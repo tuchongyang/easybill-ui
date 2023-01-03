@@ -14,7 +14,15 @@ const table: Ref<CurdTableProps> = ref({
   columns: [
     { label: "姓名", prop: "name", filter: {} },
     { label: "年龄", prop: "age", filter: {} },
-    { label: "状态", prop: "status" },
+    {
+      label: "状态",
+      prop: "status",
+      options: [
+        { label: "唱歌", value: "1" },
+        { label: "跳舞", value: "2" },
+      ],
+      filter: { inner: true, type: "select" },
+    },
   ],
   fetchData: () => {
     return new Promise((resolve, reject) => {

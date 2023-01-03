@@ -7,7 +7,7 @@
   </el-select>
 </template>
 <script lang="ts" setup>
-import { PropType, ref, Ref, watch } from "vue"
+import { PropType, ref, Ref, watch, inject } from "vue"
 import * as I from "../../../types"
 import { deepClone } from "../../../../../utils/common"
 

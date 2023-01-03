@@ -6,7 +6,7 @@
 <script lang="ts" setup>
 import { ref, watch, Ref, PropType } from "vue"
 import * as I from "../../types"
-import container from "./containers"
+import container from "./typeComponents"
 import * as Utils from "../../../../utils/common"
 import { ListQuery } from "../../types"
 

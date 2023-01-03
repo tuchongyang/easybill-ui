@@ -14,9 +14,10 @@
 </template>
 <script lang="ts" setup>
 import { Filter } from "@element-plus/icons-vue"
-import { PropType, ref } from "vue"
+import { PropType, ref, computed } from "vue"
 import FilterType from "../../TableFilter/src/components/FilterType.vue"
-import { ColumnItemFilter, Fields } from "./types"
+import { ColumnItemFilter } from "./types"
+import { Fields } from "../../CurdForm"
 // import { useEventBus } from "@vueuse/core"
 import { ElPopover } from "element-plus"
 
