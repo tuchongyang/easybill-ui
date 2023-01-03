@@ -1,0 +1,214 @@
+.table-filter {
+  background: var(--el-bg-color);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  .filter-search-box {
+    min-height: 32px;
+    // width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--el-border-color);
+    display: flex;
+    // flex: 1;
+    min-width: 460px;
+    align-items: center;
+    justify-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    border-radius: 18px;
+    transition: all 0.3s;
+
+    &.is-focus {
+      border-color: var(--el-color-primary);
+    }
+
+    .filter-action {
+      height: 32px;
+      line-height: 32px;
+      align-self: flex-end;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      justify-content: space-between;
+
+      div {
+        cursor: pointer;
+      }
+
+      .empty {
+        color: var(--el-color-info);
+        margin-right: 15px;
+        padding-left: 10px;
+
+        &:hover {
+          color: var(--el-color-primary);
+        }
+      }
+
+      .search {
+        // width: 96px;
+        padding: 0 20px;
+        text-align: center;
+        border-radius: 18px;
+        position: relative;
+        display: flex;
+
+        &:before {
+          content: "";
+          display: block;
+          width: 1px;
+          height: 20px;
+          background: #ddd;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        &:hover {
+          // background: var(--el-color-primary-light-2);
+          color: var(--el-color-primary);
+        }
+      }
+    }
+  }
+  .filter-external {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
+  }
+  .filter-tags {
+    height: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-items: center;
+    margin-bottom: 10px;
+    .tag-title {
+      margin-right: 20px;
+      font-size: 12px;
+      color: #aeb2bb;
+      margin-bottom: 2px;
+    }
+    .dropdown-toggle {
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      font-size: 12px;
+    }
+    .tag-list {
+      height: 24px;
+      line-height: 24px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      padding: 0 10px;
+      color: var(--el-color-info-dark-2);
+      background: var(--el-color-info-light-9);
+      font-size: 12px;
+      border-radius: 12px;
+      margin-right: 5px;
+      margin-bottom: 2px;
+      cursor: pointer;
+      .action {
+        color: var(--el-color-info-light-5);
+        text-align: center;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        border-radius: 50%;
+        margin-left: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover {
+          color: var(--el-color-primary);
+        }
+      }
+    }
+  }
+  .tag-clear {
+    margin-bottom: 2px;
+    margin-left: 10px;
+  }
+}
+.table-filter-type {
+  position: absolute;
+  box-shadow: var(--el-box-shadow-light);
+  background: var(--el-bg-color);
+  z-index: 3060;
+  min-width: 150px;
+  max-height: 300px;
+  overflow: hidden;
+  top: -99999px;
+  left: 0;
+  --el-font-size-base: 12px;
+}
+.table-filter-toggle {
+  padding: 0 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 120px;
+  font-size: 12px;
+  .current-filter-label {
+    margin-right: 20px;
+  }
+}
+.table-filter-List {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+  background: var(--el-bg-color);
+  z-index: 3060;
+  border-radius: 2px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 12px;
+  ul {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    li {
+      width: 100%;
+      list-style: none;
+      padding: 6px 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-sizing: border-box;
+      cursor: pointer;
+      &:hover {
+        background: var(--el-color-primary-light-9);
+        color: var(--el-color-primary);
+      }
+      &.active {
+        color: var(--el-color-primary);
+        font-weight: 600;
+      }
+    }
+  }
+}
+.table-filter-tag-popper {
+  max-height: 400px;
+  overflow: auto;
+  padding: 0 !important;
+  width: 250px !important;
+  .select-list {
+    .item {
+      line-height: 18px;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 12px;
+      &:hover {
+        background-color: var(--el-fill-color-light);
+      }
+      &.active {
+        color: var(--el-color-primary);
+        font-weight: 700;
+      }
+    }
+  }
+}

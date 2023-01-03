@@ -1,0 +1,51 @@
+<template>
+  <div class="schema-form-radio">
+    <div v-if="formItem.loading" class="loading" style="color: #999; font-size: 12px">
+      <el-icon class="is-loading"><Loading /></el-icon> 加载中...
+    </div>
+    <el-radio-group v-if="!formItem.loading && formItem.options && formItem.options.length" v-model="model" :class="[props?.showType]" v-bind="props" v-on="eventObject">
+      <template v-for="option in formItem.options" :key="option.value">
+        <el-radio-button v-if="props?.componentName == 'button'" :label="option.value" :disabled="option.disabled">
+          <span>{{ option.label }}</span>
+          <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
+        </el-radio-button>
+        <el-radio v-else :label="option.value" :disabled="option.disabled">
+          <span>{{ option.label }}</span>
+          <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
+        </el-radio>
+      </template>
+    </el-radio-group>
+    <div v-if="!formItem.loading && !formItem.options?.length" class="empty">
+      <el-icon><Warning /></el-icon> <span>暂无数据</span>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { defineComponent, computed } from "vue"
+import { Loading, Warning } from "@element-plus/icons-vue"
+import { ElIcon, ElRadioGroup, ElRadio, ElRadioButton } from "element-plus"
+import { FormItemProps } from "../types"
+import FormTooltip from "../FormTooltip.vue"
+export default defineComponent({
+  name: "SchemaFormRadio",
+  components: { Loading, ElIcon, ElRadioGroup, ElRadio, ElRadioButton, Warning, FormTooltip },
+  props: {
+    ...FormItemProps,
+    modelValue: {
+      type: [String, Number, Boolean],
+      default: null,
+    },
+  },
+  emits: ["update:modelValue"],
+  setup(props, { emit }) {
+    const model = computed({
+      get: () => props.modelValue,
+      set: (val) => emit("update:modelValue", val),
+    })
+
+    return {
+      model,
+    }
+  },
+})
+</script>
