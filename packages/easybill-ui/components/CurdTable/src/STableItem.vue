@@ -73,7 +73,7 @@ const getValue = (scope: any) => {
   if (props.schema.formatter) {
     return props.schema.formatter(scope.row, scope.column, scope.row[props.schema.prop], scope.index)
   }
-  return typeof scope.row[props.schema.prop] == "undefined" ? "--" : scope.row[props.schema.prop]
+  return typeof scope.row[props.schema.prop] == "undefined" || scope.row[props.schema.prop] === "" ? "--" : scope.row[props.schema.prop]
 }
 
 // 复制值

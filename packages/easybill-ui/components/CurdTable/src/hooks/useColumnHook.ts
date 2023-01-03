@@ -44,7 +44,6 @@ export function useColumnHook(props: any) {
   }
 
   initColumn()
-  console.log("columns", columns)
   watch(
     () => props.columns,
     (val) => {
