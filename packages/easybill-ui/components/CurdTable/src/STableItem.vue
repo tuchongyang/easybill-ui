@@ -3,7 +3,7 @@
     <template #header>
       <div class="header-td" :class="[props.schema.align]">
         <slot name="header"></slot>
-        <span v-if="!props.isSlotHeader" class="tit">{{ props.schema.header ? props.schema.header : props.schema.label }}</span>
+        <STableItemHeader v-if="!props.isSlotHeader" :schema-item="props.schema" />
         <STableItemFilter v-if="props.schema.filter && props.schema.filter.inner" ref="tableItemFilterRef" :filter="filterSchema" @change="onChange" />
       </div>
     </template>
@@ -31,6 +31,7 @@
 import { computed, inject, PropType, ref, Ref } from "vue"
 import ConstantStatus from "../../ConstantStatus"
 import STableItemFilter from "./STableItemFilter.vue"
+import STableItemHeader from "./STableItemHeader.vue"
 import { ParamsItem } from "../../TableFilter"
 import { ColumnItem } from "./types"
 import { CopyDocument } from "@element-plus/icons-vue"

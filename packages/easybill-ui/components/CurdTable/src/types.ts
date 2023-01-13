@@ -38,9 +38,15 @@ export interface ColumnItemCtx<T> {
   className?: string
   copy?: boolean // 对某一列的单元格的值进行复制
   vHtml?: boolean //当前列是否v-html渲染
+  header?: string | TableColumnHeader
 }
 
 export type ColumnItem<T = any> = Partial<TableColumnCtx<T>> & ColumnItemCtx<T>
+
+export interface TableColumnHeader {
+  title: string
+  tooltip: string | import("element-plus/es/components/tooltip").ElTooltipProps
+}
 
 export interface PropOption {
   operationWidth?: number

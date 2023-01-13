@@ -13,10 +13,13 @@
     <div class="table-detail">
       <slot></slot>
     </div>
-    <el-row v-if="!$slots.default" class="table-detail" :class="[props.showType]">
-      <el-col v-for="(item, i) in props.data" :key="i" :span="item.span">
+    <div v-if="!$slots.default" class="table-detail" :class="[props.showType]">
+      <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="{ flex: '0 0 ' + (100 * (item.span || 24)) / 24 + '%' }">
         <div class="item-col">
-          <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item) }">{{ item.label }}：</div>
+          <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item) }">
+            <span>{{ item.label }}</span>
+            <DetailInfoTooltip :tooltip="item.tooltip" />{{ props.showType == "table" ? "" : "：" }}
+          </div>
           <div class="det">
             <template v-if="item.slot">
               <slot :name="item.slot" :row="item" :data="props.data" :index="i"></slot>
@@ -30,8 +33,8 @@
             </template>
           </div>
         </div>
-      </el-col>
-    </el-row>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -43,6 +46,7 @@ export default {
 import { PropType } from "vue"
 import { ConstantStatus } from "../../ConstantStatus/src"
 import { DetailDataItem } from "./types"
+import DetailInfoTooltip from "./DetailInfoTooltip.vue"
 
 const props = defineProps({
   data: {
@@ -65,6 +69,7 @@ const props = defineProps({
 })
 const getLabelWidth = (dataItem: DetailDataItem): string => {
   const labelWidth = typeof dataItem.labelWidth !== "undefined" ? dataItem.labelWidth : props.labelWidth
-  return typeof labelWidth == "string" ? labelWidth + "" : labelWidth + "px"
+  const isNum = typeof labelWidth == "number" || (typeof labelWidth == "string" && /^\d+$/.test(labelWidth))
+  return !isNum ? labelWidth + "" : labelWidth + "px"
 }
 </script>

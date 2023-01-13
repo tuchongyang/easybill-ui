@@ -14,4 +14,6 @@ export * from "./components/FormDialog/src/types"
 export * from "./components/CurdForm/src/types"
 export * from "./components/CurdTable/src/types"
 export * from "./components/TableFilter/types"
+export * from "./utils/hooks/useGlobalConfig"
+
 export default makeInstaller([...Components])

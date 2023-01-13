@@ -6,14 +6,14 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue"
 import { CurdTableProps } from "easybill-ui/index"
-import { useGlobalConfig } from "element-plus"
+import { useGlobalConfig } from "easybill-ui/index"
 const config = useGlobalConfig()
 console.log("config", config)
 const table: Ref<CurdTableProps> = ref({
   data: [],
   columns: [
-    { label: "姓名", prop: "name", filter: {} },
-    { label: "年龄", prop: "age", filter: {} },
+    { label: "姓名", prop: "name", filter: {}, header: "姓名字符串" },
+    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" } },
     {
       label: "状态",
       prop: "status",
@@ -21,6 +21,7 @@ const table: Ref<CurdTableProps> = ref({
         { label: "唱歌", value: "1" },
         { label: "跳舞", value: "2" },
       ],
+      header: { tooltip: { content: "这是状态的提示", placement: "right" } },
       filter: { inner: true, type: "select" },
     },
   ],

@@ -1,7 +1,7 @@
 <template>
   <el-tag v-if="current" class="constant-status" :class="{ 'dot-status': current.dot }" v-bind="currentProps">
-    <el-icon v-if="current.icon && !current.dot" :class="current.iconClass" style="margin-right: 5px">
-      <component :is="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
+    <el-icon v-if="(current.icon || current.iconClass) && !current.dot" :class="current.iconClass" style="margin-right: 5px">
+      <component v-if="current.icon" :is="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
     </el-icon>
     <span v-if="current.dot" class="dot"></span>
     <span class="name">{{ current.label }}</span>

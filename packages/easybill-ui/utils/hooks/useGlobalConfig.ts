@@ -1,14 +1,16 @@
-import { ref, App, unref } from "vue"
-const globalConfig = ref()
+import { ref, App, unref, Ref } from "vue"
+const globalConfig: Ref<GlobalConfig> = ref({} as GlobalConfig)
 export function useGlobalConfig() {
   return globalConfig
 }
 export const provideGlobalConfig = (config: any, app?: App, global = false) => {
   const oldConfig = useGlobalConfig()
-  const cfg = unref(config)
+  const cfg = (config && unref(config)) || {}
   if (!oldConfig?.value) return cfg
 
-  return mergeConfig(oldConfig.value, cfg)
+  const a = mergeConfig(oldConfig.value, cfg)
+  globalConfig.value = a
+  return
 }
 const mergeConfig = (a: any, b: any): any => {
   const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])]
@@ -17,4 +19,8 @@ const mergeConfig = (a: any, b: any): any => {
     obj[key] = b[key] ?? a[key]
   }
   return obj
+}
+
+export interface GlobalConfig {
+  size: "default" | "small" | "medium"
 }

@@ -24,6 +24,7 @@
 import { computed, ref } from "vue"
 import STableColumnControl from "./STableColumnControl.vue"
 import { Refresh, Search, ScaleToOriginal, Download, Operation } from "@element-plus/icons-vue"
+import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
 const emits = defineEmits(["operation"])
 const props = defineProps({
   filterVisible: {
@@ -31,6 +32,7 @@ const props = defineProps({
     default: true,
   },
 })
+const globalConfig = useGlobalConfig()
 // 控制按钮逻辑
 const controlButtons = computed(() => [
   { label: "刷新", value: "refresh", icon: Refresh },
@@ -56,7 +58,7 @@ const onClick = (item: any) => {
     visible.value = true
   }
 }
-const currentSize = ref("default")
+const currentSize = ref(globalConfig.value.size || "default")
 const handleSizeCommand = (val: any) => {
   currentSize.value = val
   emits("operation", "size", val)

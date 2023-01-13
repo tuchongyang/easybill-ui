@@ -118,6 +118,7 @@ import FormDialog from "../../FormDialog"
 import { ElMessageBox, ElMessage, ElLoading, ElNotification, ElTable, dayjs } from "element-plus"
 import { FormItem, FormSchema, Fields } from "../../CurdForm"
 import { useColumnHook } from "./hooks/useColumnHook"
+import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
 
 const props = defineProps({
   // 表格的数据
@@ -197,7 +198,8 @@ watch(
   },
   { deep: true }
 )
-const tableAttrs: Ref<TableAttr> = ref({ size: "default" })
+const globalConfig = useGlobalConfig()
+const tableAttrs: Ref<TableAttr> = ref({ size: globalConfig.value.size || "default" })
 const listQuery = reactive({
   pageIndex: 1,
   pageSize: props.pageOptions?.pageSize || 10,

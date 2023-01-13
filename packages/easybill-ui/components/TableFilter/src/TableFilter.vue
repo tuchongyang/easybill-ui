@@ -62,7 +62,7 @@ const onChange = (d: any) => {
     }
     // console.log("selectList1", selectList)
     // console.log("listQuery.value1", listQuery.value)
-    emit("search", selectList.value)
+    emit("search", listQuery.value, selectList.value)
     return
   }
   // selectParams.value.forEach((a) => {
@@ -79,10 +79,10 @@ const onChange = (d: any) => {
   // })
   // console.log("selectList", selectList)
   // console.log("listQuery.value", listQuery.value)
-  emit("search", selectList.value)
+  emit("search", listQuery.value, selectList.value)
 }
 const onRemove = () => {
-  emit("search", selectList.value)
+  emit("search", listQuery.value, selectList.value)
 }
 const getTags = () => {
   selectParams.value.forEach((a) => {
@@ -173,7 +173,7 @@ const clear = () => {
     selectList.value.splice(i, 1)
     i--
   }
-  emit("search", selectList.value)
+  emit("search", listQuery.value, selectList.value)
 }
 // 重新调用selectParams
 const refreshSelectParams = () => {

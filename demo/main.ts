@@ -8,4 +8,4 @@ import EasybillUi from "easybill-ui/index"
 import "easybill-ui/theme-chalk/index.css"
 
 const app = createApp(App)
-app.use(router).use(store).use(ElementPlus).use(EasybillUi).mount("#app")
+app.use(router).use(store).use(ElementPlus).use(EasybillUi, { size: "default" }).mount("#app")

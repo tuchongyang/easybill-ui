@@ -17,4 +17,5 @@ export interface DetailDataItem {
     [key: string]: string
   }
   slot?: string
+  tooltip: string | import("element-plus/es/components/tooltip").ElTooltipProps
 }

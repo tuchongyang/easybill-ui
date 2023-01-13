@@ -1,7 +1,7 @@
 <template>
   <div class="base-select" @click.stop>
     <div v-if="paramsItem.props?.filterable" class="remote-input" @click.stop>
-      <el-input ref="selectInputRef" v-model="textModel" v-trim placeholder="输入搜索名称" clearable @input="onInput">
+      <el-input ref="selectInputRef" v-model="textModel" placeholder="输入搜索名称" clearable @input="onInput">
         <template #prefix>
           <el-icon class="el-input__icon"><Search /></el-icon>
         </template>
@@ -32,7 +32,7 @@ const props = defineProps({
     },
   },
   modelValue: {
-    type: [String, Number, Boolean],
+    type: [String, Number, Boolean, Array],
     default: "",
   },
   listQuery: {
@@ -42,7 +42,7 @@ const props = defineProps({
     },
   },
 })
-const model: Ref<string | number | boolean> = ref(props.modelValue)
+const model: Ref<string | number | boolean | Array<any>> = ref(props.modelValue)
 
 watch(
   () => props.modelValue,
