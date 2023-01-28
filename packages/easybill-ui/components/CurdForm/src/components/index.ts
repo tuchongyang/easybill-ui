@@ -6,6 +6,7 @@ import SchemaFormSelect from "./schema-form-select.vue"
 import SchemaFormSwitch from "./schema-form-switch.vue"
 import SchemaFormFile from "./schema-form-file.vue"
 import SchemaFormDatePicker from "./schema-form-date-picker.vue"
+import SchemaFormTimePicker from "./schema-form-time-picker.vue"
 import SchemaFormColorPicker from "./schema-form-color-picker.vue"
 import SchemaFormValue from "./schema-form-value.vue"
 import SchemaFormCascader from "./schema-form-cascader.vue"
@@ -22,6 +23,7 @@ const presetMap: PresetMap = {
   "schema-switch": SchemaFormSwitch,
   "schema-file": SchemaFormFile,
   "schema-date-picker": SchemaFormDatePicker,
+  "schema-time-picker": SchemaFormTimePicker,
   "schema-color-picker": SchemaFormColorPicker,
   "schema-value": SchemaFormValue,
   "schema-cascader": SchemaFormCascader,

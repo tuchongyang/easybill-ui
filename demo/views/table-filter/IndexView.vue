@@ -23,18 +23,36 @@ const selectParams: Ref<ParamsItem[]> = ref([
     label: "dd",
     prop: "a",
     type: "cascader",
-    options: [
-      {
-        value: "guide",
-        label: "Guide",
-        children: [
-          {
-            value: "disciplines",
-            label: "Disciplines",
-          },
-        ],
-      },
-    ],
+    asyncOptions: () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            {
+              value: "guide",
+              label: "Guide",
+              children: [
+                {
+                  value: "disciplines",
+                  label: "Disciplines",
+                },
+              ],
+            },
+          ])
+        }, 1000)
+      })
+    },
+    // options: [
+    //   {
+    //     value: "guide",
+    //     label: "Guide",
+    //     children: [
+    //       {
+    //         value: "disciplines",
+    //         label: "Disciplines",
+    //       },
+    //     ],
+    //   },
+    // ],
   },
 ])
 </script>

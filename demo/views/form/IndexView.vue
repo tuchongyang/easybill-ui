@@ -34,6 +34,8 @@ const formSchema: Ref<FormSchema> = ref({
       ],
       value: ["1"],
     },
+    { label: "日期", prop: "date-picker", type: "date-picker", span: 12 },
+    { label: "时间", prop: "time-picker", type: "time-picker", span: 12 },
   ],
   rules: {
     name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
