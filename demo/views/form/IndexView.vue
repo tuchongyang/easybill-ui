@@ -1,12 +1,18 @@
 <template>
   <div>
-    <CurdForm v-model="form" :form-schema="formSchema" />
+    <CurdForm v-model="form" :form-schema="formSchema">
+      <template #operate-button>
+        <el-button @click="submit">提交</el-button>
+      </template>
+    </CurdForm>
   </div>
 </template>
 <script lang="ts" setup>
 import { FormSchema } from "easybill-ui/index"
 import { ref, Ref } from "vue"
-const form = ref({})
+const form = ref({
+  initData: { x: 1 },
+})
 const formSchema: Ref<FormSchema> = ref({
   formItem: [
     { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
@@ -42,4 +48,7 @@ const formSchema: Ref<FormSchema> = ref({
   },
   labelWidth: 120,
 })
+const submit = () => {
+  console.log("form", form.value)
+}
 </script>

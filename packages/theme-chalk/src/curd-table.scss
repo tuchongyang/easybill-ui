@@ -1,42 +1,4 @@
 .table-container {
-  .el-table {
-    --el-table-header-bg-color: #dfe2e7; // #f0f2f5;
-    --el-table-header-text-color: #575d6c;
-    --el-table-text-color: #252b3a;
-    --el-table-border-color: #e3e9f1;
-    --el-table-row-hover-bg-color: #edf0f5;
-
-    tbody {
-      .el-table__cell {
-        padding: 9px 0;
-      }
-    }
-
-    &.el-table--medium {
-      tbody {
-        .el-table__cell {
-          padding: 12px 0;
-        }
-      }
-    }
-
-    &.el-table--small {
-      tbody {
-        .el-table__cell {
-          padding: 4px 0;
-        }
-      }
-
-      .el-button {
-        font-size: 12px;
-      }
-    }
-
-    .el-button {
-      vertical-align: top;
-    }
-  }
-
   .pagination {
     margin: 15px 0;
     justify-content: end;

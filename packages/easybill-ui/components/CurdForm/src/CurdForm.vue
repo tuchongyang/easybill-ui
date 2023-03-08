@@ -1,9 +1,9 @@
 <template>
-  <el-form ref="schemaFormRef" :model="modelRef" :rules="rulesRef" v-bind="$attrs" class="schema-form" style="display: flex; flex-wrap: wrap; position: relative; box-sizing: border-box" :label-width="sFormSchema.labelWidth" @submit.prevent>
+  <el-form ref="schemaFormRef" :model="modelRef" :rules="rulesRef" v-bind="$attrs" class="curd-form" :label-width="sFormSchema.labelWidth" @submit.prevent>
     <template v-for="formItem in schemaItems" :key="formItem.prop">
       <el-form-item v-if="!$slots[formItem.type + 'Item']" :label="formItem.label" :prop="formItem.prop" :label-width="formItem.labelWidth" :style="getFormItemStyle(formItem)" v-bind="getFormItemProps(formItem)">
-        <slot :name="formItem.type" :form-item="formItem" :form-model="modelRef"></slot>
-        <FormItem v-if="!(formItem.type && $slots[formItem.type])" :form-item="formItem" :form-model="modelRef" @change="onChange">
+        <slot :name="formItem.prop" :form-item="formItem" :form-model="modelRef"></slot>
+        <FormItem v-if="!(formItem.prop && $slots[formItem.prop])" :form-item="formItem" :form-model="modelRef" @change="onChange">
           <template #prefix>
             <slot :name="formItem.prop + 'Prefix'" :form-item="formItem" :form-model="modelRef"></slot>
           </template>
@@ -56,31 +56,25 @@ export default defineComponent({
   },
   emits: ["update:modelValue", "change"],
   setup(props, { emit, attrs }) {
-    // a-form
     const schemaFormRef = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
-    // 将外面传进来的form数据进行转化，如schema = {style: {color: '#fff' }} 转化为  form = {'style.color': '#fff'}
-    const getForm = (obj: any, parentPrefix?: any) => {
-      let result = {}
-      for (let i in obj) {
-        var formItem = obj[i]
-        let child = {}
-        const prefix = parentPrefix ? parentPrefix + "." + i : i
-        const curShemaItem = sFormSchema.value.formItem.find((a) => a.prop == i)
-        if (isObject(formItem) && !(curShemaItem && Object.keys(components).map((a) => a.replace("schema-", "").includes(curShemaItem.type)))) {
-          child = getForm(formItem, prefix)
-        } else {
-          child[prefix] = formItem
+
+    const modelRef = reactive<Fields>(props.modelValue || {})
+    watch(
+      () => props.modelValue,
+      () => {
+        for (let i in modelRef) {
+          delete modelRef[i]
         }
-
-        result = { ...result, ...child }
+        Object.assign(modelRef, props.modelValue)
       }
-      return result
-    }
-
-    let isChangeIn = false
-    // 表单项
-    const modelRef = reactive<Fields>({})
+    )
+    watch(
+      () => modelRef,
+      (val) => {
+        emit("update:modelValue", val)
+      }
+    )
 
     // 先从schema中读取默认值
     const schemaValues = sFormSchema.value.formItem.reduce<Fields>((previousValue, currentValue) => {
@@ -88,57 +82,11 @@ export default defineComponent({
       typeof currentValue.value == "undefined" ? false : currentValue.prop && (previousValue[currentValue.prop] = currentValue.value)
       return previousValue
     }, {})
-    watch(
-      () => modelRef,
-      (val) => {
-        // emit("update:modelValue", val)
-        isChangeIn = true
-        const model = props.modelValue
-        for (let i in val) {
-          if (i.indexOf(".") > -1) {
-            const s = i.split(".")
-            let index = 0
-            let o = model
-            while (o && index < s.length - 1) {
-              if (!o[s[index]]) {
-                o[s[index]] = {}
-              }
-              o = o[s[index]]
-              index++
-            }
-            if (o) {
-              o[s[s.length - 1]] = val[i]
-            }
-          } else {
-            model && (model[i] = val[i])
-          }
-        }
-        isChangeIn = false
-        emit("update:modelValue", model)
-      },
-      {
-        deep: true,
-      }
-    )
-    watch(
-      () => props.modelValue,
-      (val) => {
-        // Object.assign(modelRef, val)
-        for (let i in modelRef) {
-          delete modelRef[i]
-        }
-        if (isChangeIn) return
-        const value = getForm(val)
-        Object.assign(modelRef, value)
-      },
-      {
-        deep: true,
-      }
-    )
+
     Object.assign(modelRef, schemaValues)
     // 如果有默认值，则覆盖
     props.fields && Object.assign(modelRef, props.fields)
-    Object.assign(modelRef, getForm(props.modelValue))
+    Object.assign(modelRef, props.modelValue)
     // props.modelValue && Object.assign(modelRef, props.modelValue)
     const instance = getCurrentInstance()
     // 异步设置默认数据

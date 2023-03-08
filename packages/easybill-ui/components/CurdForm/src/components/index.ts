@@ -4,7 +4,6 @@ import SchemaFormInput from "./schema-form-input.vue"
 import SchemaFormRadio from "./schema-form-radio.vue"
 import SchemaFormSelect from "./schema-form-select.vue"
 import SchemaFormSwitch from "./schema-form-switch.vue"
-import SchemaFormFile from "./schema-form-file.vue"
 import SchemaFormDatePicker from "./schema-form-date-picker.vue"
 import SchemaFormTimePicker from "./schema-form-time-picker.vue"
 import SchemaFormColorPicker from "./schema-form-color-picker.vue"
@@ -21,7 +20,6 @@ const presetMap: PresetMap = {
   "schema-checkbox": SchemaFormCheckbox,
   "schema-input-number": SchemaFormInputNumber,
   "schema-switch": SchemaFormSwitch,
-  "schema-file": SchemaFormFile,
   "schema-date-picker": SchemaFormDatePicker,
   "schema-time-picker": SchemaFormTimePicker,
   "schema-color-picker": SchemaFormColorPicker,

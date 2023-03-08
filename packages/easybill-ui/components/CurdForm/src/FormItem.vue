@@ -1,9 +1,11 @@
 <template>
   <div class="form-item">
+    <div v-if="props.formItem.prefix" class="form-item-prefix" v-html="props.formItem.prefix"></div>
     <slot name="prefix"></slot>
     <component :is="getComponent(props.formItem.type)" v-if="!(props.formItem.type && $slots[props.formItem.type])" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
     <FormTooltip v-if="props.formItem.tooltip" :tooltip="props.formItem.tooltip" :form-item="props.formItem" :form-model="props.formModel" />
     <slot name="suffix"></slot>
+    <div v-if="props.formItem.suffix" class="form-item-suffix" v-html="props.formItem.suffix"></div>
   </div>
 </template>
 <script lang="ts" setup>

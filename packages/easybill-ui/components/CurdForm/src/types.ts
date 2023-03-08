@@ -36,7 +36,7 @@ export interface FormItem {
   maxsize?: number
   beforeUpload?: (isJpgOrPng: boolean, isLt2M: number) => void
 }
-type typeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "color-picker" | "value"
+type typeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
 export interface FormItemPropObject {
   [key: string]: any
