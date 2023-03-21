@@ -1,10 +1,9 @@
-import { FormRules, FormItemRule } from "element-plus"
+import { FormRules, FormItemRule, FormProps } from "element-plus"
 import { PropType } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
-export interface FormSchema {
+export interface FormSchema extends FormProps {
   formItem: Array<FormItem>
-  labelWidth?: string | number
   rules?: FormRules
 }
 export interface FormItem {
@@ -25,16 +24,6 @@ export interface FormItem {
   span?: number
   disabled?: boolean
   tooltip?: string
-  /** File组件需要的配置 */
-  action?: string
-  headers?: {
-    [key: string]: string
-  }
-  url?: string
-  getUrl?: (formModel: Fields, formItem: FormItem) => string
-  fileType?: string
-  maxsize?: number
-  beforeUpload?: (isJpgOrPng: boolean, isLt2M: number) => void
 }
 type typeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)

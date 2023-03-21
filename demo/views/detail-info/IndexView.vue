@@ -2,6 +2,12 @@
   <div>
     <DetailInfo title="默认模式" :data="list" />
     <DetailInfo title="表格模式" :data="list" show-type="table" label-width="120px" />
+    <DetailInfo title="卡片模式" :data="list" show-type="card" shadow label-width="120px" label-position="left">
+      <template #headerRight>
+        <el-button type="primary" link>编辑按钮</el-button>
+        <el-button type="danger" link>删除</el-button>
+      </template>
+    </DetailInfo>
   </div>
 </template>
 <script lang="ts" setup>

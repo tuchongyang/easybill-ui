@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-info">
+  <div class="detail-info" :class="[props.showType, $attrs.shadow]">
     <div class="detail-info-header">
       <div class="header-left">
         <div v-if="props.title && !$slots.title" class="title">{{ props.title }}</div>
@@ -10,13 +10,13 @@
       </div>
     </div>
 
-    <div class="table-detail">
+    <div v-if="$slots.default" class="table-detail">
       <slot></slot>
     </div>
     <div v-if="!$slots.default" class="table-detail" :class="[props.showType]">
       <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="{ flex: '0 0 ' + (100 * (item.span || 24)) / 24 + '%' }">
         <div class="item-col">
-          <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item) }">
+          <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item), justifyContent: props.labelPosition || item.labelPosition }">
             <span>{{ item.label }}</span>
             <DetailInfoTooltip :tooltip="item.tooltip" />{{ props.showType == "table" ? "" : "：" }}
           </div>
@@ -65,6 +65,10 @@ const props = defineProps({
   labelWidth: {
     type: [Number, String],
     default: "",
+  },
+  labelPosition: {
+    type: String,
+    default: "left",
   },
 })
 const getLabelWidth = (dataItem: DetailDataItem): string => {

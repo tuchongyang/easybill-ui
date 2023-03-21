@@ -13,9 +13,8 @@ export interface DetailDataItem {
   /** type为image时，会把value当做image的url来显示图片 */
   type?: string
   labelWidth?: number
-  props?: {
-    [key: string]: string
-  }
+  props?: Record<string, string>
   slot?: string
-  tooltip: string | import("element-plus/es/components/tooltip").ElTooltipProps
+  tooltip?: string | import("element-plus/es/components/tooltip").ElTooltipProps
+  labelPosition?: "left" | "right" | "center"
 }

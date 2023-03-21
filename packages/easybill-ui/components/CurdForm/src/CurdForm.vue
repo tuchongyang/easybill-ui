@@ -1,19 +1,19 @@
 <template>
-  <el-form ref="schemaFormRef" :model="modelRef" :rules="rulesRef" v-bind="$attrs" class="curd-form" :label-width="sFormSchema.labelWidth" @submit.prevent>
+  <el-form ref="schemaFormRef" :model="formModel" :rules="rules" v-bind="{ ...$attrs, ...getFormProps }" class="curd-form" :style="getFormStyle()" @submit.prevent>
     <template v-for="formItem in schemaItems" :key="formItem.prop">
       <el-form-item v-if="!$slots[formItem.type + 'Item']" :label="formItem.label" :prop="formItem.prop" :label-width="formItem.labelWidth" :style="getFormItemStyle(formItem)" v-bind="getFormItemProps(formItem)">
-        <slot :name="formItem.prop" :form-item="formItem" :form-model="modelRef"></slot>
-        <FormItem v-if="!(formItem.prop && $slots[formItem.prop])" :form-item="formItem" :form-model="modelRef" @change="onChange">
+        <slot :name="formItem.prop" :form-item="formItem" :form-model="formModel"></slot>
+        <FormItem v-if="!(formItem.prop && $slots[formItem.prop])" :form-item="formItem" :form-model="formModel" @change="onChange">
           <template #prefix>
-            <slot :name="formItem.prop + 'Prefix'" :form-item="formItem" :form-model="modelRef"></slot>
+            <slot :name="formItem.prop + 'Prefix'" :form-item="formItem" :form-model="formModel"></slot>
           </template>
           <template #suffix>
-            <slot :name="formItem.prop + 'Suffix'" :form-item="formItem" :form-model="modelRef"></slot>
+            <slot :name="formItem.prop + 'Suffix'" :form-item="formItem" :form-model="formModel"></slot>
           </template>
         </FormItem>
-        <slot :name="formItem.prop + 'Bottom'" :form-item="formItem" :form-model="modelRef"></slot>
+        <slot :name="formItem.prop + 'Bottom'" :form-item="formItem" :form-model="formModel"></slot>
       </el-form-item>
-      <slot :name="formItem.prop + 'Item'" :form-item="formItem" :form-model="modelRef"></slot>
+      <slot :name="formItem.prop + 'Item'" :form-item="formItem" :form-model="formModel"></slot>
     </template>
     <template v-if="$slots['operate-button']">
       <el-form-item style="max-width: 100%">
@@ -59,18 +59,18 @@ export default defineComponent({
     const schemaFormRef = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
 
-    const modelRef = reactive<Fields>(props.modelValue || {})
+    const formModel = reactive<Fields>(props.modelValue || {})
     watch(
       () => props.modelValue,
       () => {
-        for (let i in modelRef) {
-          delete modelRef[i]
+        for (let i in formModel) {
+          delete formModel[i]
         }
-        Object.assign(modelRef, props.modelValue)
+        Object.assign(formModel, props.modelValue)
       }
     )
     watch(
-      () => modelRef,
+      () => formModel,
       (val) => {
         emit("update:modelValue", val)
       }
@@ -83,23 +83,23 @@ export default defineComponent({
       return previousValue
     }, {})
 
-    Object.assign(modelRef, schemaValues)
+    Object.assign(formModel, schemaValues)
     // 如果有默认值，则覆盖
-    props.fields && Object.assign(modelRef, props.fields)
-    Object.assign(modelRef, props.modelValue)
-    // props.modelValue && Object.assign(modelRef, props.modelValue)
+    props.fields && Object.assign(formModel, props.fields)
+    Object.assign(formModel, props.modelValue)
+    // props.modelValue && Object.assign(formModel, props.modelValue)
     const instance = getCurrentInstance()
     // 异步设置默认数据
     sFormSchema.value.formItem.forEach(async (item) => {
       // 异步选项
       if (item.asyncOptions && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
         item.loading = true
-        item.options = await item.asyncOptions(modelRef, item).finally(() => (item.loading = false))
-        item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(modelRef, item, instance?.proxy)
+        item.options = await item.asyncOptions(formModel, item).finally(() => (item.loading = false))
+        item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, instance?.proxy)
       } else if (item.prop && item.asyncValue && (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue))) {
         // 异步默认值
         item.loading = true
-        modelRef[item.prop] = await item.asyncValue(modelRef, item).finally(() => (item.loading = false))
+        formModel[item.prop] = await item.asyncValue(formModel, item).finally(() => (item.loading = false))
       }
     })
 
@@ -109,13 +109,13 @@ export default defineComponent({
           return true
         }
         if (item.hidden instanceof Function) {
-          return !item.hidden(modelRef)
+          return !item.hidden(formModel)
         }
         return !item.hidden
       })
     })
     // 生成表单验证规则
-    const rulesRef = computed(() => {
+    const rules = computed(() => {
       return sFormSchema.value.rules
     })
 
@@ -130,10 +130,10 @@ export default defineComponent({
         cur.loading = true
         cur.options =
           (await cur
-            .asyncOptions(modelRef, cur)
+            .asyncOptions(formModel, cur)
             .catch((err) => console.error("loadOptionError", err))
             .finally(() => (cur.loading = false))) || []
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(modelRef, cur, instance?.proxy)
+        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, instance?.proxy)
       }
       return cur
     }
@@ -141,25 +141,40 @@ export default defineComponent({
       emit("change", formModel, formItem)
     }
     const getFormItemStyle = (formItem: FormItemType) => {
-      return { maxWidth: formItem.span && (100 * formItem.span) / 24 + "%", flex: typeof attrs.inline == "undefined" ? "0 0 " + (100 * (formItem.span || 24)) / 24 + "%" : "" }
+      const gutter = props.formSchema.gutter || 0
+      return { maxWidth: formItem.span && (100 * formItem.span) / 24 + "%", flex: typeof attrs.inline == "undefined" ? "0 0 " + (100 * (formItem.span || 24)) / 24 + "%" : "", padding: "0 " + gutter + "px" }
     }
     const getFormItemProps = (formItem: FormItemType) => {
       if (formItem.formItemProps) {
         if (formItem.formItemProps instanceof Function) {
-          return formItem.formItemProps(modelRef, formItem)
+          return formItem.formItemProps(formModel, formItem)
         }
         const { ...attrs } = formItem.formItemProps
         return attrs
       }
       return {}
     }
+    const getFormStyle = () => {
+      const gutter = props.formSchema.gutter
+      if (gutter) {
+        const guPx = +parseFloat(String(gutter))
+        return { marginLeft: -guPx + "px", marginRight: -guPx + "px" }
+      }
+      return {}
+    }
+    const getFormProps = computed(() => {
+      const { formItem, rules, ...args } = props.formSchema
+      return { ...args }
+    })
 
     return {
-      modelRef,
+      formModel,
       schemaFormRef,
-      rulesRef,
+      rules,
       schemaItems,
       sFormSchema,
+      getFormStyle,
+      getFormProps,
       getFormItemStyle,
       getFormItemProps,
       validate,

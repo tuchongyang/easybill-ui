@@ -42,13 +42,20 @@ const formSchema: Ref<FormSchema> = ref({
     },
     { label: "日期", prop: "date-picker", type: "date-picker", span: 12 },
     { label: "时间", prop: "time-picker", type: "time-picker", span: 12 },
+    { label: "测试1", prop: "input1", type: "input", span: 12 },
+    { label: "测试2测试测试ss", prop: "input2", type: "input", span: 12 },
   ],
   rules: {
     name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
   },
   labelWidth: 120,
+  labelPosition: "left",
+  gutter: 10,
 })
 const submit = () => {
   console.log("form", form.value)
 }
+setTimeout(() => {
+  form.value.age = 22
+}, 2000)
 </script>

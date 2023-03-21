@@ -1,9 +1,14 @@
 .constant-status {
   --el-tag-border-opacity: 1;
   --el-tag-bg-opacity: 1;
+  .el-tag__content {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
   .el-icon,
   .name {
-    vertical-align: middle;
+    vertical-align: top;
     line-height: 1;
   }
   .dot {
@@ -14,6 +19,9 @@
     border-radius: 50%;
     background: var(--el-tag-text-color);
     margin-right: 5px;
+  }
+  &.el-tag--plain {
+    padding: 0;
   }
 
   &.dot-status {
