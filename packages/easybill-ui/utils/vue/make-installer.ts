@@ -1,9 +1,9 @@
 import type { App, Plugin } from "vue"
-import { provideGlobalConfig } from "../hooks/useGlobalConfig"
+import { provideGlobalConfig, GlobalConfig } from "../hooks/useGlobalConfig"
 const INSTALLED_KEY = Symbol("INSTALLED_KEY")
 
 export const makeInstaller = (components: Plugin[] = []) => {
-  const install = (app: any, options: any) => {
+  const install = (app: any, options?: GlobalConfig) => {
     if (app[INSTALLED_KEY]) return
     provideGlobalConfig(options)
     app[INSTALLED_KEY] = true
