@@ -65,7 +65,7 @@ export interface PropOption {
   pageProps?: Fields
   filterVisible?: boolean
   customActivatedFetch?: boolean // 自定义执行onActivated内部的fetch执行，完全交由父组件控制
-  filterNew?: boolean
+  autoload?: boolean
 }
 
 export interface ColumnItemFilter {

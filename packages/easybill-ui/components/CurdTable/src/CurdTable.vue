@@ -18,7 +18,7 @@
       <template v-for="item in columns" :key="item.label">
         <el-table-column v-if="item.children && item.children.length" :key="item.prop" :label="item.label">
           <template v-for="sub in item.children" :key="sub.prop">
-            <STableItem :ref="(el) => (tableItemRefs[sub.prop] = el)" :is-slot="!!$slots[sub.prop]" :is-slot-header="!!$slots[sub.prop + 'Header']" :schema="sub" :option="props.option" @search="onItemChange">
+            <STableItem :ref="(el) => (tableItemRefs[sub.prop] = el)" :is-slot="!!$slots[sub.prop]" :is-slot-header="!!$slots[sub.prop + 'Header']" :schema="sub" :option="option" @search="onItemChange">
               <template #default="scope1">
                 <slot :name="sub.prop" v-bind="scope1"></slot>
               </template>
@@ -29,7 +29,7 @@
           </template>
         </el-table-column>
         <template v-else>
-          <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="props.option" @search="onItemChange">
+          <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
             <template #default="scope">
               <slot :name="item.prop" v-bind="scope"></slot>
             </template>
@@ -50,7 +50,7 @@
           <template v-else>
             <el-dropdown trigger="click" popper-class="curd-table-dropdown-menu">
               <el-button type="primary" link>
-                {{ props.option.operationBtnTitle || "更多" }}
+                {{ option.operationBtnTitle || "更多" }}
                 <el-icon>
                   <ArrowDown />
                 </el-icon>
@@ -168,27 +168,29 @@ const props = defineProps({
   option: {
     type: Object as PropType<PropOption>,
     default() {
-      return {
-        operationWidth: 200,
-        operationBtnTitle: "更多",
-        hideMenu: false, // 是否隐藏右侧工具菜单
-        hideMenuAdd: false, // 是否隐藏菜单中添加按钮
-        hideMenuRight: false, // 是否隐藏菜单右侧
-        hideOperation: false, // 是否隐藏操作列
-        hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
-        hideOperationDetail: false, // 是否隐藏操作列中的详情按钮
-        hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
-        hidePage: false, // 是否隐藏分页器
-        excelTitle: "", //导出表格的文件名
-        selectionProps: null,
-        downloadMod: false,
-        pageProps: null,
-        filterVisible: true,
-        customActivatedFetch: false, // 自定义执行onActivated内部的fetch执行，完全交由父组件控制 false 是自动的，true 开发者自己控制
-      }
+      return {}
     },
   },
 })
+const defaultOption = {
+  operationWidth: 200,
+  operationBtnTitle: "更多",
+  hideMenu: false, // 是否隐藏右侧工具菜单
+  hideMenuAdd: false, // 是否隐藏菜单中添加按钮
+  hideMenuRight: false, // 是否隐藏菜单右侧
+  hideOperation: false, // 是否隐藏操作列
+  hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
+  hideOperationDetail: false, // 是否隐藏操作列中的详情按钮
+  hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
+  hidePage: false, // 是否隐藏分页器
+  excelTitle: "", //导出表格的文件名
+  selectionProps: null,
+  downloadMod: false,
+  pageProps: null,
+  filterVisible: true,
+  autoload: true,
+  customActivatedFetch: false, // 自定义执行onActivated内部的fetch执行，完全交由父组件控制 false 是自动的，true 开发者自己控制
+}
 const emits = defineEmits(["selectionChange", "row-click"])
 const list = ref(props.data)
 watch(
@@ -215,9 +217,10 @@ const search = reactive<ListQuery>(
     return args
   })()
 )
+const option: PropOption = Object.assign(defaultOption, props.option)
 provide("search", search)
-provide("option", props.option)
-const filterVisible = ref(typeof props.option?.filterVisible == "undefined" ? true : props.option?.filterVisible)
+provide("option", option)
+const filterVisible = ref(typeof option?.filterVisible == "undefined" ? true : option?.filterVisible)
 const loading = ref(false)
 const listTotal = ref(0)
 const setTotal = (num: number) => {
@@ -278,14 +281,14 @@ const onItemChange = (prop: string, value: string, filter: any) => {
 
 let hasInit = false
 onActivated(() => {
-  // props.option?.customActivatedFetch为true时，参考/system/partner/account/vendor写法
-  if (!props.option?.customActivatedFetch && hasInit) {
+  // option?.customActivatedFetch为true时，参考/system/partner/account/vendor写法
+  if (!option?.customActivatedFetch && hasInit) {
     fetchData()
   } else {
     hasInit = true
   }
 })
-fetchData()
+option.autoload && fetchData()
 // 组装columns
 const { columns, selectParams } = useColumnHook(props)
 // 菜单点击事件
@@ -324,7 +327,7 @@ const onMenuOption = (option: string, val: string) => {
         excel.export_json_to_excel({
           header: columns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label),
           data,
-          filename: props.option.excelTitle || "导出数据",
+          filename: option.excelTitle || "导出数据",
         })
         ElMessage.success("导出成功!")
       })

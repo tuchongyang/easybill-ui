@@ -11,6 +11,7 @@ const config = useGlobalConfig()
 console.log("config", config)
 const table: Ref<CurdTableProps> = ref({
   data: [],
+  option: { autoload: false },
   columns: [
     { label: "姓名", prop: "name", filter: {}, header: "姓名字符串" },
     { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" } },
