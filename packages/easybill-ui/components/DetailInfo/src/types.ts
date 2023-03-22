@@ -1,3 +1,4 @@
+import { ElTooltipProps } from "element-plus"
 export interface OptionItem {
   label: string
   value: string | number | boolean
@@ -17,4 +18,6 @@ export interface DetailDataItem {
   slot?: string
   tooltip?: string | import("element-plus/es/components/tooltip").ElTooltipProps
   labelPosition?: "left" | "right" | "center"
+  showOverflowTooltip?: boolean | ElTooltipProps
+  rawContent?: boolean
 }

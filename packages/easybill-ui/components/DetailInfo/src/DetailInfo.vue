@@ -14,7 +14,7 @@
       <slot></slot>
     </div>
     <div v-if="!$slots.default" class="table-detail" :class="[props.showType]">
-      <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="{ flex: '0 0 ' + (100 * (item.span || 24)) / 24 + '%' }">
+      <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="getItemStyle(item)">
         <div class="item-col">
           <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item), justifyContent: props.labelPosition || item.labelPosition }">
             <span>{{ item.label }}</span>
@@ -29,7 +29,7 @@
               <template v-else-if="item.type == 'image'">
                 <el-image :src="item.value" :preview-src-list="[item.value]" style="width: 40px; height: 40px; vertical-align: top" :fit="'cover'" v-bind="item.props"></el-image>
               </template>
-              <template v-else>{{ item.value }}</template>
+              <template v-else><DetailInfoContent :data="item" /></template>
             </template>
           </div>
         </div>
@@ -47,6 +47,7 @@ import { PropType } from "vue"
 import { ConstantStatus } from "../../ConstantStatus/src"
 import { DetailDataItem } from "./types"
 import DetailInfoTooltip from "./DetailInfoTooltip.vue"
+import DetailInfoContent from "./DetailInfoContent.vue"
 
 const props = defineProps({
   data: {
@@ -75,5 +76,9 @@ const getLabelWidth = (dataItem: DetailDataItem): string => {
   const labelWidth = typeof dataItem.labelWidth !== "undefined" ? dataItem.labelWidth : props.labelWidth
   const isNum = typeof labelWidth == "number" || (typeof labelWidth == "string" && /^\d+$/.test(labelWidth))
   return !isNum ? labelWidth + "" : labelWidth + "px"
+}
+const getItemStyle = (dataItem: DetailDataItem) => {
+  const width = (100 * (dataItem.span || 24)) / 24 + "%"
+  return { width: width, flex: "0 0 " + width }
 }
 </script>
