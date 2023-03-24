@@ -1,6 +1,6 @@
 {
   "name": "@easybill-ui/theme-chalk",
-  "version": "0.0.12",
+  "version": "0.0.11",
   "description": "easybill component chalk theme.",
   "keywords": [
     "easybill-ui",
@@ -37,5 +37,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "136e751d4cf57b3aecf8741509efad26180e5b07"
+  "gitHead": "a1f97c78d058646591ec9d152e2090e6d7a2cfcc"
 }
