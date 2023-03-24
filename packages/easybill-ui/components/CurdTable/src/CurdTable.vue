@@ -112,7 +112,7 @@ import STableDetail from "./STableDetail.vue"
 import STableSinglePage from "./STableSinglePage.vue"
 import { deepClone } from "../utils/common"
 import { Edit, Delete, Plus, ArrowDown, Document } from "@element-plus/icons-vue"
-import { ColumnItem, PropOption, TableAttr, FetchDataOpt } from "./types"
+import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey } from "./types"
 import TableFilter, { ListQuery } from "../../TableFilter"
 import FormDialog from "../../FormDialog"
 import { ElMessageBox, ElMessage, ElLoading, ElNotification, ElTable, dayjs } from "element-plus"
@@ -292,8 +292,11 @@ option.autoload && fetchData()
 // 组装columns
 const { columns, selectParams } = useColumnHook(props)
 // 菜单点击事件
-const onMenuOption = (option: string, val: string) => {
-  switch (option) {
+const onMenuOption = (optionKey: MenuEventKey, val: string) => {
+  if (option.menuEvent?.[optionKey]) {
+    return option.menuEvent?.[optionKey]()
+  }
+  switch (optionKey) {
     case "refresh":
       fetchData()
       break

@@ -66,7 +66,9 @@ export interface PropOption {
   filterVisible?: boolean
   customActivatedFetch?: boolean // 自定义执行onActivated内部的fetch执行，完全交由父组件控制
   autoload?: boolean
+  menuEvent?: Record<MenuEventKey, () => void>
 }
+export type MenuEventKey = "refresh" | "searchToggle" | "size" | "export" | "operation"
 
 export interface ColumnItemFilter {
   inner?: boolean
