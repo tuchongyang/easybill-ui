@@ -2,12 +2,14 @@ import { FormRules, FormItemRule, FormProps } from "element-plus"
 import { PropType } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
-export interface FormSchema extends FormProps {
+export interface FormSchema extends Partial<FormProps> {
   formItem: Array<FormItem>
   rules?: FormRules
+  labelPosition?: "left" | "right" | "top"
+  gutter?: number
 }
 export interface FormItem {
-  prop?: string
+  prop: string
   label?: string
   type?: typeEmun | ReturnType<typeof defineComponent>
   value?: any

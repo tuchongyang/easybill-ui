@@ -440,6 +440,7 @@ defineExpose({
   setPageIndex,
   setTotal,
   search,
+  listQuery,
   getEl() {
     return instance?.proxy?.$el
   },
