@@ -17,4 +17,5 @@ export interface OptionItem {
    * 供curd-form的单选或多选，选项上的tooltip
    */
   tooltip?: any
+  html?: string
 }

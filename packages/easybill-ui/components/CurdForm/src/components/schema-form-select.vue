@@ -3,7 +3,10 @@
     <el-option v-if="props.all && !props.multiple" value="" label="全部"></el-option>
     <el-checkbox v-if="props.all && props.multiple" v-model="checked" label="全选" class="schema-form-select-check" @change="selectAll" />
     <template v-for="option in formItem.options" :key="option.value">
-      <el-option :value="option.value" :label="option.label" :disabled="option.disabled"></el-option>
+      <el-option :value="option.value" :label="option.label" :disabled="option.disabled">
+        <div v-if="option.html" v-html="option.html"></div>
+        <template v-else>{{ option.label }}</template>
+      </el-option>
     </template>
   </el-select>
 </template>

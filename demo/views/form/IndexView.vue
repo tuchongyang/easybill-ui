@@ -31,6 +31,16 @@ const formSchema: Ref<FormSchema> = ref({
     },
     {
       label: "名称",
+      prop: "name4",
+      span: 12,
+      type: "select",
+      options: [
+        { label: "唱歌", value: "1", html: "<div style='display:flex;justify-content:space-between;'><span>唱歌</span><span style='color:#999'>22</span></div>" },
+        { label: "跳舞", value: "2" },
+      ],
+    },
+    {
+      label: "名称",
       prop: "name2",
       span: 12,
       type: "checkbox",

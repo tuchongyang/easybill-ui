@@ -11,8 +11,14 @@ export interface ParamsItem {
   sortIndex?: number // 排序，数字越大越靠前
   tagNames?: string
   props?: ParamsItemProps
+  eventObject?: {
+    change?: (query: ListQuery, paramsItem: ParamsItem, context: TableFilterContext) => void
+  }
 }
-
+export interface TableFilterContext {
+  loadOptions: (prop: string) => void
+  setValue: (prop: string, value: any) => void
+}
 export interface ListQuery {
   [key: string]: any //string | boolean | number | Array<string> | Array<number>
 }

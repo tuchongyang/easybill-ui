@@ -18,7 +18,7 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { PropType, provide, Ref, ref } from "vue"
+import { PropType, provide, Ref, ref, reactive } from "vue"
 import * as I from "../types"
 import FilterExternal from "./FilterExternal/FilterExternal.vue"
 import FilterSearchBox from "./FilterSearchBox.vue"
@@ -65,20 +65,6 @@ const onChange = (d: any) => {
     emit("search", listQuery.value, selectList.value)
     return
   }
-  // selectParams.value.forEach((a) => {
-  //   let i = selectList.value.findIndex((j) => a.prop == j.prop)
-  //   // selectList.value.splice(i, 1)
-
-  //   if (listQuery.value[a.prop] && !a.external) {
-  //     if (i > -1) {
-  //       selectList.value[i] = a
-  //     } else {
-  //       selectList.value.push(a)
-  //     }
-  //   }
-  // })
-  // console.log("selectList", selectList)
-  // console.log("listQuery.value", listQuery.value)
   emit("search", listQuery.value, selectList.value)
 }
 const onRemove = () => {
@@ -150,6 +136,11 @@ const setItem = (prop: string, paramsItem?: any) => {
     }
   })
 }
+//主动赋值
+const setValue = (prop: string, value: any) => {
+  listQuery.value[prop] = value
+  setItem(prop)
+}
 const state = ref({
   isFocus: false,
 })
@@ -187,7 +178,11 @@ const onTagClick = (item: I.ParamsItem) => {
   const i = selectParams.value.findIndex((a) => a.prop == item.prop && a.label == item.label)
   searchRef.value.setIndex(i)
 }
-
+const tableFilterContext = reactive<I.TableFilterContext>({
+  loadOptions,
+  setValue,
+})
+provide("tableFilter", tableFilterContext)
 provide("state", state)
 provide("selectList", selectList)
 defineExpose({ setItem, selectList, loadOptions, clear, refreshSelectParams, getCurrentIndex })
