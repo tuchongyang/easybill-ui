@@ -92,7 +92,7 @@ export default defineComponent({
     // 异步设置默认数据
     sFormSchema.value.formItem.forEach(async (item) => {
       // 异步选项
-      if (item.asyncOptions && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
+      if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
         item.loading = true
         item.options = await item.asyncOptions(formModel, item).finally(() => (item.loading = false))
         item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, instance?.proxy)

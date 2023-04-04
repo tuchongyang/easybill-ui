@@ -18,4 +18,5 @@ export interface OptionItem {
    */
   tooltip?: any
   html?: string
+  [key: string]: any
 }

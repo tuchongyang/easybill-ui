@@ -14,8 +14,8 @@ export interface FormItem {
   type?: typeEmun | ReturnType<typeof defineComponent>
   value?: any
   eventObject?: EventObject
-  options?: Array<OptionItem>
-  asyncOptions?: (modelRef: Fields, formItem: FormItem) => Promise<Array<OptionItem>>
+  options?: Array<CurdFormOptionItem>
+  asyncOptions?: (modelRef: Fields, formItem: FormItem) => Promise<Array<CurdFormOptionItem>>
   asyncValue?: (modelRef: Fields, formItem: FormItem) => Promise<string | number | boolean>
   loading?: boolean
   hidden?: boolean | ((model: Fields) => boolean)
@@ -26,6 +26,7 @@ export interface FormItem {
   span?: number
   disabled?: boolean
   tooltip?: string
+  autoload?: boolean
 }
 type typeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
@@ -34,6 +35,9 @@ export interface FormItemPropObject {
 }
 
 export interface Fields {
+  [key: string]: any
+}
+export interface CurdFormOptionItem extends OptionItem {
   [key: string]: any
 }
 // interface EventObjectDefault {
