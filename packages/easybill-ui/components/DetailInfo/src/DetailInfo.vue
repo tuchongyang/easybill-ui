@@ -10,10 +10,10 @@
       </div>
     </div>
 
-    <div v-if="$slots.default" class="table-detail">
+    <div v-if="$slots.default" class="detail-info-body">
       <slot></slot>
     </div>
-    <div v-if="!$slots.default" class="table-detail" :class="[props.showType]">
+    <div v-if="!$slots.default" class="detail-info-body" :class="[props.showType]">
       <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="getItemStyle(item)">
         <div class="item-col">
           <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item), justifyContent: props.labelPosition || item.labelPosition }">

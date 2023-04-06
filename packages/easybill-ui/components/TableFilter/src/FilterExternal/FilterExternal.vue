@@ -6,7 +6,7 @@
   </CurdForm>
 </template>
 <script lang="ts" setup>
-import { ref, Ref, PropType } from "vue"
+import { ref, watch, Ref, PropType } from "vue"
 import CurdForm from "../../../CurdForm"
 import { ParamsItem, ListQuery } from "../../types"
 import { Fields, FormSchema, FormItem } from "../../../CurdForm"
@@ -53,6 +53,16 @@ const init = () => {
 }
 init()
 const emit = defineEmits(["change"])
+watch(
+  () => listQuery.value,
+  (val) => {
+    const l = props.listQuery
+    for (let i in val) {
+      l[i] = val[i]
+    }
+  },
+  { deep: true }
+)
 const onChange = (formModel: Fields, formItem: any) => {
   const l = props.listQuery
   if (formItem.tableKey && formModel[formItem.prop] && formModel[formItem.prop].length) {

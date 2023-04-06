@@ -43,13 +43,13 @@ const emit = defineEmits(["search"])
 const searchRef = ref()
 const selectList: Ref<I.ParamsItem[]> = ref([])
 const selectParams: Ref<Array<I.ParamsItem>> = ref(deepClone(props.selectParams) || [])
-const listQuery: Ref<I.ListQuery> = ref(props.listQuery || {})
+const listQuery = reactive<I.ListQuery>(props.listQuery || {})
 
 const onChange = (d: any) => {
   if (d) {
     const cur = selectList.value.find((j) => d.prop == j.prop && d.label == j.label)
     if (cur) {
-      if (listQuery.value[cur.prop] === "") {
+      if (listQuery[cur.prop] === "") {
         selectList.value.splice(
           selectList.value.findIndex((j) => d.prop == j.prop),
           1
@@ -58,26 +58,26 @@ const onChange = (d: any) => {
         cur.tagNames = d.tagNames
       }
     } else {
-      typeof listQuery.value[d.prop] !== "undefined" && listQuery.value[d.prop] !== "" && selectList.value.push(d)
+      typeof listQuery[d.prop] !== "undefined" && listQuery[d.prop] !== "" && selectList.value.push(d)
     }
     // console.log("selectList1", selectList)
-    // console.log("listQuery.value1", listQuery.value)
-    emit("search", listQuery.value, selectList.value)
+    // console.log("listQuery.value1", listQuery)
+    emit("search", listQuery, selectList.value)
     return
   }
-  emit("search", listQuery.value, selectList.value)
+  emit("search", listQuery, selectList.value)
 }
 const onRemove = () => {
-  emit("search", listQuery.value, selectList.value)
+  emit("search", listQuery, selectList.value)
 }
 const getTags = () => {
   selectParams.value.forEach((a) => {
     let i = selectList.value.findIndex((j) => a.prop == j.prop)
-    if (!a.external && i == -1 && listQuery.value[a.prop]) {
+    if (!a.external && i == -1 && listQuery[a.prop]) {
       if (a.options && a.options.length) {
-        const prop = String(listQuery.value[a.prop])
+        const prop = String(listQuery[a.prop])
         // const propI = prop.indexOf(",")
-        let tagNames = a.tagNames || a.options.find((j) => j.value == listQuery.value[a.prop])?.label
+        let tagNames = a.tagNames || a.options.find((j) => j.value == listQuery[a.prop])?.label
         // 处理多选value的值
         if (!a.tagNames && a.type == "checkbox") {
           let propList = prop.split(",").map((item) => {
@@ -87,10 +87,10 @@ const getTags = () => {
         }
         selectList.value.push({ ...a, tagNames: tagNames })
       } else if (a.asyncOptions) {
-        a.asyncOptions({ textModel: "", listQuery: {} }).then((res) => {
+        a.asyncOptions(listQuery, a, tableFilterContext).then((res) => {
           selectList.value.push({
             ...a,
-            tagNames: a.tagNames || res.find((j: any) => j.value == listQuery.value[a.prop])?.label,
+            tagNames: a.tagNames || res.find((j: any) => j.value == listQuery[a.prop])?.label,
           })
         })
       } else {
@@ -107,14 +107,14 @@ const setItem = (prop: string, paramsItem?: any) => {
     if (!item || item.external) return
     const current = selectList.value.find((a) => a.prop == prop && a.label == item.label)
     if (!current) {
-      if (typeof listQuery.value[prop] !== "undefined" && listQuery.value[prop] !== "") {
+      if (typeof listQuery[prop] !== "undefined" && listQuery[prop] !== "") {
         selectList.value.push({
           ...item,
-          tagNames: item.tagNames || item.options?.find((j: any) => j.value == listQuery.value[prop])?.label,
+          tagNames: item.tagNames || item.options?.find((j: any) => j.value == listQuery[prop])?.label,
         })
       }
     } else if (item.options && item.options.length) {
-      let tagNames = item.options?.find((j: any) => j.value == listQuery.value[prop])?.label
+      let tagNames = item.options?.find((j: any) => j.value == listQuery[prop])?.label
       // 处理多选value的值
       if (!item.tagNames && item.type == "checkbox") {
         let propList = prop.split(",").map((a) => {
@@ -124,8 +124,8 @@ const setItem = (prop: string, paramsItem?: any) => {
       }
       current.tagNames = tagNames
     } else if (item.asyncOptions) {
-      item.asyncOptions({ textModel: "", listQuery: {} }).then((res: any) => {
-        current.tagNames = item.tagNames || res.find((j: any) => j.value == listQuery.value[prop])?.label
+      item.asyncOptions(listQuery, item, tableFilterContext).then((res: any) => {
+        current.tagNames = item.tagNames || res.find((j: any) => j.value == listQuery[prop])?.label
       })
     }
     if ((current && typeof current.tagNames == "undefined") || (current && current.tagNames === "")) {
@@ -138,7 +138,7 @@ const setItem = (prop: string, paramsItem?: any) => {
 }
 //主动赋值
 const setValue = (prop: string, value: any) => {
-  listQuery.value[prop] = value
+  listQuery[prop] = value
   setItem(prop)
 }
 const state = ref({
@@ -147,24 +147,17 @@ const state = ref({
 const loadOptions = (prop: string) => {
   const current = selectParams.value.find((a) => a.prop == prop)
   if (!current || !current.asyncOptions) return
-  current
-    .asyncOptions({
-      textModel: "",
-      listQuery: props.listQuery,
-      options: current.options,
-      paramsItem: current,
-    })
-    .then((res) => {
-      current.options = res
-    })
+  current.asyncOptions(listQuery, current, tableFilterContext).then((res) => {
+    current.options = res
+  })
 }
 const clear = () => {
   for (let i = 0; i < selectList.value.length; i++) {
-    delete listQuery.value[selectList.value[i].prop]
+    delete listQuery[selectList.value[i].prop]
     selectList.value.splice(i, 1)
     i--
   }
-  emit("search", listQuery.value, selectList.value)
+  emit("search", listQuery, selectList.value)
 }
 // 重新调用selectParams
 const refreshSelectParams = () => {

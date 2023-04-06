@@ -48,18 +48,11 @@ const getList = () => {
   if (paramsItem.value.asyncOptions) {
     loading.value = true
     paramsItem.value
-      .asyncOptions({
-        textModel: textModel.value,
-        listQuery: props.listQuery,
-        options: paramsItem.value.options,
-        paramsItem: paramsItem.value,
-      })
+      .asyncOptions(props.listQuery, paramsItem.value, null, textModel.value)
       .then((res) => {
-        // remoteOptions.value = res
         paramsItem.value.options = res
         const paramIem = props.paramsItem
         paramIem.options = res
-        // getModel()
       })
       .finally(() => {
         loading.value = false

@@ -1,4 +1,4 @@
-import { AsyncOptionsParams, ParamsItemProps } from "../../TableFilter"
+import { AsyncOptionsParams, ParamsItem, ParamsItemProps } from "../../TableFilter"
 import { EventObject, FormItem as FormItemType, Fields } from "../../CurdForm"
 import { OptionItem } from "../../ConstantStatus"
 import { TableProps } from "element-plus/es/components/table/src/table/defaults"
@@ -44,8 +44,8 @@ export interface ColumnItemCtx<T> {
 export type ColumnItem<T = any> = Partial<TableColumnCtx<T>> & ColumnItemCtx<T>
 
 export interface TableColumnHeader {
-  title: string
-  tooltip: string | import("element-plus/es/components/tooltip").ElTooltipProps
+  title?: string
+  tooltip?: string | Partial<import("element-plus/es/components/tooltip").ElTooltipProps>
 }
 
 export interface PropOption {
@@ -66,25 +66,12 @@ export interface PropOption {
   filterVisible?: boolean
   customActivatedFetch?: boolean // 自定义执行onActivated内部的fetch执行，完全交由父组件控制
   autoload?: boolean
-  menuEvent?: Record<MenuEventKey, () => void>
+  menuEvent?: Partial<Record<MenuEventKey, () => void>>
 }
 export type MenuEventKey = "refresh" | "searchToggle" | "size" | "export" | "operation"
 
-export interface ColumnItemFilter {
+export interface ColumnItemFilter extends Partial<ParamsItem> {
   inner?: boolean
-  type?: string
-  label?: string
-  prop?: string
-  options?: Array<OptionItem>
-  tableKey?: Array<string>
-  asyncOptions?: (options: AsyncOptionsParams) => Promise<any>
-  external?: boolean | "left" | "right"
-  all?: boolean
-  sortIndex?: number
-  tagNames?: string
-  props?: ParamsItemProps
-  eventObject?: EventObject
-  filter?: boolean
 }
 
 export interface ColumnItemDetail {

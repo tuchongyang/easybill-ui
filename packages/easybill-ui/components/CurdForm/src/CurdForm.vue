@@ -24,12 +24,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, Ref, getCurrentInstance, computed, watch, PropType } from "vue"
+import { defineComponent, reactive, provide, ref, Ref, getCurrentInstance, computed, watch, PropType } from "vue"
 import { isFunction, isAsyncFunction, isObject } from "./utils/is"
 import components from "./components"
 import { ElForm, ElFormItem } from "element-plus"
 import { FormSchema, Fields, FormItem as FormItemType } from "./types"
 import FormItem from "./FormItem.vue"
+import { OptionItem } from "../../ConstantStatus"
 export default defineComponent({
   name: "CurdForm",
   components: {
@@ -58,7 +59,6 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
     const schemaFormRef = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
-
     const formModel = reactive<Fields>(props.modelValue || {})
     watch(
       () => props.modelValue,
@@ -94,7 +94,7 @@ export default defineComponent({
       // 异步选项
       if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
         item.loading = true
-        item.options = await item.asyncOptions(formModel, item).finally(() => (item.loading = false))
+        item.options = await item.asyncOptions(formModel, item, instance?.proxy).finally(() => (item.loading = false))
         item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, instance?.proxy)
       } else if (item.prop && item.asyncValue && (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue))) {
         // 异步默认值
@@ -137,12 +137,21 @@ export default defineComponent({
       }
       return cur
     }
+    // 给某个item赋值options
+    const setOptions = async (prop: string, options: OptionItem[]) => {
+      const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
+      if (cur) {
+        cur.options = options
+        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, instance?.proxy)
+      }
+      return cur
+    }
     const onChange = (formModel: Fields, formItem: FormItemType) => {
       emit("change", formModel, formItem)
     }
     const getFormItemStyle = (formItem: FormItemType) => {
       const gutter = props.formSchema.gutter || 0
-      return { maxWidth: formItem.span && (100 * formItem.span) / 24 + "%", flex: typeof attrs.inline == "undefined" ? "0 0 " + (100 * (formItem.span || 24)) / 24 + "%" : "", padding: "0 " + gutter + "px" }
+      return { maxWidth: formItem.span && (100 * formItem.span) / 24 + "%", flex: typeof attrs.inline == "undefined" || typeof formItem.span != "undefined" ? "0 0 " + (100 * (formItem.span || 24)) / 24 + "%" : "", padding: "0 " + gutter + "px" }
     }
     const getFormItemProps = (formItem: FormItemType) => {
       if (formItem.formItemProps) {
@@ -167,6 +176,14 @@ export default defineComponent({
       return { ...args }
     })
 
+    const curdFormContext = reactive({
+      loadOptions,
+      setOptions,
+      change: onChange,
+      formModel,
+      formRef: schemaFormRef,
+    })
+    provide("curdFormContext", curdFormContext)
     return {
       formModel,
       schemaFormRef,
@@ -179,6 +196,7 @@ export default defineComponent({
       getFormItemProps,
       validate,
       loadOptions,
+      setOptions,
       onChange,
     }
   },

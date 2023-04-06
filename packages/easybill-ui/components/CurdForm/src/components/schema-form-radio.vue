@@ -6,11 +6,13 @@
     <el-radio-group v-if="!formItem.loading && formItem.options && formItem.options.length" v-model="model" :class="[props?.showType]" v-bind="props" v-on="eventObject">
       <template v-for="option in formItem.options" :key="option.value">
         <el-radio-button v-if="props?.componentName == 'button'" :label="option.value" :disabled="option.disabled">
-          <span>{{ option.label }}</span>
+          <span v-if="option.html" v-html="option.html"></span>
+          <span v-else>{{ option.label }}</span>
           <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
         </el-radio-button>
         <el-radio v-else :label="option.value" :disabled="option.disabled">
-          <span>{{ option.label }}</span>
+          <span v-if="option.html" v-html="option.html"></span>
+          <span v-else>{{ option.label }}</span>
           <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
         </el-radio>
       </template>

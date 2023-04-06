@@ -1,4 +1,4 @@
-import { FormRules, FormItemRule, FormProps } from "element-plus"
+import { FormRules, FormItemRule, FormProps, ElForm } from "element-plus"
 import { PropType } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
@@ -11,11 +11,11 @@ export interface FormSchema extends Partial<FormProps> {
 export interface FormItem {
   prop: string
   label?: string
-  type?: typeEmun | ReturnType<typeof defineComponent>
+  type?: FormItemTypeEmun | ReturnType<typeof defineComponent>
   value?: any
   eventObject?: EventObject
   options?: Array<CurdFormOptionItem>
-  asyncOptions?: (modelRef: Fields, formItem: FormItem) => Promise<Array<CurdFormOptionItem>>
+  asyncOptions?: (modelRef: Fields, formItem: FormItem, context: FormContext, config?: Fields) => Promise<Array<CurdFormOptionItem>>
   asyncValue?: (modelRef: Fields, formItem: FormItem) => Promise<string | number | boolean>
   loading?: boolean
   hidden?: boolean | ((model: Fields) => boolean)
@@ -28,12 +28,18 @@ export interface FormItem {
   tooltip?: string
   autoload?: boolean
 }
-type typeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
+export type FormItemTypeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
 export interface FormItemPropObject {
   [key: string]: any
 }
-
+export interface FormContext {
+  loadOptions: (prop: string) => void
+  setOptions: (prop: string, options: CurdFormOptionItem) => void
+  change: (formModel: Fields, formItem: FormItem) => void
+  formModel: Fields
+  formRef: InstanceType<typeof ElForm> | undefined
+}
 export interface Fields {
   [key: string]: any
 }
@@ -44,9 +50,9 @@ export interface CurdFormOptionItem extends OptionItem {
 //   change?: (formModel: Fields, formItem: FormItem, proxy: any) => void
 // }
 export interface EventObject {
-  change?: (formModel: Fields, formItem: FormItem, proxy: any) => void
-  optionLoaded?: (formModel: Fields, formItem: FormItem, proxy: any) => void
-  [key: string]: ((formModel: Fields, formItem: FormItem, proxy: any) => void) | undefined
+  change?: (formModel: Fields, formItem: FormItem, context: FormContext) => void
+  optionLoaded?: (formModel: Fields, formItem: FormItem, context: FormContext) => void
+  [key: string]: ((formModel: Fields, formItem: FormItem, context: FormContext) => void) | undefined
 }
 // export interface OptionItem {
 //   label: string

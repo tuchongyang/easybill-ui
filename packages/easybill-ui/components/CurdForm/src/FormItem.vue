@@ -13,6 +13,7 @@ import { ref, computed, getCurrentInstance, Ref, PropType } from "vue"
 import { FormItem, Fields } from "./types"
 import { getComponent } from "./components"
 import FormTooltip from "./FormTooltip.vue"
+import { useForm } from "./hooks"
 
 const props = defineProps({
   // 动态验证表单
@@ -38,7 +39,7 @@ const formItemProps = computed(() => {
   return props.formItem.props
 })
 // 重新组装eventObject
-const instance = getCurrentInstance()
+const { formContext } = useForm()
 const eventObject = ref(
   (() => {
     const result: any = { ...props.formItem.eventObject }
@@ -46,15 +47,15 @@ const eventObject = ref(
     if (!props.formItem.eventObject || Object.keys(props.formItem.eventObject).length <= 0) {
       return {
         change: () => {
-          emit("change", props.formModel, props.formItem, instance?.parent?.parent?.parent?.proxy)
+          emit("change", props.formModel, props.formItem, formContext)
         },
       }
     }
     if (props.formItem.eventObject.change) {
       const changeFun = props.formItem.eventObject.change
       result.change = () => {
-        changeFun(props.formModel, props.formItem, instance?.parent?.parent?.parent?.proxy)
-        emit("change", props.formModel, props.formItem, instance?.parent?.parent?.parent?.proxy)
+        changeFun(props.formModel, props.formItem, formContext)
+        emit("change", props.formModel, props.formItem, formContext)
       }
     }
     return result
