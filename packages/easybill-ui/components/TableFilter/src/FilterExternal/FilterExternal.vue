@@ -23,13 +23,21 @@ const props = defineProps({
       return {}
     },
   },
+  hasSlot: {
+    type: Boolean,
+    default: false,
+  },
 })
 const listQuery = ref<any>({})
 // 特殊处理数组
 const formItemLeft = props.selectParams.filter((a) => a.external === true || a.external === "left").sort((a, b) => parseInt(String(b.sortIndex || 0)) - parseInt(String(a.sortIndex || 0))) as FormItem[]
 const formItemRight = props.selectParams.filter((a) => a.external === "right") as FormItem[]
+const as = [...formItemLeft]
+if (props.hasSlot) {
+  as.push({ prop: "defaultFilter", type: "defaultFilter" })
+}
 const formSchema: Ref<FormSchema> = ref({
-  formItem: [...formItemLeft, { prop: "defaultFilter", type: "defaultFilter" }, ...formItemRight],
+  formItem: [...as, ...formItemRight],
 })
 const init = () => {
   for (let i in formSchema.value.formItem) {

@@ -51,10 +51,11 @@ const eventObject = ref(
         },
       }
     }
-    if (props.formItem.eventObject.change) {
-      const changeFun = props.formItem.eventObject.change
-      result.change = () => {
+    const changeFun = props.formItem.eventObject.change
+    result.change = () => {
+      if (changeFun) {
         changeFun(props.formModel, props.formItem, formContext)
+      } else {
         emit("change", props.formModel, props.formItem, formContext)
       }
     }
@@ -62,16 +63,3 @@ const eventObject = ref(
   })()
 )
 </script>
-<style lang="scss" scoped>
-.form-item {
-  width: 100%;
-  display: flex;
-  .tooltip {
-    margin-left: 10px;
-    color: #999;
-    &:hover {
-      color: var(--color-primary);
-    }
-  }
-}
-</style>

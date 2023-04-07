@@ -28,9 +28,8 @@ import { defineComponent, reactive, provide, ref, Ref, getCurrentInstance, compu
 import { isFunction, isAsyncFunction, isObject } from "./utils/is"
 import components from "./components"
 import { ElForm, ElFormItem } from "element-plus"
-import { FormSchema, Fields, FormItem as FormItemType } from "./types"
+import { FormSchema, Fields, FormItem as FormItemType, CurdFormOptionItem, FormContext } from "./types"
 import FormItem from "./FormItem.vue"
-import { OptionItem } from "../../ConstantStatus"
 export default defineComponent({
   name: "CurdForm",
   components: {
@@ -57,9 +56,10 @@ export default defineComponent({
   },
   emits: ["update:modelValue", "change"],
   setup(props, { emit, attrs }) {
-    const schemaFormRef = ref()
+    const schemaFormRef: Ref<InstanceType<typeof ElForm> | undefined> = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
     const formModel = reactive<Fields>(props.modelValue || {})
+    const curdFormContext = reactive<FormContext>({} as FormContext)
     watch(
       () => props.modelValue,
       () => {
@@ -94,8 +94,8 @@ export default defineComponent({
       // 异步选项
       if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
         item.loading = true
-        item.options = await item.asyncOptions(formModel, item, instance?.proxy).finally(() => (item.loading = false))
-        item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, instance?.proxy)
+        item.options = await item.asyncOptions(formModel, item, curdFormContext).finally(() => (item.loading = false))
+        item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, curdFormContext)
       } else if (item.prop && item.asyncValue && (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue))) {
         // 异步默认值
         item.loading = true
@@ -121,7 +121,7 @@ export default defineComponent({
 
     // 供外部使用
     const validate = (callback: (valid: boolean) => void) => {
-      return schemaFormRef.value.validate(callback)
+      return schemaFormRef.value?.validate(callback)
     }
     // 调用某个表单项的异步数据接口
     const loadOptions = async (prop: string) => {
@@ -130,21 +130,21 @@ export default defineComponent({
         cur.loading = true
         cur.options =
           (await cur
-            .asyncOptions(formModel, cur)
+            .asyncOptions(formModel, cur, curdFormContext)
             .catch((err) => console.error("loadOptionError", err))
             .finally(() => (cur.loading = false))) || []
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, instance?.proxy)
+        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext)
       }
       return cur
     }
     // 给某个item赋值options
-    const setOptions = async (prop: string, options: OptionItem[]) => {
+    const setOptions = async (prop: string, options: CurdFormOptionItem[]) => {
       const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
       if (cur) {
         cur.options = options
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, instance?.proxy)
+        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext)
       }
-      return cur
+      // return cur
     }
     const onChange = (formModel: Fields, formItem: FormItemType) => {
       emit("change", formModel, formItem)
@@ -176,13 +176,12 @@ export default defineComponent({
       return { ...args }
     })
 
-    const curdFormContext = reactive({
-      loadOptions,
-      setOptions,
-      change: onChange,
-      formModel,
-      formRef: schemaFormRef,
-    })
+    curdFormContext.loadOptions = loadOptions
+    curdFormContext.setOptions = setOptions
+    curdFormContext.change = onChange
+    curdFormContext.formModel = formModel
+    curdFormContext.formRef = schemaFormRef
+
     provide("curdFormContext", curdFormContext)
     return {
       formModel,

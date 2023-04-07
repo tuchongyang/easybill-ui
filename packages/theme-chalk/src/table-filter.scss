@@ -5,18 +5,16 @@
   position: relative;
   .filter-search-box {
     min-height: 32px;
-    // width: 100%;
     border-width: 1px;
     border-style: solid;
     border-color: var(--el-border-color);
     display: flex;
-    // flex: 1;
     min-width: 460px;
     align-items: center;
     justify-items: center;
     justify-content: space-between;
     overflow: hidden;
-    border-radius: 18px;
+    border-radius: var(--el-border-radius-base);
     transition: all 0.3s;
 
     &.is-focus {
@@ -28,9 +26,6 @@
       line-height: 32px;
       align-self: flex-end;
       display: flex;
-      align-items: center;
-      justify-items: center;
-      justify-content: space-between;
 
       div {
         cursor: pointer;
@@ -50,16 +45,16 @@
         // width: 96px;
         padding: 0 20px;
         text-align: center;
-        border-radius: 18px;
         position: relative;
         display: flex;
+        align-items: center;
 
         &:before {
           content: "";
           display: block;
           width: 1px;
           height: 20px;
-          background: #ddd;
+          background: var(--el-border-color);
           position: absolute;
           left: 0;
           top: 50%;
@@ -67,7 +62,6 @@
         }
 
         &:hover {
-          // background: var(--el-color-primary-light-2);
           color: var(--el-color-primary);
         }
       }
@@ -83,14 +77,14 @@
     flex-wrap: wrap;
     display: flex;
     flex: 1;
-    align-items: center;
+    align-items: flex-start;
     justify-items: center;
-    margin-bottom: 10px;
     .tag-title {
-      margin-right: 20px;
       font-size: 12px;
-      color: #aeb2bb;
-      margin-bottom: 2px;
+      color: var(--el-text-color-placeholder);
+      height: 24px;
+      line-height: 24px;
+      margin: 0 15px 5px 0;
     }
     .dropdown-toggle {
       white-space: nowrap;
@@ -100,6 +94,11 @@
       font-size: 12px;
     }
     .tag-list {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .tag-item {
       height: 24px;
       line-height: 24px;
       white-space: nowrap;
@@ -110,9 +109,9 @@
       color: var(--el-color-info-dark-2);
       background: var(--el-color-info-light-9);
       font-size: 12px;
-      border-radius: 12px;
+      border-radius: var(--el-border-radius-base);
       margin-right: 5px;
-      margin-bottom: 2px;
+      margin-bottom: 10px;
       cursor: pointer;
       .action {
         color: var(--el-color-info-light-5);

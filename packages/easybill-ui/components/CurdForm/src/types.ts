@@ -1,5 +1,5 @@
 import { FormRules, FormItemRule, FormProps, ElForm } from "element-plus"
-import { PropType } from "vue"
+import { PropType, Ref } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
 export interface FormSchema extends Partial<FormProps> {
@@ -35,10 +35,10 @@ export interface FormItemPropObject {
 }
 export interface FormContext {
   loadOptions: (prop: string) => void
-  setOptions: (prop: string, options: CurdFormOptionItem) => void
+  setOptions: (prop: string, options: CurdFormOptionItem[]) => void
   change: (formModel: Fields, formItem: FormItem) => void
   formModel: Fields
-  formRef: InstanceType<typeof ElForm> | undefined
+  formRef: Ref<InstanceType<typeof ElForm> | undefined>
 }
 export interface Fields {
   [key: string]: any

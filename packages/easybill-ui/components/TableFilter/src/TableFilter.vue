@@ -2,7 +2,7 @@
   <div class="table-filter">
     <slot name="top"></slot>
     <div>
-      <FilterExternal :select-params="selectParams" :list-query="listQuery" @change="onChange">
+      <FilterExternal :select-params="selectParams" :list-query="listQuery" :has-slot="selectParams.some((a) => !a.external)" v-bind="$attrs" @change="onChange">
         <template #default>
           <FilterSearchBox v-if="selectParams.some((a) => !a.external)" ref="searchRef" :select-params="selectParams.filter((a) => !a.external)" :select-list="selectList" :list-query="listQuery" @search="onChange" />
         </template>
@@ -173,6 +173,9 @@ const onTagClick = (item: I.ParamsItem) => {
 }
 const tableFilterContext = reactive<I.TableFilterContext>({
   loadOptions,
+  search: () => {
+    emit("search", listQuery, selectList.value)
+  },
   setValue,
 })
 provide("tableFilter", tableFilterContext)

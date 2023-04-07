@@ -17,10 +17,18 @@
       color: var(--el-button-text-color);
       margin-left: 10px;
       vertical-align: middle;
-      color: #999;
+      color: var(--el-text-color-secondary);
       &:hover {
         color: var(--color-primary);
       }
+    }
+    .empty {
+      color: var(--el-text-color-secondary);
+    }
+  }
+  .schema-form-radio {
+    .el-radio-group {
+      vertical-align: top;
     }
   }
 

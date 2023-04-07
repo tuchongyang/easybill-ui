@@ -13,6 +13,9 @@ const table: Ref<CurdTableProps<any>> = ref({
   data: [],
   option: {
     autoload: false,
+    filterAttrs: {
+      labelPosition: "left",
+    },
     menuEvent: {
       export() {
         alert("自定义导出")
@@ -22,6 +25,17 @@ const table: Ref<CurdTableProps<any>> = ref({
   columns: [
     { label: "姓名", prop: "name", filter: {}, header: "姓名字符串" },
     { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" } },
+    {
+      label: "云平台",
+      prop: "cloudType",
+      filter: { external: true, type: "radio", props: { componentName: "button" }, span: 24, labelWidth: "90px", value: "" },
+      options: [
+        { label: "全部", value: "" },
+        { label: "阿里云", value: "aliyun" },
+        { label: "腾讯云", value: "tencent" },
+      ],
+    },
+    { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
     {
       label: "状态",
       prop: "status",

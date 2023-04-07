@@ -1,23 +1,25 @@
 <template>
   <div v-if="selectList.length" class="filter-tags">
     <div class="tag-title">已筛选</div>
-    <div v-for="(item, i) in selectList" :key="i" class="tag-list">
-      <el-popover ref="popoverRef" trigger="click" placement="bottom-start" :disabled="!['select'].includes(item.type)" popper-class="table-filter-tag-popper" @show="show(i)">
-        <template #reference>
-          <div class="dropdown-toggle" @click="onClick(item)">
-            <div class="label">{{ item.label }}：</div>
-            <div class="value">{{ isValue(item) }}</div>
-            <div class="action" @click.stop="remove(item, i)">
-              <el-icon>
-                <CircleCloseFilled />
-              </el-icon>
+    <div class="tag-list">
+      <div v-for="(item, i) in selectList" :key="i" class="tag-item">
+        <el-popover ref="popoverRef" trigger="click" placement="bottom-start" :disabled="!['select'].includes(item.type)" popper-class="table-filter-tag-popper" @show="show(i)">
+          <template #reference>
+            <div class="dropdown-toggle" @click="onClick(item)">
+              <div class="label">{{ item.label }}：</div>
+              <div class="value">{{ isValue(item) }}</div>
+              <div class="action" @click.stop="remove(item, i)">
+                <el-icon>
+                  <CircleCloseFilled />
+                </el-icon>
+              </div>
             </div>
+          </template>
+          <div ref="selectRef" class="select-list" @click.stop>
+            <TagsSelect ref="tagsSelectRef" v-model="listQuery[item.prop]" :list-query="listQuery" :params-item="item" @change="onChange" />
           </div>
-        </template>
-        <div ref="selectRef" class="select-list" @click.stop>
-          <TagsSelect ref="tagsSelectRef" v-model="listQuery[item.prop]" :list-query="listQuery" :params-item="item" @change="onChange" />
-        </div>
-      </el-popover>
+        </el-popover>
+      </div>
     </div>
     <div class="tag-clear"><el-button type="primary" link @click="clear">清空</el-button></div>
     <slot></slot>

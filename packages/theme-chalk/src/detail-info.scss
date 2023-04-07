@@ -21,7 +21,7 @@
     opacity: 1;
     border: 1px solid var(--el-border-color);
     &[shadow] {
-      box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--el-box-shadow-lighter);
     }
     .detail-info-header {
       height: 50px;

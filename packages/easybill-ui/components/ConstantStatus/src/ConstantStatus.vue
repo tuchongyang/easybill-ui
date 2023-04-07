@@ -4,7 +4,8 @@
       <component v-if="current.icon" :is="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
     </el-icon>
     <span v-if="current.dot" class="dot"></span>
-    <span class="name">{{ current.label }}</span>
+    <span v-if="current.html" class="name" v-html="current.label"></span>
+    <span v-else class="name">{{ current.label }}</span>
   </el-tag>
   <span v-else>{{ typeof value === "undefined" || value === "" ? "--" : value }}</span>
 </template>

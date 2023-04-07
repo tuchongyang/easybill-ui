@@ -1,7 +1,6 @@
 <template>
   <div class="s-table-filter">
-    <TableFilter ref="tableFilterRef" :select-params="selectParams" :list-query="props.listQuery" @search="onSearch"></TableFilter>
-    <!-- <TableFilter v-else ref="tableFilterRef" :select-params="selectParams" :list-query="props.listQuery" @search="onSearch"></TableFilter> -->
+    <TableFilter ref="tableFilterRef" :select-params="selectParams" :list-query="props.listQuery" v-bind="option.filterAttrs" @search="onSearch"></TableFilter>
   </div>
 </template>
 <script lang="ts" setup>
@@ -10,6 +9,7 @@ import { ListQuery, ParamsItem } from "../../TableFilter"
 import TableFilter from "../../TableFilter"
 
 const emits = defineEmits(["search"])
+const option = inject("option")
 const selectParams = inject<Ref<Array<ParamsItem>>>("selectParams") || ref([])
 const props = defineProps({
   listQuery: {

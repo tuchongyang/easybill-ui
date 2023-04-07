@@ -1,8 +1,9 @@
-import { AsyncOptionsParams, ParamsItem, ParamsItemProps } from "../../TableFilter"
+import { ParamsItem } from "../../TableFilter"
 import { EventObject, FormItem as FormItemType, Fields } from "../../CurdForm"
 import { OptionItem } from "../../ConstantStatus"
 import { TableProps } from "element-plus/es/components/table/src/table/defaults"
 import { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults"
+import { FormProps } from "element-plus"
 
 export interface CurdTableProps<T = unknown> extends Partial<TableProps<T>> {
   rowKey?: string
@@ -10,8 +11,8 @@ export interface CurdTableProps<T = unknown> extends Partial<TableProps<T>> {
   columns: ColumnItem<T>[]
   pageOptions?: { pageIndex?: number; pageSize?: number; total?: number } & Fields
   option?: PropOption
-  fetchData?: ({ listQuery }: FeachDataParam) => Promise<{ total?: number; list?: T[] } | void>
-  fetchCreate?: (modelRef: Fields) => Promise<void>
+  fetchData?: (opt: FeachDataParam) => Promise<{ total?: number; list?: T[] } | void>
+  fetchCreate?: (formModel: Fields) => Promise<void>
   fetchEdit?: (row: T) => Promise<void>
   fetchRemove?: (row: T) => Promise<void>
 }
@@ -67,6 +68,7 @@ export interface PropOption {
   customActivatedFetch?: boolean // 自定义执行onActivated内部的fetch执行，完全交由父组件控制
   autoload?: boolean
   menuEvent?: Partial<Record<MenuEventKey, () => void>>
+  filterAttrs?: Partial<FormProps>
 }
 export type MenuEventKey = "refresh" | "searchToggle" | "size" | "export" | "operation"
 

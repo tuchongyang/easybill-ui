@@ -11,73 +11,75 @@
         <STableMenu v-if="!option.hideMenuRight" ref="tableMenuRef" :filter-visible="filterVisible" @operation="onMenuOption" />
       </div>
     </div>
-    <el-table ref="tableRef" v-loading="loading" stripe :data="list" scrollbar-always-on v-bind="{ ...$attrs, ...tableAttrs }" @row-click="onRowClick" @selection-change="selectionChange">
-      <slot name="default"></slot>
-      <el-table-column v-if="$attrs.index !== undefined" type="index" />
-      <el-table-column v-if="$attrs.selection !== undefined && $attrs.selection !== false" type="selection" v-bind="option.selectionProps" />
-      <template v-for="item in columns" :key="item.label">
-        <el-table-column v-if="item.children && item.children.length" :key="item.prop" :label="item.label">
-          <template v-for="sub in item.children" :key="sub.prop">
-            <STableItem :ref="(el) => (tableItemRefs[sub.prop] = el)" :is-slot="!!$slots[sub.prop]" :is-slot-header="!!$slots[sub.prop + 'Header']" :schema="sub" :option="option" @search="onItemChange">
-              <template #default="scope1">
-                <slot :name="sub.prop" v-bind="scope1"></slot>
+    <div class="table-wrapper">
+      <el-table ref="tableRef" v-loading="loading" stripe :data="list" scrollbar-always-on v-bind="{ ...$attrs, ...tableAttrs }" @row-click="onRowClick" @selection-change="selectionChange">
+        <slot name="default"></slot>
+        <el-table-column v-if="$attrs.index !== undefined" type="index" />
+        <el-table-column v-if="$attrs.selection !== undefined && $attrs.selection !== false" type="selection" v-bind="option.selectionProps" />
+        <template v-for="item in columns" :key="item.label">
+          <el-table-column v-if="item.children && item.children.length" :key="item.prop" :label="item.label">
+            <template v-for="sub in item.children" :key="sub.prop">
+              <STableItem :ref="(el) => (tableItemRefs[sub.prop] = el)" :is-slot="!!$slots[sub.prop]" :is-slot-header="!!$slots[sub.prop + 'Header']" :schema="sub" :option="option" @search="onItemChange">
+                <template #default="scope1">
+                  <slot :name="sub.prop" v-bind="scope1"></slot>
+                </template>
+                <template #header>
+                  <slot :name="sub.prop + 'Header'"></slot>
+                </template>
+              </STableItem>
+            </template>
+          </el-table-column>
+          <template v-else>
+            <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
+              <template #default="scope">
+                <slot :name="item.prop" v-bind="scope"></slot>
               </template>
               <template #header>
-                <slot :name="sub.prop + 'Header'"></slot>
+                <slot :name="item.prop + 'Header'"></slot>
               </template>
             </STableItem>
           </template>
+        </template>
+        <el-table-column v-if="!option.hideOperation" label="操作" fixed="right" :width="option.operationWidth || '200'" align="left">
+          <template #default="scope">
+            <slot name="operation" v-bind="scope"></slot>
+            <template v-if="!$slots.operationBtn">
+              <el-button v-if="!option.hideOperationEdit && props.fetchEdit" type="primary" link :icon="Edit" @click.stop="create(scope.row)">编辑 </el-button>
+              <el-button v-if="!option.hideOperationDetail" type="primary" link :icon="Document" @click.stop="detail(scope.row)">详情 </el-button>
+              <el-button v-if="!option.hideOperationDelete && props.fetchRemove" type="primary" link style="color: #ff0000" :icon="Delete" @click.stop="startremove(scope)">删除 </el-button>
+            </template>
+            <template v-else>
+              <el-dropdown trigger="click" popper-class="curd-table-dropdown-menu">
+                <el-button type="primary" link>
+                  {{ option.operationBtnTitle || "更多" }}
+                  <el-icon>
+                    <ArrowDown />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <slot name="operationBtn" v-bind="scope"></slot>
+                    <el-dropdown-item v-if="!option.hideOperationEdit && props.fetchEdit">
+                      <el-button type="primary" link @click.stop="create(scope.row)">编辑</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item v-if="!option.hideOperationDetail">
+                      <el-button type="primary" link @click.stop="detail(scope.row)">详情</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item v-if="!option.hideOperationDelete && props.fetchRemove">
+                      <el-button type="primary" link style="color: #ff0000" @click.stop="startremove(scope)">删除 </el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </template>
         </el-table-column>
-        <template v-else>
-          <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
-            <template #default="scope">
-              <slot :name="item.prop" v-bind="scope"></slot>
-            </template>
-            <template #header>
-              <slot :name="item.prop + 'Header'"></slot>
-            </template>
-          </STableItem>
+        <template #empty>
+          <slot name="empty"></slot>
+          <el-empty v-if="!$slots.empty" :image-size="30" />
         </template>
-      </template>
-      <el-table-column v-if="!option.hideOperation" label="操作" fixed="right" :width="option.operationWidth || '200'" align="left">
-        <template #default="scope">
-          <slot name="operation" v-bind="scope"></slot>
-          <template v-if="!$slots.operationBtn">
-            <el-button v-if="!option.hideOperationEdit && props.fetchEdit" type="primary" link :icon="Edit" @click.stop="create(scope.row)">编辑 </el-button>
-            <el-button v-if="!option.hideOperationDetail" type="primary" link :icon="Document" @click.stop="detail(scope.row)">详情 </el-button>
-            <el-button v-if="!option.hideOperationDelete && props.fetchRemove" type="primary" link style="color: #ff0000" :icon="Delete" @click.stop="startremove(scope)">删除 </el-button>
-          </template>
-          <template v-else>
-            <el-dropdown trigger="click" popper-class="curd-table-dropdown-menu">
-              <el-button type="primary" link>
-                {{ option.operationBtnTitle || "更多" }}
-                <el-icon>
-                  <ArrowDown />
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <slot name="operationBtn" v-bind="scope"></slot>
-                  <el-dropdown-item v-if="!option.hideOperationEdit && props.fetchEdit">
-                    <el-button type="primary" link @click.stop="create(scope.row)">编辑</el-button>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-if="!option.hideOperationDetail">
-                    <el-button type="primary" link @click.stop="detail(scope.row)">详情</el-button>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-if="!option.hideOperationDelete && props.fetchRemove">
-                    <el-button type="primary" link style="color: #ff0000" @click.stop="startremove(scope)">删除 </el-button>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <slot name="empty"></slot>
-        <el-empty v-if="!$slots.empty" :image-size="30" />
-      </template>
-    </el-table>
+      </el-table>
+    </div>
     <STableSinglePage v-if="total == -1" v-model:current-page="listQuery.pageIndex" v-model:page-size="listQuery.pageSize" :total="total" :fetch-data="fetchData" :list="list" @current-change="fetchData" />
     <el-pagination
       v-if="total != -1 && !option.hidePage"
