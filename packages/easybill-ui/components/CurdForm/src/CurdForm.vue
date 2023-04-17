@@ -1,7 +1,7 @@
 <template>
   <el-form ref="schemaFormRef" :model="formModel" :rules="rules" v-bind="{ ...$attrs, ...getFormProps }" class="curd-form" :style="getFormStyle()" @submit.prevent>
     <template v-for="formItem in schemaItems" :key="formItem.prop">
-      <el-form-item v-if="!$slots[formItem.type + 'Item']" :label="formItem.label" :prop="formItem.prop" :label-width="formItem.labelWidth" :style="getFormItemStyle(formItem)" v-bind="getFormItemProps(formItem)">
+      <el-form-item v-if="!$slots[formItem.prop + 'Item']" :label="formItem.label" :prop="formItem.prop" :label-width="formItem.labelWidth" :style="getFormItemStyle(formItem)" v-bind="getFormItemProps(formItem)">
         <slot :name="formItem.prop" :form-item="formItem" :form-model="formModel"></slot>
         <FormItem v-if="!(formItem.prop && $slots[formItem.prop])" :form-item="formItem" :form-model="formModel" @change="onChange">
           <template #prefix>

@@ -9,6 +9,7 @@ import SchemaFormTimePicker from "./schema-form-time-picker.vue"
 import SchemaFormColorPicker from "./schema-form-color-picker.vue"
 import SchemaFormValue from "./schema-form-value.vue"
 import SchemaFormCascader from "./schema-form-cascader.vue"
+import SchemaFormAutocomplete from "./schema-form-autocomplete.vue"
 import { isReactive, isRef, createVNode, isVNode } from "vue"
 interface PresetMap {
   [key: string]: any
@@ -25,6 +26,7 @@ const presetMap: PresetMap = {
   "schema-color-picker": SchemaFormColorPicker,
   "schema-value": SchemaFormValue,
   "schema-cascader": SchemaFormCascader,
+  "schema-autocomplete": SchemaFormAutocomplete,
 }
 
 export default presetMap
@@ -38,6 +40,6 @@ export const getComponent = (type = "input") => {
     return createVNode(type)
   } else {
     // 不识别组件
-    return null
+    return type
   }
 }
