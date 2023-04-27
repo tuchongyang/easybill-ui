@@ -40,6 +40,6 @@ export const getComponent = (type = "input") => {
     return createVNode(type)
   } else {
     // 不识别组件
-    return type
+    return null
   }
 }

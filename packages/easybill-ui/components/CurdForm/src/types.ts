@@ -27,6 +27,8 @@ export interface FormItem {
   disabled?: boolean
   tooltip?: string
   autoload?: boolean
+  prefix?: string
+  suffix?: string
 }
 export type FormItemTypeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)

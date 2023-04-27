@@ -2,14 +2,15 @@
   <div class="form-item">
     <div v-if="props.formItem.prefix" class="form-item-prefix" v-html="props.formItem.prefix"></div>
     <slot name="prefix"></slot>
-    <component :is="getComponent(props.formItem.type)" v-if="!(props.formItem.type && $slots[props.formItem.type])" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
+    <component :is="comp" v-if="comp" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
+    <component :is="props.formItem.type" v-else v-model="modelRef[props.formItem.prop || '']" v-bind="formItemProps" v-on="eventObject" />
     <FormTooltip v-if="props.formItem.tooltip" :tooltip="props.formItem.tooltip" :form-item="props.formItem" :form-model="props.formModel" />
     <slot name="suffix"></slot>
     <div v-if="props.formItem.suffix" class="form-item-suffix" v-html="props.formItem.suffix"></div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed, getCurrentInstance, Ref, PropType } from "vue"
+import { ref, computed, Ref, PropType } from "vue"
 import { FormItem, Fields } from "./types"
 import { getComponent } from "./components"
 import FormTooltip from "./FormTooltip.vue"
@@ -28,6 +29,7 @@ const props = defineProps({
 })
 const emit = defineEmits(["change"])
 const modelRef: Ref<Fields> = ref(props.formModel || {})
+const comp = computed(() => getComponent(props.formItem.type))
 // 重新组装props
 const formItemProps = computed(() => {
   if (!props.formItem.props) {

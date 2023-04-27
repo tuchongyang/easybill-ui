@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CurdTable v-bind="table" />
+    <CurdTable ref="tableRef" v-bind="table" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -8,7 +8,9 @@ import { ref, Ref } from "vue"
 import { CurdTableProps } from "easybill-ui/index"
 import { useGlobalConfig } from "easybill-ui/index"
 const config = useGlobalConfig()
+const tableRef = ref()
 console.log("config", config)
+console.log("tableRef", tableRef)
 const table: Ref<CurdTableProps<any>> = ref({
   data: [],
   option: {

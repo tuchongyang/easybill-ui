@@ -46,5 +46,5 @@ const getCurrentTableFilterProp = () => {
     return selectParams.value[tableFilterRef.value.getCurrentIndex()].prop
   }
 }
-defineExpose({ setItem, getSelectList, loadOptions, clear, refreshSelectParams, getCurrentTableFilterProp })
+defineExpose({ filterRef: tableFilterRef, setItem, getSelectList, loadOptions, clear, refreshSelectParams, getCurrentTableFilterProp })
 </script>

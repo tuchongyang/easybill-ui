@@ -181,6 +181,6 @@ const tableFilterContext = reactive<I.TableFilterContext>({
 provide("tableFilter", tableFilterContext)
 provide("state", state)
 provide("selectList", selectList)
-defineExpose({ setItem, selectList, loadOptions, clear, refreshSelectParams, getCurrentIndex })
+defineExpose({ setItem, selectList, loadOptions, clear, refreshSelectParams, getCurrentIndex, listQuery, selectParams })
 getTags()
 </script>

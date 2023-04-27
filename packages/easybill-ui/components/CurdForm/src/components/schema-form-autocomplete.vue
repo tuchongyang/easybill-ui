@@ -1,5 +1,5 @@
 <template>
-  <el-autocomplete v-model="model" v-bind="props" v-on="eventObject">
+  <el-autocomplete v-model="model" v-bind="props.props" v-on="props.eventObject">
     <template #default="{ item }">
       <div v-if="item.html" v-html="item.html"></div>
       <div v-else>{{ item.label || item.value }}</div>

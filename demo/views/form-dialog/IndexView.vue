@@ -13,6 +13,7 @@ const open = () => {
     title: "添加数据",
     formSchema: {
       formItem: [
+        { label: "", prop: "anyway1", labelWidth: "0px", type: "el-alert", props: { title: "标题", description: "asdads", type: "warning", showIcon: true } },
         { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
         { label: "名称", prop: "name" },
         { label: "年龄", prop: "age", tooltip: "这里是提示信息" },
