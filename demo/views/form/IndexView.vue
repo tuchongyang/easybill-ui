@@ -13,6 +13,7 @@ import { ref, Ref } from "vue"
 const form = ref({
   initData: { x: 1 },
 })
+
 const formSchema: Ref<FormSchema> = ref({
   formItem: [
     { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
@@ -67,5 +68,6 @@ const submit = () => {
 }
 setTimeout(() => {
   form.value.age = 22
+  form.value = { name: "111" }
 }, 2000)
 </script>

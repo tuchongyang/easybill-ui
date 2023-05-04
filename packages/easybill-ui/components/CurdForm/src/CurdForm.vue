@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, provide, ref, Ref, getCurrentInstance, computed, watch, PropType } from "vue"
-import { isFunction, isAsyncFunction, isObject } from "./utils/is"
+import { defineComponent, reactive, provide, ref, Ref, computed, watch, PropType } from "vue"
+import { isFunction, isAsyncFunction } from "./utils/is"
+import { deepClone } from "./utils/common"
 import components from "./components"
 import { ElForm, ElFormItem } from "element-plus"
 import { FormSchema, Fields, FormItem as FormItemType, CurdFormOptionItem, FormContext } from "./types"
@@ -58,22 +59,24 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
     const schemaFormRef: Ref<InstanceType<typeof ElForm> | undefined> = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
-    const formModel = reactive<Fields>(props.modelValue || {})
+    const formModel = reactive<Fields>((props.modelValue && deepClone(props.modelValue)) || {})
     const curdFormContext = reactive<FormContext>({} as FormContext)
     watch(
       () => props.modelValue,
-      () => {
+      (val) => {
+        const value = deepClone(val)
         for (let i in formModel) {
           delete formModel[i]
         }
-        Object.assign(formModel, props.modelValue)
+        Object.assign(formModel, value)
       }
     )
     watch(
       () => formModel,
       (val) => {
         emit("update:modelValue", val)
-      }
+      },
+      { deep: true }
     )
 
     // 先从schema中读取默认值
@@ -88,7 +91,6 @@ export default defineComponent({
     props.fields && Object.assign(formModel, props.fields)
     Object.assign(formModel, props.modelValue)
     // props.modelValue && Object.assign(formModel, props.modelValue)
-    const instance = getCurrentInstance()
     // 异步设置默认数据
     sFormSchema.value.formItem.forEach(async (item) => {
       // 异步选项
