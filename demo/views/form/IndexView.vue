@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CurdForm v-model="form" :form-schema="formSchema">
+    <CurdForm v-model="a" :form-schema="formSchema">
       <template #operate-button>
         <el-button @click="submit">提交</el-button>
       </template>
@@ -12,13 +12,15 @@ import { FormSchema } from "easybill-ui/index"
 import { ref, Ref } from "vue"
 const form = ref({
   initData: { x: 1 },
+  modelForm: {},
 })
+const a = ref(form.value.modelForm)
 
 const formSchema: Ref<FormSchema> = ref({
   formItem: [
     { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
     { label: "名称", prop: "name" },
-    { label: "年龄", prop: "age", tooltip: "这里是提示信息" },
+    { label: "年龄", prop: "age", type: "input-number", tooltip: "这里是提示信息" },
     {
       label: "爱好",
       prop: "name1",
@@ -67,7 +69,7 @@ const submit = () => {
   console.log("form", form.value)
 }
 setTimeout(() => {
-  form.value.age = 22
-  form.value = { name: "111" }
+  // form.value.age = 22
+  // form.value = { name: "111" }
 }, 2000)
 </script>

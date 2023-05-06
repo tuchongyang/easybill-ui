@@ -59,7 +59,7 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
     const schemaFormRef: Ref<InstanceType<typeof ElForm> | undefined> = ref()
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
-    const formModel = reactive<Fields>((props.modelValue && deepClone(props.modelValue)) || {})
+    let formModel = reactive<Fields>(props.modelValue || {})
     const curdFormContext = reactive<FormContext>({} as FormContext)
     watch(
       () => props.modelValue,
