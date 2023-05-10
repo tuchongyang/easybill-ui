@@ -37,7 +37,8 @@ export const getComponent = (type = "input") => {
     return presetMap["schema-" + type]
   } else if (isReactive(type) || isRef(type) || isVNode(type) || (<any>type).setup) {
     // 自定义组件
-    return createVNode(type)
+    // return createVNode(type)
+    return type
   } else {
     // 不识别组件
     return null
