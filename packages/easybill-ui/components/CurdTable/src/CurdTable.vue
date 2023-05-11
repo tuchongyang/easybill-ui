@@ -380,6 +380,8 @@ const create = (row?: any) => {
       a.form && setItem(a)
     }
   })
+  formSchema.formItem.sort((a, b) => (b.sortIndex || 0) - (a.sortIndex || 0))
+  const eoptions = row ? option.editOptions : option.createOptions
   FormDialog.show({
     title: row ? "编辑" : "添加",
     formSchema: formSchema,
@@ -389,6 +391,7 @@ const create = (row?: any) => {
       const fun = row ? "fetchEdit" : "fetchCreate"
       return await (props[fun] && props[fun](modelRef, row))
     },
+    ...eoptions,
   })
 }
 const instance = getCurrentInstance()
