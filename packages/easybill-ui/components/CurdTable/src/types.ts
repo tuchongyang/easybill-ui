@@ -25,7 +25,7 @@ export interface ColumnItemCtx<T> {
   children?: Array<ColumnItem> // 暂时不支持
   options?: Array<OptionItem> //数据字典
   asyncOptions?: () => Promise<OptionItem[]>
-  form?: FormItemType | ((formItem: FormItemType, row: T) => FormItemType)
+  form?: Partial<FormItemType> | ((formItem: FormItemType, row: T) => Partial<FormItemType>)
   filter?: ColumnItemFilter
   detail?: ColumnItemDetail
   //继承自el-table-column属性

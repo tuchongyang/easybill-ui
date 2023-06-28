@@ -11,10 +11,10 @@ const config = useGlobalConfig()
 const tableRef = ref()
 console.log("config", config)
 console.log("tableRef", tableRef)
-const table: Ref<CurdTableProps<any>> = ref({
+const table = ref<CurdTableProps<any>>({
   data: [],
   option: {
-    autoload: false,
+    autoload: true,
     filterAttrs: {
       labelPosition: "left",
     },
@@ -25,8 +25,8 @@ const table: Ref<CurdTableProps<any>> = ref({
     },
   },
   columns: [
-    { label: "姓名", prop: "name", filter: {}, header: "姓名字符串" },
-    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" } },
+    { label: "姓名", prop: "name", filter: {}, header: "姓名字符串", form: {} },
+    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number" } },
     {
       label: "云平台",
       prop: "cloudType",
@@ -64,4 +64,7 @@ const table: Ref<CurdTableProps<any>> = ref({
     })
   },
 })
+setTimeout(() => {
+  table.value.option.hideOperation = true
+}, 1000)
 </script>

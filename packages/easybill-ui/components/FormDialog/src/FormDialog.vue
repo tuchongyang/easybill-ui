@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="60%" v-bind="$attrs" :before-close="onBeforeClose">
+  <el-dialog v-model="visible" :title="title" width="60%" :close-on-click-modal="false" v-bind="$attrs" :before-close="onBeforeClose">
     <el-steps v-if="stepSchemaList.length > 1" :active="step" align-center style="margin-bottom: 20px; position: sticky; top: 0; z-index: 2000; background: var(--el-bg-color)">
       <el-step v-for="(item, i) in stepSchemaList" :key="i" :title="item.name" :description="item.description" />
     </el-steps>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CurdForm v-model="a" :form-schema="formSchema">
+    <CurdForm v-model="form" :form-schema="formSchema">
       <template #operate-button>
         <el-button @click="submit">提交</el-button>
       </template>

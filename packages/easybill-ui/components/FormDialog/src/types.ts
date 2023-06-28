@@ -1,6 +1,7 @@
 import { Fields, FormSchema } from "../../CurdForm"
+import { DialogProps } from "element-plus"
 
-export interface FormDialogOptions {
+export interface FormDialogOptions extends Partial<DialogProps> {
   title?: string
   width?: string | number
   fields?: Fields

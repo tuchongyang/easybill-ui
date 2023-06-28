@@ -14,16 +14,22 @@ interface OpenOption {
 
 const visible = ref(false)
 const list: Ref<Array<DetailDataItem>> = ref([])
+const getValue = (data, column, index) => {
+  if (column.formatter) {
+    return column.formatter(data, column, data[column.prop], index)
+  }
+  return typeof data[column.prop] == "undefined" || data[column.prop] === "" ? "--" : data[column.prop]
+}
 const open = (option: OpenOption) => {
   list.value = []
-  option.columns.forEach((item) => {
+  option.columns.forEach((item, ci) => {
     if (item.children && item.children.length) {
       for (let i in item.children) {
         const a = item.children[i]
         if (a.hidden) continue
         list.value.push({
           label: a.label,
-          value: option.data[a.prop],
+          value: getValue(option.data, a, i),
           span: (a.detail && a.detail.span) || 24,
           options: a.options,
         })
@@ -32,7 +38,7 @@ const open = (option: OpenOption) => {
       if (item.hidden) return
       list.value.push({
         label: item.label,
-        value: option.data[item.prop],
+        value: getValue(option.data, item, ci),
         span: (item.detail && item.detail.span) || 24,
         options: item.options,
       })

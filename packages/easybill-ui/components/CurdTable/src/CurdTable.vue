@@ -219,9 +219,18 @@ const search = reactive<ListQuery>(
     return args
   })()
 )
-const option: PropOption = Object.assign(defaultOption, props.option)
+const option: PropOption = reactive(Object.assign(defaultOption, props.option))
 provide("search", search)
 provide("option", option)
+watch(
+  () => props.option,
+  (val) => {
+    for (let i in val) {
+      option[i] = val[i]
+    }
+  },
+  { deep: true }
+)
 const filterVisible = ref(typeof option?.filterVisible == "undefined" ? true : option?.filterVisible)
 const loading = ref(false)
 const listTotal = ref(0)
