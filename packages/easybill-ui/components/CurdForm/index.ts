@@ -4,3 +4,4 @@ export const CurdForm = withInstall(Instance)
 export default CurdForm
 export * from "./src/types"
 export * from "./src/directive"
+export * from "./src/hooks"

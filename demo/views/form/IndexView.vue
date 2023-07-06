@@ -9,17 +9,18 @@
 </template>
 <script lang="ts" setup>
 import { FormSchema } from "easybill-ui/index"
-import { ref, Ref } from "vue"
+import { ref, Ref, shallowRef } from "vue"
+import FormSuffixBtn from "./components/FormSuffixBtn.vue"
 const form = ref({
   initData: { x: 1 },
   modelForm: {},
 })
 const a = ref(form.value.modelForm)
 
-const formSchema: Ref<FormSchema> = ref({
+const formSchema = ref<FormSchema>({
   formItem: [
     { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
-    { label: "名称", prop: "name" },
+    { label: "名称", prop: "name", prefix: '<span style="color:red;white-space:nowrap;margin-right: 20px;">前缀</span>', suffix: '<span style="color:orange;white-space:nowrap;margin-left: 20px;">后缀</span>' },
     { label: "年龄", prop: "age", type: "input-number", tooltip: "这里是提示信息" },
     {
       label: "爱好",
@@ -56,7 +57,20 @@ const formSchema: Ref<FormSchema> = ref({
     { label: "日期", prop: "date-picker", type: "date-picker", span: 12 },
     { label: "时间", prop: "time-picker", type: "time-picker", span: 12 },
     { label: "测试1", prop: "input1", type: "input", span: 12 },
-    { label: "测试2测试测试ss", prop: "input2", type: "input", span: 12 },
+    {
+      label: "测试2测试测试ss",
+      prop: "input2",
+      type: "select",
+      span: 12,
+      suffix: shallowRef(FormSuffixBtn),
+      asyncOptions: async () => {
+        const list = [
+          { label: "aa" + Math.floor(Math.random() * 100), value: 1 },
+          { label: "bb" + Math.floor(Math.random() * 100), value: 2 },
+        ]
+        return list
+      },
+    },
   ],
   rules: {
     name: [{ required: true, message: "名称不能为空", trigger: "blur" }],

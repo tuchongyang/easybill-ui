@@ -2,7 +2,7 @@ export interface OptionItem {
   label: string
   value: string | number | boolean
   disabled?: boolean
-  type?: "default" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"
+  type?: "default" | "primary" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"
   icon?: any
   hit?: boolean
   color?: string

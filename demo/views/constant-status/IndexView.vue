@@ -28,6 +28,7 @@ import { ref, Ref } from "vue"
 import { CircleClose } from "@element-plus/icons-vue"
 
 const options1: Ref<OptionItem[]> = ref([
+  { label: "default", value: 10, type: "default" },
   { label: "primary", value: 0, type: "primary" },
   { label: "warning", value: 1, type: "warning" },
   { label: "success", value: 2, type: "success" },
@@ -86,6 +87,7 @@ const options5: Ref<OptionItem[]> = ref([
   { label: "blue-dark", value: 7, type: "blue-dark", effect: "light" },
   { label: "red-purple", value: 8, type: "red-purple", effect: "light" },
   { label: "blueness", value: 9, type: "blueness", effect: "light" },
+  { label: "自定义颜色", value: 10, type: "primary", style: { borderColor: "#e0c1fd", color: "#8154c7", backgroundColor: "#f9f0ff" } },
 ])
 </script>
 <style lang="scss" scoped>
