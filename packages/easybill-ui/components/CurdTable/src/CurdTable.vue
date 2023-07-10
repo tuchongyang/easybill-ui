@@ -106,7 +106,7 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { computed, ref, reactive, watch, onActivated, getCurrentInstance, provide, PropType, Ref } from "vue"
+import { computed, ref, reactive, watch, onActivated, onMounted, getCurrentInstance, provide, PropType, Ref } from "vue"
 import STableItem from "./STableItem.vue"
 import STableFilter from "./STableFilter.vue"
 import STableMenu from "./STableMenu.vue"
@@ -299,7 +299,10 @@ onActivated(() => {
     hasInit = true
   }
 })
-option.autoload && fetchData()
+// filter内部有一些初始化的操作，比如操作value初始值，需要等子组件初始化后再执行列表数据fetch操作
+onMounted(() => {
+  option.autoload && fetchData()
+})
 // 组装columns
 const { columns, selectParams } = useColumnHook(props)
 // 菜单点击事件

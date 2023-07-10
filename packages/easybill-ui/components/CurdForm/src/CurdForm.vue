@@ -74,11 +74,11 @@ export default defineComponent({
     watch(
       () => formModel,
       (val) => {
+        console.log("form中watch", val)
         emit("update:modelValue", val)
       },
       { deep: true }
     )
-
     // 先从schema中读取默认值
     const schemaValues = sFormSchema.value.formItem.reduce<Fields>((previousValue, currentValue) => {
       currentValue.eventObject ??= {}

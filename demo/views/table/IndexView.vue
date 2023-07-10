@@ -38,6 +38,46 @@ const table = ref<CurdTableProps<any>>({
       ],
     },
     { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
+    { label: "账期范围", prop: "cycle", filter: { external: true, labelWidth: "90px", type: "date-picker", props: { type: "monthrange", format: "YYYY-MM", valueFormat: "YYYY-MM" }, tableKey: ["startTime", "endTime"], value: ["2023-04", "2023-05"] } },
+    {
+      label: "类目一",
+      prop: "cateId",
+      filter: {
+        type: "select",
+        asyncOptions: async (modelRef, formItem, context, config) => {
+          return [
+            { label: "一级1", value: 1 },
+            { label: "一级2", value: 2 },
+          ]
+        },
+        eventObject: {
+          change(formModel, formItem, context) {
+            formModel.subCateId = ""
+            console.log("context", context)
+            context.loadOptions("subCateId")
+            context.setValue("subCateId")
+          },
+        },
+      },
+    },
+    {
+      label: "类目二",
+      prop: "subCateId",
+      filter: {
+        type: "select",
+        asyncOptions: async (modelRef, formItem, context, config) => {
+          return modelRef.cateId == 1
+            ? [
+                { label: "二级11", value: 11 },
+                { label: "二级12", value: 12 },
+              ]
+            : [
+                { label: "二级21", value: 21 },
+                { label: "二级22", value: 22 },
+              ]
+        },
+      },
+    },
     {
       label: "状态",
       prop: "status",
@@ -49,8 +89,9 @@ const table = ref<CurdTableProps<any>>({
       filter: { inner: true, type: "select" },
     },
   ],
-  fetchData: () => {
+  fetchData: ({ listQuery }) => {
     return new Promise((resolve, reject) => {
+      console.log("listQuery", listQuery)
       setTimeout(() => {
         const list = [
           { name: "张三", age: 9, status: 1 },

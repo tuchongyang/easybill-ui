@@ -10,6 +10,7 @@ export interface ParamsItem extends FormItem {
 export interface TableFilterContext {
   loadOptions: (prop: string) => void
   setValue: (prop: string, value: any) => void
+  search: () => void
 }
 export interface ListQuery {
   [key: string]: any //string | boolean | number | Array<string> | Array<number>

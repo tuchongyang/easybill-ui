@@ -10,6 +10,7 @@ import { ref, watch, Ref, PropType } from "vue"
 import CurdForm from "../../../CurdForm"
 import { ParamsItem, ListQuery } from "../../types"
 import { Fields, FormSchema, FormItem } from "../../../CurdForm"
+import { deepClone } from "../../../CurdForm/src/utils/common"
 const props = defineProps({
   selectParams: {
     type: Array as PropType<Array<ParamsItem>>,
@@ -40,9 +41,10 @@ const formSchema: Ref<FormSchema> = ref({
   formItem: [...as, ...formItemRight],
 })
 const init = () => {
+  // const query = deepClone(listQuery.value)
   for (let i in formSchema.value.formItem) {
     const item = formSchema.value.formItem[i] as ParamsItem
-    if (item.tableKey) {
+    if (item.tableKey && props.listQuery[item.tableKey[0]]) {
       listQuery.value[item.prop] = [props.listQuery[item.tableKey[0]], props.listQuery[item.tableKey[1]]]
     }
   }
@@ -54,22 +56,30 @@ const init = () => {
     } else {
       // const cur1 = formSchema.value.formItem.find((a) => a.tableKey && a.tableKey.includes(i))
       // if (cur1 && cur1.tableKey) {
-      //   listQuery.value[i] = [l[cur1.tableKey[0]], l[cur1.tableKey[1]]]
+      //   query[i] = [l[cur1.tableKey[0]], l[cur1.tableKey[1]]]
       // }
     }
   }
+  // listQuery.value = query
 }
 init()
+
 const emit = defineEmits(["change"])
 watch(
   () => listQuery.value,
   (val) => {
     const l = props.listQuery
     for (let i in val) {
-      l[i] = val[i]
+      const cur = formSchema.value.formItem.find((a) => a.prop == i)
+      if (cur && cur.tableKey) {
+        l[cur.tableKey[0]] = (val[i] && val[i][0]) || ""
+        l[cur.tableKey[1]] = (val[i] && val[i][1]) || ""
+      } else {
+        l[i] = val[i]
+      }
     }
   },
-  { deep: true }
+  { immediate: true, deep: true }
 )
 const onChange = (formModel: Fields, formItem: any) => {
   const l = props.listQuery
