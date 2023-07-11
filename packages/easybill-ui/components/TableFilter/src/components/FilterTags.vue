@@ -20,8 +20,9 @@
           </div>
         </el-popover>
       </div>
+      <div class="tag-clear"><el-button type="primary" link @click="clear">清空</el-button></div>
     </div>
-    <div class="tag-clear"><el-button type="primary" link @click="clear">清空</el-button></div>
+
     <slot></slot>
   </div>
 </template>

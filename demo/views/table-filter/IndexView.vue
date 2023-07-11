@@ -16,7 +16,7 @@ const selectParams: Ref<ParamsItem[]> = ref([
     type: "select",
     options: [
       { label: "打球", value: "1" },
-      { label: "跑步", value: "2" },
+      { label: "跑步,测试超长label测试超长label测试超长label测试超长label测试超长label测试超长label测试超长label", value: "2" },
     ],
   },
   {

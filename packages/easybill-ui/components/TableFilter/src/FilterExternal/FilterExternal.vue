@@ -78,14 +78,15 @@ watch(
         l[i] = val[i]
       }
     }
+    //
   },
   { immediate: true, deep: true }
 )
 const onChange = (formModel: Fields, formItem: any) => {
   const l = props.listQuery
-  if (formItem.tableKey && formModel[formItem.prop] && formModel[formItem.prop].length) {
-    l[formItem.tableKey[0]] = formModel[formItem.prop][0]
-    l[formItem.tableKey[1]] = formModel[formItem.prop][1]
+  if (formItem.tableKey) {
+    l[formItem.tableKey[0]] = formModel[formItem.prop]?.length ? formModel[formItem.prop][0] : ""
+    l[formItem.tableKey[1]] = formModel[formItem.prop]?.length ? formModel[formItem.prop][1] : ""
   }
   if (!formItem.tableKey) {
     l[formItem.prop] = formModel[formItem.prop]

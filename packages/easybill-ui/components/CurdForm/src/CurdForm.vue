@@ -54,6 +54,10 @@ export default defineComponent({
       type: Object as PropType<Fields>,
       default: undefined,
     },
+    extendContext: {
+      type: Object as PropType<Record<string, any>>,
+      default: undefined,
+    },
   },
   emits: ["update:modelValue", "change"],
   setup(props, { emit, attrs }) {
@@ -74,7 +78,6 @@ export default defineComponent({
     watch(
       () => formModel,
       (val) => {
-        console.log("form中watch", val)
         emit("update:modelValue", val)
       },
       { deep: true }
@@ -183,7 +186,7 @@ export default defineComponent({
     curdFormContext.change = onChange
     curdFormContext.formModel = formModel
     curdFormContext.formRef = schemaFormRef
-
+    props.extendContext && Object.assign(curdFormContext, props.extendContext)
     provide("curdFormContext", curdFormContext)
     return {
       formModel,
