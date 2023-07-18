@@ -1,11 +1,12 @@
 <template>
   <div class="detail-info" :class="[props.showType, $attrs.shadow]">
     <div class="detail-info-header">
-      <div class="header-left">
+      <slot name="header"></slot>
+      <div v-if="!$slots.header" class="header-left">
         <div v-if="props.title && !$slots.title" class="title">{{ props.title }}</div>
         <slot name="title"></slot>
       </div>
-      <div class="header-right">
+      <div v-if="!$slots.header" class="header-right">
         <slot name="headerRight"></slot>
       </div>
     </div>

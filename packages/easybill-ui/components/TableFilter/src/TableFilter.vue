@@ -49,7 +49,7 @@ const onChange = (d: any) => {
   if (d) {
     const cur = selectList.value.find((j) => d.prop == j.prop && d.label == j.label)
     if (cur) {
-      if (listQuery[cur.prop] === "") {
+      if (listQuery[cur.prop] === "" || listQuery[cur.prop] === null || listQuery[cur.prop] === undefined) {
         selectList.value.splice(
           selectList.value.findIndex((j) => d.prop == j.prop),
           1

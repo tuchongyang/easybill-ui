@@ -1,4 +1,4 @@
-import { FormRules, FormItemRule, FormProps, ElForm } from "element-plus"
+import { FormRules, FormItemRule, FormProps, ElForm, ElTooltipProps } from "element-plus"
 import { PropType, Ref } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
@@ -25,7 +25,7 @@ export interface FormItem {
   labelWidth?: string
   span?: number
   disabled?: boolean
-  tooltip?: string
+  tooltip?: string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps>) | Partial<ElTooltipProps>
   autoload?: boolean
   prefix?: string | any[]
   suffix?: string | any[]

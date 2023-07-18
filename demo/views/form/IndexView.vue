@@ -32,6 +32,7 @@ const formSchema = ref<FormSchema>({
         { label: "跳舞", value: "2" },
       ],
       value: "1",
+      tooltip: (form) => ({ content: form.name1 }),
     },
     {
       label: "名称",

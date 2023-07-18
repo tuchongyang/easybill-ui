@@ -58,7 +58,10 @@ const eventObject = ref(
     const changeFun = props.formItem.eventObject.change
     result.change = () => {
       if (changeFun) {
-        changeFun(props.formModel, props.formItem, formContext)
+        const flag = changeFun && changeFun(props.formModel, props.formItem, formContext)
+        if (flag) {
+          emit("change", props.formModel, props.formItem, formContext)
+        }
       } else {
         emit("change", props.formModel, props.formItem, formContext)
       }

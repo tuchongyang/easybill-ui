@@ -1,6 +1,7 @@
 .constant-status {
   --el-tag-border-opacity: 1;
   --el-tag-bg-opacity: 1;
+  --el-tag-font-size: var(--el-font-size-base);
   .el-tag__content {
     display: flex;
     align-items: center;

@@ -88,6 +88,11 @@ const table = ref<CurdTableProps<any>>({
       header: { tooltip: { content: "这是状态的提示", placement: "right" } },
       filter: { inner: true, type: "select" },
     },
+    {
+      label: "日期",
+      prop: "date",
+      filter: { type: "time", props: { clearable: true } },
+    },
   ],
   fetchData: ({ listQuery }) => {
     return new Promise((resolve, reject) => {
