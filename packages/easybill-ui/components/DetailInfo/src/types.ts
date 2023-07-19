@@ -20,4 +20,5 @@ export interface DetailDataItem {
   labelPosition?: "left" | "right" | "center"
   showOverflowTooltip?: boolean | ElTooltipProps
   rawContent?: boolean
+  hidden?: boolean | ((data: DetailDataItem[]) => boolean)
 }

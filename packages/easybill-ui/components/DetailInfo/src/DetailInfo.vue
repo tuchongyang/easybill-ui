@@ -15,7 +15,7 @@
       <slot></slot>
     </div>
     <div v-if="!$slots.default" class="detail-info-body" :class="[props.showType]">
-      <div class="table-detail-col" v-for="(item, i) in props.data" :key="i" :span="item.span" :style="getItemStyle(item)">
+      <div class="table-detail-col" v-for="(item, i) in list" :key="i" :span="item.span" :style="getItemStyle(item)">
         <div class="item-col">
           <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item), justifyContent: props.labelPosition || item.labelPosition }">
             <span>{{ item.label }}</span>
@@ -44,7 +44,7 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { PropType } from "vue"
+import { PropType, computed } from "vue"
 import { ConstantStatus } from "../../ConstantStatus/src"
 import { DetailDataItem } from "./types"
 import DetailInfoTooltip from "./DetailInfoTooltip.vue"
@@ -72,6 +72,13 @@ const props = defineProps({
     type: String,
     default: "left",
   },
+})
+const list = computed(() => {
+  return props.data.filter((item) => {
+    if (typeof item.hidden == "function") return item.hidden(props.data)
+    if (typeof item.hidden != "undefined") return item.hidden
+    return true
+  })
 })
 const getLabelWidth = (dataItem: DetailDataItem): string => {
   const labelWidth = typeof dataItem.labelWidth !== "undefined" ? dataItem.labelWidth : props.labelWidth

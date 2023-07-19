@@ -73,8 +73,10 @@ const formSchema = ref<FormSchema>({
       },
     },
   ],
-  rules: {
-    name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+  rules: () => {
+    return {
+      name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+    }
   },
   labelWidth: 120,
   labelPosition: "left",

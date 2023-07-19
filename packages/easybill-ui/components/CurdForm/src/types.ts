@@ -4,7 +4,7 @@ import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
 export interface FormSchema extends Partial<FormProps> {
   formItem: Array<FormItem>
-  rules?: FormRules
+  rules?: FormRules | ((formModel: Fields, context: FormContext) => FormRules)
   labelPosition?: "left" | "right" | "top"
   gutter?: number
 }
@@ -19,7 +19,7 @@ export interface FormItem {
   asyncValue?: (modelRef: Fields, formItem: FormItem) => Promise<string | number | boolean>
   loading?: boolean
   hidden?: boolean | ((model: Fields) => boolean)
-  rules?: FormItemRule[]
+  rules?: FormItemRule[] | ((formModel: Fields, formItem: FormItem, context: FormContext) => FormItemRule[])
   props?: FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
   formItemProps?: FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
   labelWidth?: string
@@ -27,8 +27,8 @@ export interface FormItem {
   disabled?: boolean
   tooltip?: string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps>) | Partial<ElTooltipProps>
   autoload?: boolean
-  prefix?: string | any[]
-  suffix?: string | any[]
+  prefix?: string | any
+  suffix?: string | any
 }
 export type FormItemTypeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"
 // type FormItemProps = FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)

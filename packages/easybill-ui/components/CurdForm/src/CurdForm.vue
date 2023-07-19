@@ -121,6 +121,9 @@ export default defineComponent({
     })
     // 生成表单验证规则
     const rules = computed(() => {
+      if (typeof sFormSchema.value.rules == "function") {
+        return sFormSchema.value.rules(formModel, curdFormContext)
+      }
       return sFormSchema.value.rules
     })
 
@@ -129,16 +132,16 @@ export default defineComponent({
       return schemaFormRef.value?.validate(callback)
     }
     // 调用某个表单项的异步数据接口
-    const loadOptions = async (prop: string) => {
+    const loadOptions = async (prop: string, option?: any) => {
       const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
       if (cur && cur.asyncOptions) {
         cur.loading = true
         cur.options =
           (await cur
-            .asyncOptions(formModel, cur, curdFormContext)
+            .asyncOptions(formModel, cur, curdFormContext, option)
             .catch((err) => console.error("loadOptionError", err))
             .finally(() => (cur.loading = false))) || []
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext)
+        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
       }
       return cur
     }
