@@ -1,8 +1,5 @@
 import { ElTooltipProps } from "element-plus"
-export interface OptionItem {
-  label: string
-  value: string | number | boolean
-}
+import { OptionItem } from "../../ConstantStatus/src/types"
 
 export interface DetailDataItem {
   label?: string

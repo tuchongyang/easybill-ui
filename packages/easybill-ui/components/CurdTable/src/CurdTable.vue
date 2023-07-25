@@ -355,10 +355,12 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
 
 // 添加/编辑
 const create = (row?: any) => {
+  const formAttrs = option.formAttrs || {}
   const formSchema: FormSchema = {
     formItem: [],
     rules: {},
     labelWidth: "110px",
+    ...formAttrs,
   }
   const setItem = (a: ColumnItem) => {
     if (!a.form) return
@@ -398,7 +400,7 @@ const create = (row?: any) => {
     title: row ? "编辑" : "添加",
     formSchema: formSchema,
     fields: row,
-    width: 600,
+    width: formAttrs.width || 600,
     handleOk: async (modelRef: Fields) => {
       const fun = row ? "fetchEdit" : "fetchCreate"
       return await (props[fun] && props[fun](modelRef, row))

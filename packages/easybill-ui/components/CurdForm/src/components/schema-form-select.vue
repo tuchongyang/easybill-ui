@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="model" style="width: 100%" :loading="formItem.loading" v-bind="props" v-on="eventObject">
+  <el-select v-model="model" style="width: 100%" :loading="formItem.loading" :placeholder="'请选择' + formItem.label" v-bind="props" v-on="eventObject">
     <el-option v-if="props.all && !props.multiple" value="" label="全部"></el-option>
     <el-checkbox v-if="props.all && props.multiple" v-model="checked" label="全选" class="schema-form-select-check" @change="selectAll" />
     <template v-for="option in formItem.options" :key="option.value">

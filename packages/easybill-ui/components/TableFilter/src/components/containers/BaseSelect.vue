@@ -1,8 +1,11 @@
 <template>
   <el-select v-if="visible" v-model="model" class="base-select" popper-class="filter-select-popper" v-bind="paramsItem.props" @focus="onFocus" @blur="onBlur" @change="onChange">
-    <el-option v-if="paramsItem.props?.all" :class="{ active: typeof model === 'undefined' || model === '' }" :value="''" label="全部">全部 </el-option>
+    <el-option v-if="paramsItem.props?.all" :class="{ active: typeof model === 'undefined' || model === '' || model === null }" :value="''" label="全部">全部 </el-option>
     <template v-for="(item, i) in paramsItem.options" :key="i">
-      <el-option :value="item.value" :label="item.label"></el-option>
+      <el-option :value="item.value" :label="item.label">
+        <div v-if="item.html" v-html="item.html"></div>
+        <template v-else>{{ item.label }}</template>
+      </el-option>
     </template>
   </el-select>
 </template>

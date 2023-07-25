@@ -1,5 +1,5 @@
 <template>
-  <CurdForm v-model="listQuery" inline class="filter-external" :form-schema="formSchema" @change="onChange">
+  <CurdForm ref="formRef" v-model="listQuery" inline class="filter-external" :form-schema="formSchema" @change="onChange">
     <template #defaultFilter>
       <slot></slot>
     </template>
@@ -93,4 +93,9 @@ const onChange = (formModel: Fields, formItem: any) => {
   }
   emit("change")
 }
+const formRef = ref()
+const loadOptions = (prop: string, option?: any) => {
+  formRef.value.loadOptions(prop, option)
+}
+defineExpose({ loadOptions })
 </script>

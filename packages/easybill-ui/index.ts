@@ -13,6 +13,7 @@ export * from "./components/ConstantStatus/src/types"
 export * from "./components/FormDialog/src/types"
 export * from "./components/CurdForm"
 export * from "./components/CurdTable/src/types"
+export * from "./components/DetailInfo/src/types"
 export * from "./components/TableFilter/types"
 export * from "./utils/hooks/useGlobalConfig"
 

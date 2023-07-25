@@ -75,8 +75,8 @@ const props = defineProps({
 })
 const list = computed(() => {
   return props.data.filter((item) => {
-    if (typeof item.hidden == "function") return item.hidden(props.data)
-    if (typeof item.hidden != "undefined") return item.hidden
+    if (typeof item.hidden == "function") return !item.hidden(props.data)
+    if (typeof item.hidden != "undefined") return !item.hidden
     return true
   })
 })

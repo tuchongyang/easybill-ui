@@ -69,6 +69,7 @@ export interface PropOption {
   autoload?: boolean
   menuEvent?: Partial<Record<MenuEventKey, () => void>>
   filterAttrs?: Partial<FormProps>
+  formAttrs?: Partial<FormProps> & { width: string }
 }
 export type MenuEventKey = "refresh" | "searchToggle" | "size" | "export" | "operation"
 
@@ -96,22 +97,6 @@ export interface TableListQuery {
 
 export interface FeachDataParam {
   listQuery: TableListQuery
-}
-
-export interface DetailDataItem {
-  label: string
-  value: any
-  /** 当前项占的宽度，最大24, 默认24 */
-  span?: number
-  /** 当前数据的选项，里面包含的图标、颜色信息会自动显示 */
-  options?: Array<OptionItem>
-  /** type为image时，会把value当做image的url来显示图片 */
-  type?: string
-  labelWidth?: number
-  props?: {
-    [key: string]: string
-  }
-  slot?: string
 }
 
 export interface FetchDataOpt {
