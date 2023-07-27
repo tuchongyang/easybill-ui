@@ -85,14 +85,15 @@ export default defineComponent({
     // 先从schema中读取默认值
     const schemaValues = sFormSchema.value.formItem.reduce<Fields>((previousValue, currentValue) => {
       currentValue.eventObject ??= {}
-      typeof currentValue.value == "undefined" ? false : currentValue.prop && (previousValue[currentValue.prop] = currentValue.value)
+      typeof currentValue.value == "undefined" ? false : currentValue.prop && (typeof formModel[currentValue.prop] == "undefined" || formModel[currentValue.prop] === "" || formModel[currentValue.prop] === null) && (previousValue[currentValue.prop] = currentValue.value)
       return previousValue
     }, {})
 
     Object.assign(formModel, schemaValues)
+    console.log("schemaValues", schemaValues)
     // 如果有默认值，则覆盖
     props.fields && Object.assign(formModel, props.fields)
-    Object.assign(formModel, props.modelValue)
+    // Object.assign(formModel, props.modelValue)
     // props.modelValue && Object.assign(formModel, props.modelValue)
     // 异步设置默认数据
     sFormSchema.value.formItem.forEach(async (item) => {

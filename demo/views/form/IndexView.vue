@@ -14,6 +14,7 @@ import FormSuffixBtn from "./components/FormSuffixBtn.vue"
 const form = ref({
   initData: { x: 1 },
   modelForm: {},
+  name2: ["2"],
 })
 const a = ref(form.value.modelForm)
 
