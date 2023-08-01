@@ -90,7 +90,6 @@ export default defineComponent({
     }, {})
 
     Object.assign(formModel, schemaValues)
-    console.log("schemaValues", schemaValues)
     // 如果有默认值，则覆盖
     props.fields && Object.assign(formModel, props.fields)
     // Object.assign(formModel, props.modelValue)

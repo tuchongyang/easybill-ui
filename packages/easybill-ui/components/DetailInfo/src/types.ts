@@ -1,7 +1,7 @@
 import { ElTooltipProps } from "element-plus"
 import { OptionItem } from "../../ConstantStatus/src/types"
 
-export interface DetailDataItem {
+export interface DetailDataItem extends Record<string, any> {
   label?: string
   value?: string | number | boolean
   /** 当前项占的宽度，最大24, 默认24 */

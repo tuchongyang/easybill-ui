@@ -56,14 +56,22 @@ const eventObject = ref(
       }
     }
     const changeFun = props.formItem.eventObject.change
-    result.change = () => {
+    result.change = (...args: any) => {
       if (changeFun) {
-        const flag = changeFun && changeFun(props.formModel, props.formItem, formContext)
+        const flag = changeFun && changeFun(props.formModel, props.formItem, formContext, ...args)
         if (flag) {
-          emit("change", props.formModel, props.formItem, formContext)
+          emit("change", props.formModel, props.formItem, formContext, ...args)
         }
       } else {
-        emit("change", props.formModel, props.formItem, formContext)
+        emit("change", props.formModel, props.formItem, formContext, ...args)
+      }
+    }
+    for (let i in result) {
+      if (i !== "change") {
+        const fun = result[i]
+        result[i] = (...args: any) => {
+          fun(props.formModel, props.formItem, formContext, ...args)
+        }
       }
     }
     return result
