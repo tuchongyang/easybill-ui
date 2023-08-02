@@ -10,7 +10,8 @@
     <template #default="scope">
       <slot v-bind="scope"></slot>
       <template v-if="!props.isSlot">
-        <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="props.schema.options" />
+        <!-- <div v-if="props.schema.options">{{ ops }}</div> -->
+        <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="ops" />
         <template v-else-if="props.schema.form && props.schema.form.type == 'file'">
           <el-image :src="scope.row[props.schema.prop]" :preview-src-list="[scope.row[props.schema.prop]]" style="width: 40px; height: 40px; vertical-align: top" fit="cover" @click.stop></el-image>
         </template>
@@ -28,7 +29,7 @@
   </el-table-column>
 </template>
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, Ref } from "vue"
+import { computed, inject, PropType, ref, Ref, shallowRef } from "vue"
 import ConstantStatus from "../../ConstantStatus"
 import STableItemFilter from "./STableItemFilter.vue"
 import STableItemHeader from "./STableItemHeader.vue"
@@ -58,6 +59,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+const ops = shallowRef(props.schema.options)
 const selectParams = inject<Ref<Array<ParamsItem>>>("selectParams")
 const filterSchema = computed(() => {
   let result = selectParams?.value.filter((a) => a.prop == props.schema.filter?.prop || a.prop == props.schema.prop) //getFilterFromColumn(props.schema)

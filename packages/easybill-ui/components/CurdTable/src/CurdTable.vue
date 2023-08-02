@@ -80,23 +80,26 @@
         </template>
       </el-table>
     </div>
-    <STableSinglePage v-if="total == -1" v-model:current-page="listQuery.pageIndex" v-model:page-size="listQuery.pageSize" :total="total" :fetch-data="fetchData" :list="list" @current-change="fetchData" />
-    <el-pagination
-      v-if="total != -1 && !option.hidePage"
-      v-model:current-page="listQuery.pageIndex"
-      v-model:page-size="listQuery.pageSize"
-      class="pagination"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      v-bind="option.pageProps"
-      @current-change="fetchData"
-      @size-change="fetchData"
-    >
-      <ul class="el-pager">
-        <li class="is-active number">{{ listQuery.pageIndex }}</li>
-      </ul>
-    </el-pagination>
+    <div class="table-pager">
+      <div class="page-left"><slot name="pageLeft"></slot></div>
+      <el-pagination
+        v-if="total != -1 && !option.hidePage"
+        v-model:current-page="listQuery.pageIndex"
+        v-model:page-size="listQuery.pageSize"
+        class="pagination"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        v-bind="option.pageProps"
+        @current-change="fetchData"
+        @size-change="fetchData"
+      >
+        <ul class="el-pager">
+          <li class="is-active number">{{ listQuery.pageIndex }}</li>
+        </ul>
+      </el-pagination>
+    </div>
+
     <STableDetail ref="STableDetailRef" />
   </div>
 </template>
@@ -111,7 +114,6 @@ import STableItem from "./STableItem.vue"
 import STableFilter from "./STableFilter.vue"
 import STableMenu from "./STableMenu.vue"
 import STableDetail from "./STableDetail.vue"
-import STableSinglePage from "./STableSinglePage.vue"
 import { deepClone } from "../utils/common"
 import { Edit, Delete, Plus, ArrowDown, Document } from "@element-plus/icons-vue"
 import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey } from "./types"

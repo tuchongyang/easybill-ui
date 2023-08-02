@@ -1,8 +1,13 @@
 .table-container {
-  .pagination {
+  .table-pager {
     margin: 15px 0;
-    justify-content: end;
-    font-weight: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .pagination {
+      justify-content: end;
+      font-weight: normal;
+    }
   }
 
   .table-control {

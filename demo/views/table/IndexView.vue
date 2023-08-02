@@ -1,16 +1,19 @@
 <template>
   <div>
-    <CurdTable ref="tableRef" v-bind="table" />
+    <CurdTable ref="tableRef" v-bind="table">
+      <template #pageLeft>
+        <el-button type="primary" plain>左边插槽</el-button>
+      </template>
+    </CurdTable>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, Ref } from "vue"
+import { ref, markRaw } from "vue"
 import { CurdTableProps } from "easybill-ui/index"
 import { useGlobalConfig } from "easybill-ui/index"
+import { CircleCheck } from "@element-plus/icons-vue"
 const config = useGlobalConfig()
 const tableRef = ref()
-console.log("config", config)
-console.log("tableRef", tableRef)
 const table = ref<CurdTableProps<any>>({
   data: [],
   option: {
@@ -82,8 +85,8 @@ const table = ref<CurdTableProps<any>>({
       label: "状态",
       prop: "status",
       options: [
-        { label: "唱歌", value: "1" },
-        { label: "跳舞", value: "2" },
+        { label: "唱歌", value: "1", type: "success", border: false, effect: "plain", icon: markRaw(CircleCheck) },
+        { label: "跳舞", value: "2", type: "danger" },
       ],
       header: { tooltip: { content: "这是状态的提示", placement: "right" } },
       filter: { inner: true, type: "select" },
@@ -96,7 +99,6 @@ const table = ref<CurdTableProps<any>>({
   ],
   fetchData: ({ listQuery }) => {
     return new Promise((resolve, reject) => {
-      console.log("listQuery", listQuery)
       setTimeout(() => {
         const list = [
           { name: "张三", age: 9, status: 1 },

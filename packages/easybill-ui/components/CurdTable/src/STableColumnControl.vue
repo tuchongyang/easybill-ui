@@ -3,8 +3,7 @@
     <el-table :data="columnDatas">
       <el-table-column property="label" label="列名称"></el-table-column>
       <el-table-column property="hidden" label="显示" width="60">
-        <template #default="scope"
-          >{{ scope }}
+        <template #default="scope">
           <el-switch v-model="scope.row.hidden" :active-value="false" :inactive-value="true" size="small" @change="onChangeHidden(scope.row)"></el-switch>
         </template>
       </el-table-column>

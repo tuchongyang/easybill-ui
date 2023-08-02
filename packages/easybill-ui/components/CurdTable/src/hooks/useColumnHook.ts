@@ -1,10 +1,10 @@
-import { Ref, ref, provide, watch } from "vue"
+import { Ref, ref, provide, watch, shallowRef } from "vue"
 import { ColumnItem } from "../types"
 import { deepClone } from "../../utils/common"
 import { ParamsItem } from "../../../TableFilter"
 
 export function useColumnHook(props: any) {
-  const columns: Ref<Array<ColumnItem>> = ref([])
+  const columns: Ref<Array<ColumnItem>> = shallowRef([])
   const cs = deepClone(props.columns)
   columns.value = cs //.filter((a) => !a.hidden)
   provide("columns", columns)

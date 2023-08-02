@@ -9,7 +9,7 @@
 </template>
 <script lang="ts" setup>
 import { FormSchema } from "easybill-ui/index"
-import { ref, Ref, shallowRef } from "vue"
+import { ref, Ref, markRaw } from "vue"
 import FormSuffixBtn from "./components/FormSuffixBtn.vue"
 const form = ref({
   initData: { x: 1 },
@@ -64,7 +64,7 @@ const formSchema = ref<FormSchema>({
       prop: "input2",
       type: "select",
       span: 12,
-      suffix: shallowRef(FormSuffixBtn),
+      suffix: [markRaw(FormSuffixBtn)],
       asyncOptions: async () => {
         const list = [
           { label: "aa" + Math.floor(Math.random() * 100), value: 1 },
