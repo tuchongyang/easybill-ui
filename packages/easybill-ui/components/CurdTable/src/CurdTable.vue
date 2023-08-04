@@ -368,7 +368,7 @@ const create = (row?: any) => {
     if (!a.form) return
     let formValue: FormItem
     if (a.form instanceof Function) {
-      formValue = a.form(a, row)
+      formValue = a.form(a, row, search)
     } else {
       formValue = a.form
     }

@@ -1,13 +1,15 @@
 <template>
-  <div v-if="formItem.loading" class="loading" style="color: #999; font-size: 12px">
-    <el-icon class="is-loading"><Loading /></el-icon> 加载中...
+  <div class="schema-form-radio">
+    <div v-if="formItem.loading" class="loading" style="color: #999; font-size: 12px">
+      <el-icon class="is-loading"><Loading /></el-icon> 加载中...
+    </div>
+    <el-checkbox-group v-else v-model="model" :class="[props?.showType]" style="width: 100%" v-bind="props" v-on="eventObject">
+      <template v-for="option in formItem.options" :key="option.value">
+        <el-checkbox-button v-if="props?.componentName == 'button'" :label="option.value" :disabled="option.disabled"> {{ option.label }} </el-checkbox-button>
+        <el-checkbox v-else :label="option.value" :disabled="option.disabled"> {{ option.label }} </el-checkbox>
+      </template>
+    </el-checkbox-group>
   </div>
-  <el-checkbox-group v-else v-model="model" :class="[props?.showType]" style="width: 100%" v-bind="props" v-on="eventObject">
-    <template v-for="option in formItem.options" :key="option.value">
-      <el-checkbox-button v-if="props?.componentName == 'button'" :label="option.value" :disabled="option.disabled"> {{ option.label }} </el-checkbox-button>
-      <el-checkbox v-else :label="option.value" :disabled="option.disabled"> {{ option.label }} </el-checkbox>
-    </template>
-  </el-checkbox-group>
 </template>
 <script lang="ts">
 import { defineComponent, computed, PropType } from "vue"

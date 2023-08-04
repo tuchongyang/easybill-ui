@@ -29,7 +29,7 @@ const table = ref<CurdTableProps<any>>({
   },
   columns: [
     { label: "姓名", prop: "name", filter: {}, header: "姓名字符串", form: {} },
-    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number" } },
+    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number", value: 1 } },
     {
       label: "云平台",
       prop: "cloudType",
@@ -95,6 +95,9 @@ const table = ref<CurdTableProps<any>>({
       label: "日期",
       prop: "date",
       filter: { type: "time", props: { clearable: true } },
+      form: (form, row, query) => {
+        return { value: [query.startTime, query.endTime], type: "date-picker", props: { type: "monthrange", valueFormat: "YYYY-MM", format: "YYYY-MM" } }
+      },
     },
   ],
   fetchData: ({ listQuery }) => {
@@ -111,6 +114,7 @@ const table = ref<CurdTableProps<any>>({
       }, 500)
     })
   },
+  fetchCreate: async () => {},
 })
 setTimeout(() => {
   table.value.option.hideOperation = true

@@ -25,7 +25,7 @@ export interface FormItem {
   labelWidth?: string
   span?: number
   disabled?: boolean
-  tooltip?: string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps>) | Partial<ElTooltipProps>
+  tooltip?: string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps> | String) | Partial<ElTooltipProps>
   autoload?: boolean
   prefix?: string | any
   suffix?: string | any

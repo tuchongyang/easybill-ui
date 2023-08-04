@@ -55,6 +55,7 @@ const formSchema = ref<FormSchema>({
         { label: "跳舞", value: "2" },
       ],
       value: ["1"],
+      tooltip: (form) => "这里展示提示信息" + form.name2,
     },
     { label: "日期", prop: "date-picker", type: "date-picker", span: 12 },
     { label: "时间", prop: "time-picker", type: "time-picker", span: 12 },
