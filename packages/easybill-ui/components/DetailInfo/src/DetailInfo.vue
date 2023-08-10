@@ -17,7 +17,7 @@
     <div v-if="!$slots.default" class="detail-info-body" :class="[props.showType]">
       <div class="table-detail-col" v-for="(item, i) in list" :key="i" :span="item.span" :style="getItemStyle(item)">
         <div class="item-col">
-          <div v-if="item.label" class="label" :style="{ width: getLabelWidth(item), justifyContent: props.labelPosition || item.labelPosition }">
+          <div v-if="item.label" class="label" :style="getLabelStyle(item)">
             <span>{{ item.label }}</span>
             <DetailInfoTooltip :tooltip="item.tooltip" />{{ props.showType == "table" ? "" : "：" }}
           </div>
@@ -30,6 +30,7 @@
               <template v-else-if="item.type == 'image'">
                 <el-image :src="item.value" :preview-src-list="[item.value]" style="width: 40px; height: 40px; vertical-align: top" :fit="'cover'" v-bind="item.props"></el-image>
               </template>
+              <component v-else-if="item.type" :is="item.type" v-model="item.value" v-bind="item.props"></component>
               <template v-else><DetailInfoContent :data="item" /></template>
             </template>
           </div>
@@ -52,8 +53,8 @@ import DetailInfoContent from "./DetailInfoContent.vue"
 
 const props = defineProps({
   data: {
-    type: Object as PropType<Array<DetailDataItem>>,
-    default: () => ({}),
+    type: Array as PropType<Array<DetailDataItem>>,
+    default: () => [],
   },
   title: {
     type: String,
@@ -74,7 +75,8 @@ const props = defineProps({
   },
 })
 const list = computed(() => {
-  return props.data.filter((item) => {
+  const d = props.data || []
+  return d.filter((item) => {
     if (typeof item.hidden == "function") return !item.hidden(props.data)
     if (typeof item.hidden != "undefined") return !item.hidden
     return true
@@ -84,6 +86,15 @@ const getLabelWidth = (dataItem: DetailDataItem): string => {
   const labelWidth = typeof dataItem.labelWidth !== "undefined" ? dataItem.labelWidth : props.labelWidth
   const isNum = typeof labelWidth == "number" || (typeof labelWidth == "string" && /^\d+$/.test(labelWidth))
   return !isNum ? labelWidth + "" : labelWidth + "px"
+}
+const getLabelStyle = (item: DetailDataItem) => {
+  let s = item.labelStyle
+  if (typeof s == "object") {
+    s = Object.keys(item.labelStyle)
+      .map((a) => a + ":" + item.labelStyle[a])
+      .join(";")
+  }
+  return `width: ${getLabelWidth(item)}; justifyContent: ${item.labelPosition || props.labelPosition};` + s
 }
 const getItemStyle = (dataItem: DetailDataItem) => {
   const width = (100 * (dataItem.span || 24)) / 24 + "%"

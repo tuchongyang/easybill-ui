@@ -13,12 +13,12 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue"
 import { DetailDataItem } from "easybill-ui/index"
-const list: Ref<DetailDataItem[]> = ref([
+const list = ref<DetailDataItem[]>([
   { label: "正在同步", value: 1 },
   { label: "同步完成", value: 2, tooltip: "这是一个提示消息" },
   { label: "已取消", value: 3 },
   { label: "错误", value: 4 },
-  { label: "描述", value: "这里是一大段文字这里是一大段文<span style='color:red'>字这</span>里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字" },
+  { label: "描述", value: "这里是一大段文字这里是一大段文<span style='color:red'>字这</span>里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", labelStyle: "align-items: flex-start" },
   {
     label: "描述",
     value:

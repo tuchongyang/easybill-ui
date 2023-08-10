@@ -462,6 +462,9 @@ defineExpose({
   setTotal,
   search,
   listQuery,
+  fetchCreate: create,
+  fetchEdit: create,
+  fetchRemove: startremove,
   getEl() {
     return instance?.proxy?.$el
   },
