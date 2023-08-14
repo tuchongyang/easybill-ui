@@ -39,6 +39,13 @@ const open = () => {
           ],
           value: ["1"],
         },
+        {
+          label: "自定义组件",
+          prop: "slider",
+          span: 12,
+          type: "el-slider",
+          value: 1,
+        },
       ],
       rules: {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],

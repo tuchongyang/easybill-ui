@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, provide, ref, Ref, computed, watch, PropType } from "vue"
+import { defineComponent, reactive, provide, ref, Ref, computed, watch, PropType, getCurrentInstance } from "vue"
 import { isFunction, isAsyncFunction } from "./utils/is"
 import { deepClone } from "./utils/common"
 import components from "./components"
@@ -65,6 +65,7 @@ export default defineComponent({
     const sFormSchema: Ref<FormSchema> = ref(props.formSchema)
     let formModel = reactive<Fields>(props.modelValue || {})
     const curdFormContext = reactive<FormContext>({} as FormContext)
+    const instance = getCurrentInstance()
     watch(
       () => props.modelValue,
       (val) => {
@@ -100,7 +101,7 @@ export default defineComponent({
       if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
         item.loading = true
         item.options = await item.asyncOptions(formModel, item, curdFormContext).finally(() => (item.loading = false))
-        item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, curdFormContext)
+        !instance?.isUnmounted && item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, curdFormContext)
       } else if (item.prop && item.asyncValue && (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue))) {
         // 异步默认值
         item.loading = true
@@ -134,23 +135,23 @@ export default defineComponent({
     // 调用某个表单项的异步数据接口
     const loadOptions = async (prop: string, option?: any) => {
       const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
-      if (cur && cur.asyncOptions) {
+      if (cur && cur.asyncOptions && !instance?.isUnmounted) {
         cur.loading = true
         cur.options =
           (await cur
             .asyncOptions(formModel, cur, curdFormContext, option)
             .catch((err) => console.error("loadOptionError", err))
             .finally(() => (cur.loading = false))) || []
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
+        !instance?.isUnmounted && cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
       }
       return cur
     }
     // 给某个item赋值options
-    const setOptions = async (prop: string, options: CurdFormOptionItem[]) => {
+    const setOptions = async (prop: string, options: CurdFormOptionItem[], option?: any) => {
       const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
       if (cur) {
         cur.options = options
-        cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext)
+        !instance?.isUnmounted && cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
       }
       // return cur
     }
