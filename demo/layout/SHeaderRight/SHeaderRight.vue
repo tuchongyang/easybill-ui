@@ -8,13 +8,12 @@
   <MessageCenter class="menu-item" />
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
-import { Moon, Sunny, ArrowDown } from "@element-plus/icons-vue"
+import { Moon, Sunny } from "@element-plus/icons-vue"
 // import axios from "axios"
 import MessageCenter from "./MessageCenter.vue"
-const router = useRouter()
+
 const store = useStore()
 
 const theme = computed(() => store.state.layout.theme)

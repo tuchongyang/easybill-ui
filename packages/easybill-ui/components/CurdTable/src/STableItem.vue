@@ -9,12 +9,21 @@
     </template>
     <template #default="scope">
       <slot v-bind="scope"></slot>
+      <template v-if="props.schema.children?.length">
+        <template v-for="item in props.schema.children" :key="item.label">
+          <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="props.isSlot" :is-slot-header="props.isSlotHeader" :option="option" @search="onItemChange">
+            <template #default>
+              <slot :name="item.prop"></slot>
+            </template>
+            <template #header>
+              <slot :name="item.prop + 'Header'"></slot>
+            </template>
+          </STableItem>
+        </template>
+      </template>
       <template v-if="!props.isSlot">
         <!-- <div v-if="props.schema.options">{{ ops }}</div> -->
         <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="ops" />
-        <template v-else-if="props.schema.form && props.schema.form.type == 'file'">
-          <el-image :src="scope.row[props.schema.prop]" :preview-src-list="[scope.row[props.schema.prop]]" style="width: 40px; height: 40px; vertical-align: top" fit="cover" @click.stop></el-image>
-        </template>
         <span v-else-if="props.schema.copy">
           <el-icon class="copy" title="点击复制" @click.stop="copyValue(getValue(scope))"><CopyDocument /></el-icon>
           <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
@@ -91,6 +100,10 @@ const onChange = (prop: string, value: string) => {
 const tableItemFilterRef = ref()
 const search = (opt: any) => {
   tableItemFilterRef.value?.search && tableItemFilterRef.value.search(opt)
+}
+const tableItemRefs: Ref<Record<string, any>> = ref({})
+const onItemChange = (prop: string, value: string) => {
+  emits("search", prop, value, filterSchema.value)
 }
 defineExpose({ search })
 </script>

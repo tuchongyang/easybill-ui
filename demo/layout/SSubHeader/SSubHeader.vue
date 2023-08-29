@@ -56,13 +56,13 @@ watch(
   () => store.state.header.headerLeft,
   (val) => {
     headerLeft.value = val
-  }
+  },
 )
 watch(
   () => store.state.header.headerRight,
   (val) => {
     headerRight.value = val
-  }
+  },
 )
 // 查找四级菜单
 // const routes = computed(() => store.state.menu.menus[store.state.menu.currentMenuIndex]?.children)
@@ -116,7 +116,7 @@ watch(
     // console.log("currentEndMenu", store.state.menu.currentEndMenu)
     // console.log("headerMenu", store.state.header.headerMenu)
     showBack.value = !!router.options.history.state.back || !!route.query.prev
-  }
+  },
 )
 const isBack = () => {
   const prev = (route.meta.backPath as string) || (route.query.prev as string)

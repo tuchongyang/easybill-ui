@@ -1,22 +1,18 @@
-export interface OptionItem {
+export interface OptionItem extends Record<string, any> {
   label: string
   value: string | number | boolean
   disabled?: boolean
-  type?: "default" | "primary" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"
+  type?: string | "default" | "primary" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"
   icon?: any
   hit?: boolean
   color?: string
-  size?: "large" | "default" | "small"
-  effect?: "dark" | "light" | "plain"
+  size?: string | "large" | "default" | "small"
+  effect?: string | "dark" | "light" | "plain"
   round?: boolean
   border?: boolean
   className?: string
   iconClass?: string | string[]
   dot?: boolean
-  /**
-   * 供curd-form的单选或多选，选项上的tooltip
-   */
   tooltip?: any
   html?: string
-  [key: string]: any
 }

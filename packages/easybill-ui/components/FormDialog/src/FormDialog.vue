@@ -1,14 +1,12 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="60%" :close-on-click-modal="false" v-bind="$attrs" :before-close="onBeforeClose">
-    <el-steps v-if="stepSchemaList.length > 1" :active="step" align-center style="margin-bottom: 20px; position: sticky; top: 0; z-index: 2000; background: var(--el-bg-color)">
+    <el-steps v-if="stepSchemaList.length > 1" :active="step" align-center style="margin-bottom: 20px; position: sticky; top: 0; z-index: 2000; background: var(--el-bg-color)" v-bind="stepProps">
       <el-step v-for="(item, i) in stepSchemaList" :key="i" :title="item.name" :description="item.description" />
     </el-steps>
     <div v-loading="confirmLoading">
-      <div v-for="(item, i) in stepSchemaList" :key="i">
-        <div v-show="step == i">
-          <curd-form ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" style="margin: 0 40px 0 20px" />
-        </div>
-      </div>
+      <template v-for="(item, i) in stepSchemaList" :key="i">
+        <curd-form v-show="step == i" ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" :extend-context="extendContext" style="margin: 0 40px 0 20px" />
+      </template>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -61,6 +59,10 @@ export default defineComponent({
       type: Function,
       default: null,
     },
+    stepProps: {
+      type: Object as PropType<Fields>,
+      default: () => ({}),
+    },
   },
   setup(props) {
     const curdFormRef = ref()
@@ -86,7 +88,6 @@ export default defineComponent({
       }
     }
     const onOk = () => {
-      // return console.log("curdFormRef", curdFormRef)
       state.confirmLoading = true
       curdFormRef.value[state.step]
         ?.validate()
@@ -98,7 +99,7 @@ export default defineComponent({
           }
         })
         .catch((e: Error) => {
-          console.log(e)
+          console.error(e)
           state.confirmLoading = false
         })
     }
@@ -114,6 +115,22 @@ export default defineComponent({
         props.remove && props.remove()
       }, 300)
     }
+    const loadOptions = (prop: string, config?: any) => {
+      if (!stepSchemaList.value.length) return
+      for (const i in stepSchemaList.value) {
+        const group = stepSchemaList.value[i]
+        const formItem = group.formSchema.formItem
+        for (const j in formItem) {
+          const item = formItem[j]
+          if (item.prop == prop) {
+            curdFormRef.value[i]?.loadOptions(prop, config)
+          }
+        }
+      }
+    }
+    const extendContext = {
+      loadOptions,
+    }
     if (props.setForm) {
       props.setForm(form)
     }
@@ -128,6 +145,7 @@ export default defineComponent({
       form,
       prev,
       next,
+      extendContext,
     }
   },
 })

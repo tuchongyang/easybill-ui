@@ -13,37 +13,50 @@
   </div>
 </template>
 <script lang="ts">
-export default {
-  name: "TableFilter",
-}
+export default { name: "TableFilter" }
 </script>
 <script lang="ts" setup>
-import { PropType, provide, Ref, ref, reactive } from "vue"
+import { PropType, provide, Ref, ref, reactive, onMounted } from "vue"
 import * as I from "../types"
 import FilterExternal from "./FilterExternal/FilterExternal.vue"
 import FilterSearchBox from "./FilterSearchBox.vue"
 import FilterTags from "./components/FilterTags.vue"
 import { deepClone } from "../../CurdTable/utils/common"
+import { CurdFormOptionItem } from "easybill-ui/components/CurdForm"
 
 const props = defineProps({
+  /**
+   * @deprecated since version 1.0
+   */
   selectParams: {
     type: Array as PropType<Array<I.ParamsItem>>,
     default: () => {
       return []
     },
   },
+  schema: {
+    type: Array as PropType<Array<I.ParamsItem>>,
+    default: undefined,
+  },
+  /**
+   * @deprecated  since version 1.0
+   */
   listQuery: {
     type: Object as PropType<I.ListQuery>,
     default: () => {
       return {}
     },
   },
+  modelValue: {
+    type: Object as PropType<I.ListQuery>,
+    default: undefined,
+  },
 })
 const emit = defineEmits(["search"])
 const searchRef = ref()
 const selectList: Ref<I.ParamsItem[]> = ref([])
-const selectParams: Ref<Array<I.ParamsItem>> = ref(deepClone(props.selectParams) || [])
-const listQuery = reactive<I.ListQuery>(props.listQuery || {})
+const selectParams = ref<I.ParamsItem[]>(props.schema || props.selectParams || [])
+const listQuery = reactive<I.ListQuery>(props.modelValue || props.listQuery || {})
 
 const onChange = (d: any) => {
   if (d) {
@@ -52,7 +65,7 @@ const onChange = (d: any) => {
       if (listQuery[cur.prop] === "" || listQuery[cur.prop] === null || listQuery[cur.prop] === undefined) {
         selectList.value.splice(
           selectList.value.findIndex((j) => d.prop == j.prop),
-          1
+          1,
         )
       } else {
         cur.tagNames = d.tagNames
@@ -60,8 +73,6 @@ const onChange = (d: any) => {
     } else {
       typeof listQuery[d.prop] !== "undefined" && listQuery[d.prop] !== "" && selectList.value.push(d)
     }
-    // console.log("selectList1", selectList)
-    // console.log("listQuery.value1", listQuery)
     emit("search", listQuery, selectList.value)
     return
   }
@@ -87,10 +98,10 @@ const getTags = () => {
         }
         selectList.value.push({ ...a, tagNames: tagNames })
       } else if (a.asyncOptions) {
-        a.asyncOptions(listQuery, a, tableFilterContext).then((res) => {
+        loadOptions(a.prop).then((res: CurdFormOptionItem[]) => {
           selectList.value.push({
             ...a,
-            tagNames: a.tagNames || res.find((j: any) => j.value == listQuery[a.prop])?.label,
+            tagNames: a.tagNames || res.find((j: any) => j.value == listQuery[a.prop])?.label || "",
           })
         })
       } else {
@@ -131,7 +142,7 @@ const setItem = (prop: string, paramsItem?: any) => {
     if ((current && typeof current.tagNames == "undefined") || (current && current.tagNames === "")) {
       selectList.value.splice(
         selectList.value.findIndex((a) => a.prop == prop),
-        1
+        1,
       )
     }
   })
@@ -145,15 +156,13 @@ const state = ref({
   isFocus: false,
 })
 const filterExternalRef = ref()
-const loadOptions = (prop: string, option: any) => {
+const loadOptions = (prop: string, option?: any) => {
   const current = selectParams.value.find((a) => a.prop == prop)
   if (!current || !current.asyncOptions) return
   if (current.external) {
     return filterExternalRef.value.loadOptions(prop, option)
   }
-  current.asyncOptions(listQuery, current, tableFilterContext).then((res) => {
-    current.options = res
-  })
+  return searchRef.value.loadOptions(prop, option)
 }
 const clear = () => {
   for (let i = 0; i < selectList.value.length; i++) {
@@ -165,7 +174,7 @@ const clear = () => {
 }
 // 重新调用selectParams
 const refreshSelectParams = () => {
-  selectParams.value = deepClone(props.selectParams)
+  selectParams.value = deepClone(props.schema)
 }
 const getCurrentIndex = () => {
   return searchRef.value && searchRef.value.currentIndex
@@ -185,6 +194,9 @@ const tableFilterContext = reactive<I.TableFilterContext>({
 provide("tableFilter", tableFilterContext)
 provide("state", state)
 provide("selectList", selectList)
+provide("selectParams", selectParams)
 defineExpose({ setItem, selectList, loadOptions, clear, refreshSelectParams, getCurrentIndex, listQuery, selectParams })
-getTags()
+onMounted(() => {
+  getTags()
+})
 </script>

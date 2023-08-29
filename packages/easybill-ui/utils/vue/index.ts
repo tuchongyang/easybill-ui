@@ -1,3 +1,3 @@
-export * from "./install";
+export * from "./install"
 
-export * from "./typescript";
+export * from "./typescript"

@@ -1,9 +1,9 @@
-import { ref, App, unref, Ref } from "vue"
+import { ref, unref, Ref } from "vue"
 const globalConfig: Ref<GlobalConfig> = ref({} as GlobalConfig)
 export function useGlobalConfig() {
   return globalConfig
 }
-export const provideGlobalConfig = (config: any, app?: App, global = false) => {
+export const provideGlobalConfig = (config: any) => {
   const oldConfig = useGlobalConfig()
   const cfg = (config && unref(config)) || {}
   if (!oldConfig?.value) return cfg

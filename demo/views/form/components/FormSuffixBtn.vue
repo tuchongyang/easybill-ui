@@ -11,8 +11,9 @@ const props = defineProps({
   ...FormItemProps,
 })
 const { formContext } = useForm()
+console.log("formContext", formContext)
 const refresh = () => {
-  formContext.loadOptions(props.formItem.prop)
+  formContext?.loadOptions(props.formItem.prop)
 }
 const add = () => {
   FormDialog.show({

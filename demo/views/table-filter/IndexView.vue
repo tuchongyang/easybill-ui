@@ -1,15 +1,26 @@
 <template>
   <div>
-    <TableFilter :list-query="listQuery" :select-params="selectParams" />
+    <TableFilter v-model="listQuery" :schema="filterSchema" @search="onSearch" />
   </div>
 </template>
 <script lang="ts" setup>
-import { ParamsItem } from "easybill-ui/index"
-import { ref, Ref } from "vue"
+import { Ref } from "vue"
+import { Fields, FilterItem } from "easybill-ui/index"
+import { ref } from "vue"
 const listQuery = ref({})
-const selectParams: Ref<ParamsItem[]> = ref([
+const filterSchema: Ref<FilterItem[]> = ref([
   { label: "名称", prop: "name" },
   { label: "年龄", prop: "age" },
+  { label: "账期", prop: "date", type: "date-picker", external: true },
+  {
+    label: "多选",
+    prop: "checkboc",
+    type: "checkbox",
+    options: [
+      { label: "11", value: 1 },
+      { label: "22", value: 2 },
+    ],
+  },
   {
     label: "爱好",
     prop: "ai",
@@ -22,7 +33,7 @@ const selectParams: Ref<ParamsItem[]> = ref([
   {
     label: "dd",
     prop: "a",
-    type: "cascader",
+    type: "el-cascader",
     asyncOptions: () => {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -41,18 +52,11 @@ const selectParams: Ref<ParamsItem[]> = ref([
         }, 1000)
       })
     },
-    // options: [
-    //   {
-    //     value: "guide",
-    //     label: "Guide",
-    //     children: [
-    //       {
-    //         value: "disciplines",
-    //         label: "Disciplines",
-    //       },
-    //     ],
-    //   },
-    // ],
   },
 ])
+
+const onSearch = (query: Fields) => {
+  console.log("listQuery", listQuery.value)
+  console.log("query", query)
+}
 </script>

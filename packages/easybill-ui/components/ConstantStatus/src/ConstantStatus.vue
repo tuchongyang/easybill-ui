@@ -1,7 +1,7 @@
 <template>
   <el-tag v-if="current" class="constant-status" :class="{ 'dot-status': current.dot }" v-bind="currentProps">
     <el-icon v-if="(current.icon || current.iconClass) && !current.dot" :class="current.iconClass" style="margin-right: 5px">
-      <component v-if="current.icon" :is="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
+      <component :is="current.icon" v-if="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
     </el-icon>
     <span v-if="current.dot" class="dot"></span>
     <span v-if="current.html" class="name" v-html="current.label"></span>
@@ -43,7 +43,7 @@ const current = computed(() => {
   return result && result.find((a) => a.value == props.value)
 })
 const currentProps = computed(() => {
-  const defaults = { type: "", class: [""], style: {} }
+  const defaults = { type: "", label: "", value: "", class: [""], style: {} } as OptionItem
   const result = props.options || []
   const cur = result.find((a) => a.value == props.value)
   if (!cur) return {}
@@ -53,7 +53,7 @@ const currentProps = computed(() => {
     defaults.style = args.color ? { color: args.color, backgroundColor: "transparent" } : {}
   }
   // 判断type在不在里面
-  if (type && ["success", "info", "warning", "danger"].includes(type)) {
+  if (type && ["success", "info", "warning", "danger"].includes(String(type))) {
     defaults.type = type
   } else {
     defaults.class.push("el-tag--" + (type || "default"))

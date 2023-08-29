@@ -14,12 +14,13 @@ import { DetailDataItem } from "./types"
 const props = defineProps({
   data: {
     type: Object as PropType<DetailDataItem>,
-    default: {},
+    default: () => ({}),
   },
 })
 const getTooltipProps = computed(() => {
   if (typeof props.data.showOverflowTooltip == "object") {
-    return { content: props.data.value, ...props.data.showOverflowTooltip }
+    const { content, ...args } = props.data.showOverflowTooltip
+    return { content: content || props.data.value, ...args }
   }
   return { content: props.data.value }
 })

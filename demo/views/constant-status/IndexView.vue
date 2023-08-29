@@ -2,30 +2,29 @@
   <div>
     <div class="title">默认样式</div>
     <div class="list">
-      <div class="item" v-for="(item, i) in options1" :key="i"><ConstantStatus :value="item.value" :options="options1" /></div>
+      <div v-for="(item, i) in options1" :key="i" class="item"><ConstantStatus :value="item.value" :options="options1" /></div>
     </div>
     <div class="title">dot风格</div>
     <div class="list">
-      <div class="item" v-for="(item, i) in options2" :key="i"><ConstantStatus :value="item.value" :options="options2" /></div>
+      <div v-for="(item, i) in options2" :key="i" class="item"><ConstantStatus :value="item.value" :options="options2" /></div>
     </div>
     <div class="title">effect:dark</div>
     <div class="list">
-      <div class="item" v-for="(item, i) in options3" :key="i"><ConstantStatus :value="item.value" :options="options3" /></div>
+      <div v-for="(item, i) in options3" :key="i" class="item"><ConstantStatus :value="item.value" :options="options3" /></div>
     </div>
     <div class="title">effect:plain</div>
     <div class="list">
-      <div class="item" v-for="(item, i) in options4" :key="i"><ConstantStatus :value="item.value" :options="options4" /></div>
+      <div v-for="(item, i) in options4" :key="i" class="item"><ConstantStatus :value="item.value" :options="options4" /></div>
     </div>
     <div class="title">effect:light</div>
     <div class="list">
-      <div class="item" v-for="(item, i) in options5" :key="i"><ConstantStatus :value="item.value" :options="options5" /></div>
+      <div v-for="(item, i) in options5" :key="i" class="item"><ConstantStatus :value="item.value" :options="options5" /></div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { OptionItem } from "easybill-ui/index"
 import { ref, Ref } from "vue"
-import { CircleClose } from "@element-plus/icons-vue"
 
 const options1: Ref<OptionItem[]> = ref([
   { label: "default", value: 10, type: "default" },
@@ -40,7 +39,7 @@ const options1: Ref<OptionItem[]> = ref([
   { label: "red-purple", value: 8, type: "red-purple" },
   { label: "blueness", value: 9, type: "blueness" },
 ])
-const options2: Ref<OptionItem[]> = ref([
+const options2 = ref<OptionItem[]>([
   { label: "primary", value: 0, dot: true, type: "primary", effect: "plain", border: false },
   { label: "warning", value: 1, dot: true, type: "warning", effect: "plain", border: false },
   { label: "success", value: 2, dot: true, type: "success", effect: "plain", border: false },
@@ -52,7 +51,7 @@ const options2: Ref<OptionItem[]> = ref([
   { label: "red-purple", value: 8, dot: true, type: "red-purple", effect: "plain", border: false },
   { label: "blueness", value: 9, dot: true, type: "blueness", effect: "plain", border: false },
 ])
-const options3: Ref<OptionItem[]> = ref([
+const options3 = ref<OptionItem[]>([
   { label: "primary", value: 0, type: "primary", effect: "dark" },
   { label: "warning", value: 1, type: "warning", effect: "dark" },
   { label: "success", value: 2, type: "success", effect: "dark" },
@@ -64,7 +63,7 @@ const options3: Ref<OptionItem[]> = ref([
   { label: "red-purple", value: 8, type: "red-purple", effect: "dark" },
   { label: "blueness", value: 9, type: "blueness", effect: "dark" },
 ])
-const options4: Ref<OptionItem[]> = ref([
+const options4 = ref<OptionItem[]>([
   { label: "primary", value: 0, type: "primary", effect: "plain" },
   { label: "warning", value: 1, type: "warning", effect: "plain" },
   { label: "success", value: 2, type: "success", effect: "plain" },
@@ -76,7 +75,7 @@ const options4: Ref<OptionItem[]> = ref([
   { label: "red-purple", value: 8, type: "red-purple", effect: "plain" },
   { label: "blueness", value: 9, type: "blueness", effect: "plain" },
 ])
-const options5: Ref<OptionItem[]> = ref([
+const options5 = ref<OptionItem[]>([
   { label: "primary", value: 0, type: "primary", effect: "light" },
   { label: "warning", value: 1, type: "warning", effect: "light" },
   { label: "success", value: 2, type: "success", effect: "light" },

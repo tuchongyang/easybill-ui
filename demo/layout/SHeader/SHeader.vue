@@ -13,9 +13,8 @@
   </el-header>
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
 import HeaderMenu from "./HeaderMenu.vue"
 import SLogo from "../SLogo"
 import SAsideToggle from "../SAsideToggle"

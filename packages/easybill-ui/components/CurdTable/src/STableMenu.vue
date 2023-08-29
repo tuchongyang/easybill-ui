@@ -1,7 +1,7 @@
 <template>
   <div class="table-menu">
     <el-tooltip v-for="item in controlButtons" :key="item.label" :content="item.label" placement="top">
-      <el-dropdown v-if="item.options" trigger="click" style="margin: 0 3px" @command="handleSizeCommand">
+      <el-dropdown v-if="item.options" trigger="click" class="table-menu-item" @command="handleSizeCommand">
         <el-button type="info" link class="table-menu-item">
           <el-icon><component :is="item.icon"></component></el-icon>
         </el-button>

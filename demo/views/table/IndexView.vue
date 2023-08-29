@@ -1,43 +1,71 @@
 <template>
   <div>
     <CurdTable ref="tableRef" v-bind="table">
+      <template #menuLeft>
+        <el-button type="primary" plain>左边插槽</el-button>
+      </template>
+      <template #menuRight>
+        <el-button type="primary" plain>右边边插槽</el-button>
+      </template>
       <template #pageLeft>
         <el-button type="primary" plain>左边插槽</el-button>
       </template>
+      <template #expand> 这里是展开杭 </template>
     </CurdTable>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, markRaw } from "vue"
-import { CurdTableProps } from "easybill-ui/index"
-import { useGlobalConfig } from "easybill-ui/index"
+import { ref, markRaw, Ref } from "vue"
+import { CurdTableProps, LabelPosition } from "easybill-ui/index"
 import { CircleCheck } from "@element-plus/icons-vue"
-const config = useGlobalConfig()
+import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
+
 const tableRef = ref()
-const table = ref<CurdTableProps<any>>({
+const table: Ref<CurdTableProps<any>> = ref({
   data: [],
+  pageOptions: { age: "8", cateId: 1 },
   option: {
     autoload: true,
     filterAttrs: {
-      labelPosition: "left",
+      labelPosition: LabelPosition.LEFT,
     },
     menuEvent: {
-      export() {
-        alert("自定义导出")
-      },
+      // export() {
+      //   alert("自定义导出")
+      // },
     },
   },
   columns: [
-    { label: "姓名", prop: "name", filter: {}, header: "姓名字符串", form: {} },
-    { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number", value: 1 } },
     {
-      label: "云平台",
-      prop: "cloudType",
-      filter: { external: true, type: "radio", props: { componentName: "button" }, span: 24, labelWidth: "90px", value: "" },
-      options: [
-        { label: "全部", value: "" },
-        { label: "阿里云", value: "aliyun" },
-        { label: "腾讯云", value: "tencent" },
+      label: "三级表头",
+      prop: "third",
+      children: [
+        {
+          label: "用户信息",
+          prop: "s",
+          children: [
+            {
+              label: "姓名",
+              prop: "name",
+              filter: {},
+              header: "姓名字符串",
+              form: {
+                suffix: [markRaw(FormSuffixBtn)],
+              },
+            },
+            { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number", value: 1 } },
+          ],
+        },
+        {
+          label: "云平台",
+          prop: "cloudType",
+          filter: { external: true, type: "radio", props: { componentName: "button" }, span: 24, labelWidth: "90px", value: "" },
+          options: [
+            { label: "全部", value: "" },
+            { label: "阿里云", value: "aliyun" },
+            { label: "腾讯云", value: "tencent" },
+          ],
+        },
       ],
     },
     { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
@@ -47,18 +75,19 @@ const table = ref<CurdTableProps<any>>({
       prop: "cateId",
       filter: {
         type: "select",
+        inner: true,
+        props: { filterable: true },
         asyncOptions: async (modelRef, formItem, context, config) => {
           return [
             { label: "一级1", value: 1 },
             { label: "一级2", value: 2 },
-          ]
+          ].filter((a) => a.label.includes(config?.queryString || ""))
         },
         eventObject: {
           change(formModel, formItem, context) {
             formModel.subCateId = ""
-            console.log("context", context)
             context.loadOptions("subCateId")
-            context.setValue("subCateId")
+            context.change(formModel, formItem)
           },
         },
       },
@@ -68,7 +97,9 @@ const table = ref<CurdTableProps<any>>({
       prop: "subCateId",
       filter: {
         type: "select",
-        asyncOptions: async (modelRef, formItem, context, config) => {
+        props: { all: true },
+        inner: true,
+        asyncOptions: async (modelRef) => {
           return modelRef.cateId == 1
             ? [
                 { label: "二级11", value: 11 },
@@ -88,9 +119,12 @@ const table = ref<CurdTableProps<any>>({
         { label: "唱歌", value: "1", type: "success", border: false, effect: "plain", icon: markRaw(CircleCheck) },
         { label: "跳舞", value: "2", type: "danger" },
       ],
-      header: { tooltip: { content: "这是状态的提示", placement: "right" } },
+      header: { tooltip: { content: "这是状态的提示" } },
       filter: { inner: true, type: "select" },
     },
+    { label: "序号", prop: "index", type: "index" },
+    { label: "选项", prop: "sel", type: "selection" },
+    { label: "展开", prop: "expand", type: "expand" },
     {
       label: "日期",
       prop: "date",
@@ -99,9 +133,14 @@ const table = ref<CurdTableProps<any>>({
         return { value: [query.startTime, query.endTime], type: "date-picker", props: { type: "monthrange", valueFormat: "YYYY-MM", format: "YYYY-MM" } }
       },
     },
+    {
+      label: "滑动条",
+      prop: "slider",
+      form: { type: "el-slider" },
+    },
   ],
-  fetchData: ({ listQuery }) => {
-    return new Promise((resolve, reject) => {
+  fetchData: () => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         const list = [
           { name: "张三", age: 9, status: 1 },
@@ -117,6 +156,6 @@ const table = ref<CurdTableProps<any>>({
   fetchCreate: async () => {},
 })
 setTimeout(() => {
-  table.value.option.hideOperation = true
+  table.value.option && (table.value.option.hideOperation = true)
 }, 1000)
 </script>

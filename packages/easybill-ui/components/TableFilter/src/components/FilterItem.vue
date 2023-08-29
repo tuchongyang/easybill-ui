@@ -1,14 +1,14 @@
 <template>
   <div ref="wrapperRef" class="filter-item" style="flex: 1">
-    <component :is="typeList[props.paramsItem.type || 'input']" ref="comRef" v-model="query[props.paramsItem.prop]" :list-query="listQuery" :params-item="props.paramsItem" @change="onChange" />
+    <CurdForm v-if="show" ref="formRef" v-model="query" :form-schema="formSchema" @change="onChange" />
   </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch, inject, reactive, Ref, PropType } from "vue"
 import * as I from "../../types"
-import container from "./containers"
 import * as Utils from "../../../../utils/common"
 import { ListQuery } from "../../types"
+import { FormSchema } from "../../../CurdForm"
 
 const props = defineProps({
   listQuery: {
@@ -23,10 +23,37 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(["change", "search"])
+
 const listQuery = reactive<ListQuery>(props.listQuery)
 const query: Ref<ListQuery> = ref(Utils.deepClone(props.listQuery))
-const typeList = container
-const tableFilter = inject("tableFilter")
+const formRef = ref()
+const selectParams = inject<Ref<I.ParamsItem[]>>("selectParams") || ref([])
+const formSchema = ref<FormSchema>({
+  formItem: [
+    ...selectParams.value
+      .filter((a) => !a.external)
+      .map((a) => {
+        a.hidden = props.paramsItem.prop != a.prop
+        return a
+      }),
+  ],
+})
+const show = ref(true)
+watch(
+  () => props.paramsItem.prop,
+  () => {
+    show.value = false
+    ;(formSchema.value.formItem = selectParams.value
+      .filter((a) => !a.external)
+      .map((a) => {
+        a.hidden = props.paramsItem.prop != a.prop
+        return a
+      })),
+      setTimeout(() => {
+        show.value = true
+      })
+  },
+)
 watch(
   () => props.listQuery,
   (val) => {
@@ -40,43 +67,27 @@ watch(
     }
     query.value = q
   },
-  { immediate: true, deep: true }
-)
-const comRef = ref()
-watch(
-  () => props.paramsItem,
-  () => {
-    setTimeout(() => {
-      comRef.value && comRef.value.focus && comRef.value.focus()
-    })
-  }
+  { immediate: true, deep: true },
 )
 
 const wrapperRef = ref()
 
-const onChange = (option: ChangeOption) => {
+const onChange = () => {
   if (props.paramsItem.tableKey && props.paramsItem.tableKey.length) {
     props.paramsItem.tableKey.forEach((a, i) => {
-      listQuery[a] = option.value[i]
+      listQuery[a] = query.value[props.paramsItem.prop][i]
     })
   } else {
-    listQuery[option.prop] = option.value
+    listQuery[props.paramsItem.prop] = query.value[props.paramsItem.prop]
   }
-  if (props.paramsItem.eventObject?.change) {
-    props.paramsItem.eventObject?.change(listQuery, props.paramsItem, tableFilter)
-  }
+
   emit("search", props.paramsItem)
-  // close()
 }
 const setValue = (prop: string) => {
   listQuery[prop] = query.value[prop]
 }
-const focus = () => {
-  comRef.value && comRef.value.focus && comRef.value.focus()
+const loadOptions = (prop: string, config?: any) => {
+  return formRef.value.loadOptions(prop, config)
 }
-defineExpose({ setValue, focus })
-interface ChangeOption {
-  prop: string
-  value: any
-}
+defineExpose({ setValue, loadOptions })
 </script>

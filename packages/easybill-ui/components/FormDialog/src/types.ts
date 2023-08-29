@@ -1,5 +1,6 @@
 import { Fields, FormSchema } from "../../CurdForm"
 import { DialogProps } from "element-plus"
+import { StepProps } from "element-plus"
 
 export interface FormDialogOptions extends Partial<DialogProps> {
   title?: string
@@ -9,4 +10,5 @@ export interface FormDialogOptions extends Partial<DialogProps> {
   formSchema?: FormSchema
   handleOk?: (modelRef: Fields) => Promise<void>
   setForm?: (form: Fields) => void
+  stepProps?: Partial<StepProps & Fields>
 }

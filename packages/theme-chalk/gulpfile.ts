@@ -25,14 +25,14 @@ function buildThemeChalk() {
     .pipe(
       cleanCSS({}, (details) => {
         consola.success(`${chalk.cyan(details.name)}: ${chalk.yellow(details.stats.originalSize / 1000)} KB -> ${chalk.green(details.stats.minifiedSize / 1000)} KB`)
-      })
+      }),
     )
     .pipe(
       rename((path) => {
         if (!noElPrefixFile.test(path.basename)) {
           path.basename = `${path.basename}`
         }
-      })
+      }),
     )
     .pipe(dest(distFolder))
 }
@@ -54,7 +54,7 @@ export function copyThemeChalkSource() {
 
 export const build = parallel(
   // copyThemeChalkSource,
-  series(buildThemeChalk, copyThemeChalkBundle)
+  series(buildThemeChalk, copyThemeChalkBundle),
 )
 
 export default build

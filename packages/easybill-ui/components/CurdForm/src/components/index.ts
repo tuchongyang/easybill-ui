@@ -10,7 +10,7 @@ import SchemaFormColorPicker from "./schema-form-color-picker.vue"
 import SchemaFormValue from "./schema-form-value.vue"
 import SchemaFormCascader from "./schema-form-cascader.vue"
 import SchemaFormAutocomplete from "./schema-form-autocomplete.vue"
-import { isReactive, isRef, createVNode, isVNode } from "vue"
+import { isReactive, isRef, isVNode } from "vue"
 interface PresetMap {
   [key: string]: any
 }

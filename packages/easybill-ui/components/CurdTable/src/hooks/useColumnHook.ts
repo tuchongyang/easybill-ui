@@ -50,7 +50,7 @@ export function useColumnHook(props: any) {
       columns.value = deepClone(val)
 
       initColumn()
-    }
+    },
   )
   return {
     columns,

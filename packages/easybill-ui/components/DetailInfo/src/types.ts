@@ -17,7 +17,7 @@ export interface DetailDataItem extends Record<string, any> {
   tooltip?: string | import("element-plus/es/components/tooltip").ElTooltipProps
   labelPosition?: "left" | "right" | "center"
   labelStyle?: string | Record<string, any>
-  showOverflowTooltip?: boolean | ElTooltipProps
+  showOverflowTooltip?: boolean | string | Partial<ElTooltipProps>
   rawContent?: boolean
   hidden?: boolean | ((data: DetailDataItem[]) => boolean)
 }

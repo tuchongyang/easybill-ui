@@ -1,16 +1,15 @@
 <template>
-  <CurdForm ref="formRef" v-model="listQuery" inline class="filter-external" :form-schema="formSchema" @change="onChange">
+  <CurdForm ref="formRef" v-model="query" inline class="filter-external" :form-schema="formSchema" @change="onChange">
     <template #defaultFilter>
       <slot></slot>
     </template>
   </CurdForm>
 </template>
 <script lang="ts" setup>
-import { ref, watch, Ref, PropType } from "vue"
+import { ref, watch, PropType } from "vue"
 import CurdForm from "../../../CurdForm"
 import { ParamsItem, ListQuery } from "../../types"
 import { Fields, FormSchema, FormItem } from "../../../CurdForm"
-import { deepClone } from "../../../CurdForm/src/utils/common"
 const props = defineProps({
   selectParams: {
     type: Array as PropType<Array<ParamsItem>>,
@@ -29,7 +28,7 @@ const props = defineProps({
     default: false,
   },
 })
-const listQuery = ref<any>({})
+const query = ref<any>({})
 // 特殊处理数组
 const formItemLeft = props.selectParams.filter((a) => a.external === true || a.external === "left").sort((a, b) => parseInt(String(b.sortIndex || 0)) - parseInt(String(a.sortIndex || 0))) as FormItem[]
 const formItemRight = props.selectParams.filter((a) => a.external === "right") as FormItem[]
@@ -37,22 +36,23 @@ const as = [...formItemLeft]
 if (props.hasSlot) {
   as.push({ prop: "defaultFilter", type: "defaultFilter" })
 }
-const formSchema: Ref<FormSchema> = ref({
-  formItem: [...as, ...formItemRight],
+const formItem: FormItem[] = [...as, ...formItemRight]
+const formSchema = ref<FormSchema>({
+  formItem,
 })
 const init = () => {
-  // const query = deepClone(listQuery.value)
+  // const query = deepClone(query.value)
   for (let i in formSchema.value.formItem) {
     const item = formSchema.value.formItem[i] as ParamsItem
     if (item.tableKey && props.listQuery[item.tableKey[0]]) {
-      listQuery.value[item.prop] = [props.listQuery[item.tableKey[0]], props.listQuery[item.tableKey[1]]]
+      query.value[item.prop] = [props.listQuery[item.tableKey[0]], props.listQuery[item.tableKey[1]]]
     }
   }
   const l = props.listQuery
   for (let i in props.listQuery) {
     const cur = formSchema.value.formItem.find((a) => a.prop == i)
     if (cur) {
-      listQuery.value[i] = l[i]
+      query.value[i] = l[i]
     } else {
       // const cur1 = formSchema.value.formItem.find((a) => a.tableKey && a.tableKey.includes(i))
       // if (cur1 && cur1.tableKey) {
@@ -60,17 +60,17 @@ const init = () => {
       // }
     }
   }
-  // listQuery.value = query
+  // query.value = query
 }
 init()
 
 const emit = defineEmits(["change"])
 watch(
-  () => listQuery.value,
+  () => query.value,
   (val) => {
     const l = props.listQuery
     for (let i in val) {
-      const cur = formSchema.value.formItem.find((a) => a.prop == i)
+      const cur = formSchema.value.formItem.find((a) => a.prop == i) as any
       if (cur && cur.tableKey) {
         l[cur.tableKey[0]] = (val[i] && val[i][0]) || ""
         l[cur.tableKey[1]] = (val[i] && val[i][1]) || ""
@@ -80,7 +80,7 @@ watch(
     }
     //
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 )
 const onChange = (formModel: Fields, formItem: any) => {
   const l = props.listQuery
@@ -95,7 +95,7 @@ const onChange = (formModel: Fields, formItem: any) => {
 }
 const formRef = ref()
 const loadOptions = (prop: string, option?: any) => {
-  formRef.value.loadOptions(prop, option)
+  return formRef.value.loadOptions(prop, option)
 }
 defineExpose({ loadOptions })
 </script>

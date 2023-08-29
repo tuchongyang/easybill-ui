@@ -1,15 +1,16 @@
 <template>
   <div class="s-table-filter">
-    <TableFilter ref="tableFilterRef" :select-params="selectParams" :list-query="props.listQuery" v-bind="option.filterAttrs" @search="onSearch"></TableFilter>
+    <TableFilter ref="tableFilterRef" :select-params="selectParams" :list-query="props.listQuery" v-bind="option?.filterAttrs" @search="onSearch"></TableFilter>
   </div>
 </template>
 <script lang="ts" setup>
 import { inject, PropType, Ref, ref } from "vue"
 import { ListQuery, ParamsItem } from "../../TableFilter"
 import TableFilter from "../../TableFilter"
+import { PropOption } from "./types"
 
 const emits = defineEmits(["search"])
-const option = inject("option")
+const option = inject<PropOption>("option")
 const selectParams = inject<Ref<Array<ParamsItem>>>("selectParams") || ref([])
 const props = defineProps({
   listQuery: {
@@ -29,8 +30,8 @@ const setItem = (prop: string, filterItem?: any) => {
 const getSelectList = () => {
   return tableFilterRef.value.selectList
 }
-const loadOptions = (prop: string) => {
-  return tableFilterRef.value.loadOptions(prop)
+const loadOptions = (prop: string, config?: any) => {
+  return tableFilterRef.value.loadOptions(prop, config)
 }
 const clear = (prop: string) => {
   return tableFilterRef.value.clear(prop)

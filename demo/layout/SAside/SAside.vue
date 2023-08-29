@@ -12,9 +12,8 @@
   </el-aside>
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
 import SLogo from "../SLogo"
 import STabMenu from "./STabMenu.vue"
 import SMenu from "../SMenu"

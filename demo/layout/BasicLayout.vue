@@ -17,9 +17,8 @@
   </el-container>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
 import SHeader from "./SHeader"
 import SAside from "./SAside"
 import TagsView from "./TagsView"

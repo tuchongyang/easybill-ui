@@ -33,22 +33,21 @@ const tagsViewModule: Module<tagsViewProps, GlobalDataProps> = {
       if (state.visitedViews.length >= 10) {
         state.visitedViews.pop()
       }
-      let title = view.meta.title || "no-name"
-      const mapPaths = this.state.menu.mapPaths
-      if (view.name == "webview" && mapPaths.length) {
-        title = mapPaths[mapPaths.length - 1].name
-      }
+      const title = view.meta.title || "no-name"
+      // const mapPaths = this.state.menu.mapPaths
+      // if (view.name == "webview" && mapPaths.length) {
+      //   title = mapPaths[mapPaths.length - 1].name
+      // }
       state.visitedViews.push(
         Object.assign({}, view, {
           title,
-        })
+        }),
       )
     },
 
     DEL_VISITED_VIEW(state: tagsViewProps, view: any) {
       for (const [i, v] of state.visitedViews.entries()) {
         if (v.path === view.path) {
-          this.commit("app/addAliveExclude", state.visitedViews[i].name)
           state.visitedViews.splice(i, 1)
           break
         }

@@ -1,14 +1,14 @@
 <template>
   <div class="form-item">
     <div v-if="props.formItem.prefix && isString(props.formItem.prefix)" class="form-item-prefix" v-html="props.formItem.prefix"></div>
-    <component v-for="(item, i) in prefixList" :key="i" :is="item" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
+    <component :is="item" v-for="(item, i) in prefixList" :key="i" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
     <slot name="prefix"></slot>
     <component :is="comp" v-if="comp" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
     <component :is="props.formItem.type" v-else v-model="modelRef[props.formItem.prop || '']" v-bind="formItemProps" v-on="eventObject" />
     <FormTooltip v-if="props.formItem.tooltip" :tooltip="props.formItem.tooltip" :form-item="props.formItem" :form-model="props.formModel" />
     <slot name="suffix"></slot>
     <div v-if="props.formItem.suffix && isString(props.formItem.suffix)" class="form-item-suffix" v-html="props.formItem.suffix"></div>
-    <component v-for="(item, i) in suffixList" :key="i" :is="item" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
+    <component :is="item" v-for="(item, i) in suffixList" :key="i" v-model="modelRef[props.formItem.prop || '']" :form-item="props.formItem" :form-model="modelRef" :props="formItemProps" :event-object="eventObject" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -58,7 +58,7 @@ const eventObject = ref(
     const changeFun = props.formItem.eventObject.change
     result.change = (...args: any) => {
       if (changeFun) {
-        const flag = changeFun && changeFun(props.formModel, props.formItem, formContext, ...args)
+        const flag = changeFun && changeFun.apply(null, [props.formModel, props.formItem, formContext, ...args])
         if (flag) {
           emit("change", props.formModel, props.formItem, formContext, ...args)
         }
@@ -75,9 +75,9 @@ const eventObject = ref(
       }
     }
     return result
-  })()
+  })(),
 )
-const isString = (val) => {
+const isString = (val: any) => {
   return typeof val === "string"
 }
 const prefixList = computed(() => {

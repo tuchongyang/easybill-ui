@@ -8,7 +8,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, PropType } from "vue"
-import { ElCascader, CascaderOption, CascaderValue } from "element-plus"
+import { CascaderValue } from "element-plus"
 import { FormItemProps } from "easybill-ui/components/CurdForm/src/types"
 const props = defineProps({
   ...FormItemProps,

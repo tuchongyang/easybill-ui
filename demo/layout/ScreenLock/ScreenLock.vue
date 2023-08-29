@@ -1,5 +1,5 @@
 <template>
-  <div class="screenlock-container" v-if="screenlock">
+  <div v-if="screenlock" class="screenlock-container">
     <div class="bg" :style="{ 'background-image': pic ? 'url(' + pic + ')' : 'none' }"></div>
     <div class="main">
       <div class="head">
@@ -16,9 +16,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
+import { ref, computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
 import { Right } from "@element-plus/icons-vue"
 const circleUrl = "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 const store = useStore()

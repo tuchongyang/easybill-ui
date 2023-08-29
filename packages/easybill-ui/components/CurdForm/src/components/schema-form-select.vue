@@ -42,7 +42,7 @@ export default defineComponent({
       },
       {
         deep: true,
-      }
+      },
     )
     // 有的options是从接口里拿的，掉接口需要时间，初始全选的时候全选的按钮没有勾选上，所以监听options
     watch(
@@ -56,7 +56,7 @@ export default defineComponent({
       },
       {
         deep: true,
-      }
+      },
     )
     const selectAll = () => {
       if (checked.value) {

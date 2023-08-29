@@ -33,7 +33,7 @@ const props = defineProps({
 })
 const emits = defineEmits(["update:index"])
 const popoverRef = ref()
-const select = (i) => {
+const select = (i: number) => {
   popoverRef.value.hide()
   emits("update:index", i)
 }

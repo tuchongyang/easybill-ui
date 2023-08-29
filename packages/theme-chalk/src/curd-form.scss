@@ -8,6 +8,11 @@
     .el-form-item {
       flex: 0 0 100%;
       box-sizing: border-box;
+      .el-form-item__label {
+        &:before {
+          margin-left: -10px;
+        }
+      }
     }
   }
   .form-item {

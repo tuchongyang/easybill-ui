@@ -5,8 +5,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, Ref } from "vue"
-import { ColumnItem, DetailDataItem } from "./types"
-import DetailInfo from "../../DetailInfo"
+import { ColumnItem } from "./types"
+import DetailInfo, { DetailDataItem } from "../../DetailInfo"
 interface OpenOption {
   columns: Array<ColumnItem>
   data: any
@@ -14,7 +14,7 @@ interface OpenOption {
 
 const visible = ref(false)
 const list: Ref<Array<DetailDataItem>> = ref([])
-const getValue = (data, column, index) => {
+const getValue = (data: DetailDataItem, column: ColumnItem, index: number) => {
   if (column.formatter) {
     return column.formatter(data, column, data[column.prop], index)
   }
@@ -24,7 +24,7 @@ const open = (option: OpenOption) => {
   list.value = []
   option.columns.forEach((item, ci) => {
     if (item.children && item.children.length) {
-      for (let i in item.children) {
+      for (let i = 0; i < item.children.length; i++) {
         const a = item.children[i]
         if (a.hidden) continue
         list.value.push({

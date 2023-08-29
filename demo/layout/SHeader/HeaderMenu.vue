@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed, Ref, onMounted, onBeforeUnmount, watch } from "vue"
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
 import { MoreFilled } from "@element-plus/icons-vue"
@@ -120,18 +120,9 @@ watch(
     // if (path !== router.currentRoute.value.path) {
     //   router.replace(path)
     // }
-  }
+  },
 )
-const toPath = (item: any) => {
-  const path = item.url
-  if (/^http/.test(path)) {
-    return window.open(path, "_blank")
-  } else {
-    router.push(getDefaultPath([item], path))
-  }
-}
 const getPath = (item: any) => {
-  const target = getQueryString("target", item.url) || ""
   const path = item.url
   if (/^http/.test(path)) {
     return path

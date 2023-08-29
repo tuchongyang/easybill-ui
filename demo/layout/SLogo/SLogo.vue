@@ -5,9 +5,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
-import { useRoute, useRouter } from "vue-router"
 // import logo from "@/assets/images/logo.png"
 const store = useStore()
 const layout = computed(() => store.state.layout.layout)

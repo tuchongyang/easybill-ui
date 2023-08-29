@@ -1,2 +1,2 @@
-import component from "./Breadcrumb.vue"
+import component from "./SBreadcrumb.vue"
 export default component

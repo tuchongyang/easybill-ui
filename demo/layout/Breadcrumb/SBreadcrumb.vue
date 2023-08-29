@@ -25,7 +25,6 @@
 import { ref, computed, watch, Ref, onBeforeMount } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
-import * as Utils from "easybill-ui/utils"
 import { RouteRecordRaw } from "vue-router"
 // import { compile } from "path-to-regexp"
 let levelList: Ref<Array<any>> = ref([])
@@ -71,16 +70,16 @@ const isDashboard = (route: RouteRecordRaw) => {
   return name.toString().trim().toLocaleLowerCase() === "Dashboard".toLocaleLowerCase()
 }
 const pathCompile = (path: string) => {
-  const { params } = route
-  const toPath = (param: any) => {
+  const toPath = () => {
     return path
   }
-  return toPath(params)
+  return toPath()
 }
 const handleLink = (item: RouteRecordRaw) => {
   const { redirect, path } = item
   if (redirect) {
-    router.push(redirect)
+    const re = String(redirect)
+    router.push(re)
     return
   }
   router.push(pathCompile(path))
@@ -90,13 +89,13 @@ watch(
   () => {
     getBreadcrumb()
   },
-  { immediate: true }
+  { immediate: true },
 )
 watch(
   () => store.state.menu.mapPaths,
   () => {
     getBreadcrumb()
-  }
+  },
 )
 onBeforeMount(() => {
   getBreadcrumb()

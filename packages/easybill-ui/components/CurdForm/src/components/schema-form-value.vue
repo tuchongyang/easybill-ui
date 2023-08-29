@@ -1,5 +1,5 @@
 <template>
-  <div v-html="model" v-bind="props"></div>
+  <div v-bind="props" v-html="model"></div>
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue"

@@ -17,28 +17,16 @@
         <el-table-column v-if="$attrs.index !== undefined" type="index" />
         <el-table-column v-if="$attrs.selection !== undefined && $attrs.selection !== false" type="selection" v-bind="option.selectionProps" />
         <template v-for="item in columns" :key="item.label">
-          <el-table-column v-if="item.children && item.children.length" :key="item.prop" :label="item.label">
-            <template v-for="sub in item.children" :key="sub.prop">
-              <STableItem :ref="(el) => (tableItemRefs[sub.prop] = el)" :is-slot="!!$slots[sub.prop]" :is-slot-header="!!$slots[sub.prop + 'Header']" :schema="sub" :option="option" @search="onItemChange">
-                <template #default="scope1">
-                  <slot :name="sub.prop" v-bind="scope1"></slot>
-                </template>
-                <template #header>
-                  <slot :name="sub.prop + 'Header'"></slot>
-                </template>
-              </STableItem>
+          <el-table-column v-if="item.type == 'index'" type="index" v-bind="item" />
+          <el-table-column v-else-if="item.type == 'selection'" type="selection" v-bind="item" />
+          <STableItem v-else :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
+            <template #default="scope">
+              <slot :name="item.prop" v-bind="scope"></slot>
             </template>
-          </el-table-column>
-          <template v-else>
-            <STableItem :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
-              <template #default="scope">
-                <slot :name="item.prop" v-bind="scope"></slot>
-              </template>
-              <template #header>
-                <slot :name="item.prop + 'Header'"></slot>
-              </template>
-            </STableItem>
-          </template>
+            <template #header>
+              <slot :name="item.prop + 'Header'"></slot>
+            </template>
+          </STableItem>
         </template>
         <el-table-column v-if="!option.hideOperation" label="操作" fixed="right" :width="option.operationWidth || '200'" align="left">
           <template #default="scope">
@@ -46,7 +34,7 @@
             <template v-if="!$slots.operationBtn">
               <el-button v-if="!option.hideOperationEdit && props.fetchEdit" type="primary" link :icon="Edit" @click.stop="create(scope.row)">编辑 </el-button>
               <el-button v-if="!option.hideOperationDetail" type="primary" link :icon="Document" @click.stop="detail(scope.row)">详情 </el-button>
-              <el-button v-if="!option.hideOperationDelete && props.fetchRemove" type="primary" link style="color: #ff0000" :icon="Delete" @click.stop="startremove(scope)">删除 </el-button>
+              <el-button v-if="!option.hideOperationDelete && props.fetchRemove" type="danger" link :icon="Delete" @click.stop="startremove(scope)">删除 </el-button>
             </template>
             <template v-else>
               <el-dropdown trigger="click" popper-class="curd-table-dropdown-menu">
@@ -66,7 +54,7 @@
                       <el-button type="primary" link @click.stop="detail(scope.row)">详情</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item v-if="!option.hideOperationDelete && props.fetchRemove">
-                      <el-button type="primary" link style="color: #ff0000" @click.stop="startremove(scope)">删除 </el-button>
+                      <el-button type="danger" link @click.stop="startremove(scope)">删除 </el-button>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -93,11 +81,7 @@
         v-bind="option.pageProps"
         @current-change="fetchData"
         @size-change="fetchData"
-      >
-        <ul class="el-pager">
-          <li class="is-active number">{{ listQuery.pageIndex }}</li>
-        </ul>
-      </el-pagination>
+      ></el-pagination>
     </div>
 
     <STableDetail ref="STableDetailRef" />
@@ -115,11 +99,12 @@ import STableFilter from "./STableFilter.vue"
 import STableMenu from "./STableMenu.vue"
 import STableDetail from "./STableDetail.vue"
 import { deepClone } from "../utils/common"
+import { exportExcel } from "../utils/tabelToExcel"
 import { Edit, Delete, Plus, ArrowDown, Document } from "@element-plus/icons-vue"
-import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey } from "./types"
-import TableFilter, { ListQuery } from "../../TableFilter"
+import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey, FormAttrs } from "./types"
+import { ListQuery } from "../../TableFilter"
 import FormDialog from "../../FormDialog"
-import { ElMessageBox, ElMessage, ElLoading, ElNotification, ElTable, dayjs } from "element-plus"
+import { ElMessageBox, ElMessage, ElLoading, FormItemRule, ElTable } from "element-plus"
 import { FormItem, FormSchema, Fields } from "../../CurdForm"
 import { useColumnHook } from "./hooks/useColumnHook"
 import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
@@ -202,7 +187,7 @@ watch(
   (val) => {
     list.value = val
   },
-  { deep: true }
+  { deep: true },
 )
 const globalConfig = useGlobalConfig()
 const tableAttrs: Ref<TableAttr> = ref({ size: globalConfig.value.size || "default" })
@@ -219,7 +204,7 @@ const search = reactive<ListQuery>(
   (() => {
     const { pageIndex, pageSize, total, ...args } = deepClone(props.pageOptions || {})
     return args
-  })()
+  })(),
 )
 const option: PropOption = reactive(Object.assign(defaultOption, props.option))
 provide("search", search)
@@ -227,11 +212,9 @@ provide("option", option)
 watch(
   () => props.option,
   (val) => {
-    for (let i in val) {
-      option[i] = val[i]
-    }
+    Object.assign(option, val)
   },
-  { deep: true }
+  { deep: true },
 )
 const filterVisible = ref(typeof option?.filterVisible == "undefined" ? true : option?.filterVisible)
 const loading = ref(false)
@@ -283,7 +266,7 @@ const onSearch = (params?: ListQuery) => {
     tableItemRefs.value[i]?.search && tableItemRefs.value[i].search({ listQuery: params })
   }
 }
-const sTableFilter: Ref<InstanceType<typeof TableFilter> | undefined> = ref()
+const sTableFilter: Ref<InstanceType<typeof STableFilter> | undefined> = ref()
 const onItemChange = (prop: string, value: string, filter: any) => {
   sTableFilter.value?.setItem(prop, filter)
   search[prop] = value
@@ -304,13 +287,15 @@ onActivated(() => {
 // filter内部有一些初始化的操作，比如操作value初始值，需要等子组件初始化后再执行列表数据fetch操作
 onMounted(() => {
   option.autoload && fetchData()
+  provide("tableFilter", sTableFilter.value)
 })
 // 组装columns
 const { columns, selectParams } = useColumnHook(props)
 // 菜单点击事件
 const onMenuOption = (optionKey: MenuEventKey, val: string) => {
-  if (option.menuEvent?.[optionKey]) {
-    return option.menuEvent?.[optionKey]()
+  const f = option.menuEvent && option.menuEvent[optionKey]
+  if (f) {
+    return f()
   }
   switch (optionKey) {
     case "refresh":
@@ -326,30 +311,26 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
       break
     }
     case "export": {
-      import("../utils/Export2Excel").then((excel) => {
-        const getTableValue = (val: string | number, schema: ColumnItem, row: any) => {
-          if (schema.options) {
-            const vals = String(val).split(",")
-            const curs = vals.map((item) => {
-              const cur = schema.options?.find((a) => a.value == item)
-              return (cur && cur.label) || cur
-            })
-            return curs.join(",")
-          }
-          if (schema.formatter) {
-            const result = schema.formatter(row)
-            return result === "--" ? "" : result
-          }
-          return val
+      const getTableValue = (val: string, schema: ColumnItem, row: any, i: number) => {
+        if (schema.options) {
+          const vals = String(val).split(",")
+          const curs = vals.map((item) => {
+            const cur = schema.options?.find((a) => a.value == item)
+            return (cur && cur.label) || item
+          })
+          return curs.join(",")
         }
-        const data = list.value.map((a) => columns.value.filter((b) => !b.hidden && !b.neverShow).map((b) => getTableValue(a[b.prop], b, a)))
-        excel.export_json_to_excel({
-          header: columns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label),
-          data,
-          filename: option.excelTitle || "导出数据",
-        })
-        ElMessage.success("导出成功!")
-      })
+        if (schema.formatter) {
+          const result = schema.formatter(row, schema, val, i) as string
+          return result === "--" ? "" : result
+        }
+        return val
+      }
+      const data = list.value.map((a) => columns.value.filter((b) => !b.hidden && !b.neverShow).map((b, i) => getTableValue(a[b.prop], b, a, i)))
+      const header = columns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label)
+      const tabledata = [header, ...data]
+      exportExcel(tabledata, "data", "data.xls")
+      ElMessage.success("导出成功!")
       break
     }
   }
@@ -357,7 +338,7 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
 
 // 添加/编辑
 const create = (row?: any) => {
-  const formAttrs = option.formAttrs || {}
+  const formAttrs: FormAttrs | undefined = option.formAttrs
   const formSchema: FormSchema = {
     formItem: [],
     rules: {},
@@ -366,25 +347,26 @@ const create = (row?: any) => {
   }
   const setItem = (a: ColumnItem) => {
     if (!a.form) return
-    let formValue: FormItem
+    let formValue: Partial<FormItem>
     if (a.form instanceof Function) {
       formValue = a.form(a, row, search)
     } else {
       formValue = a.form
     }
-    const { rules, ...formProps } = formValue
+    const { rules, prop, ...formProps } = formValue
     const item: FormItem = {
       span: 24,
       label: a.label,
-      prop: a.prop,
       options: a.options,
       asyncOptions: a.asyncOptions,
       ...formProps,
+      prop: prop || a.prop,
     }
     formSchema.formItem.push(item)
-    if (formValue && formValue.rules) {
+    if (rules) {
+      let rulesItem: FormItemRule[] = []
       if (!formSchema.rules) formSchema.rules = {}
-      formSchema.rules[a.prop] = rules
+      formSchema.rules[item.prop] = rules
     }
   }
   columns.value.map((a) => {
@@ -402,7 +384,7 @@ const create = (row?: any) => {
     title: row ? "编辑" : "添加",
     formSchema: formSchema,
     fields: row,
-    width: formAttrs.width || 600,
+    width: formAttrs?.width || 600,
     handleOk: async (modelRef: Fields) => {
       const fun = row ? "fetchEdit" : "fetchCreate"
       return await (props[fun] && props[fun](modelRef, row))

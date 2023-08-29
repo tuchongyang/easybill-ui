@@ -17,8 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
-import { useStore } from "vuex"
+import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { deepClone } from "easybill-ui/utils/common"
 import { RouteRecordRaw } from "vue-router"
@@ -29,7 +28,7 @@ const rootRoute = allroutes.find((a) => a.path == "/" && a.children.length)
 const currentTabPath = ref("") //当前高亮的菜单
 // 递归查找子菜单，重新组装url
 const getChildren = (childrens: Array<RouteRecordRaw> | undefined, parentPath: string, paths: any) => {
-  const result: any[] = []
+  const result: any[] = [] || childrens || parentPath || paths
   // for (let i = 0; childrens && i < childrens?.length; i++) {
   //   const child = childrens[i]
   //   const { path, name, children, meta = {} } = child

@@ -15,7 +15,7 @@ import { ElButton, ElIcon, ElTooltip, ElTooltipProps } from "element-plus"
 import { FormItem, Fields } from "./types"
 const props = defineProps({
   tooltip: {
-    type: [String, Function],
+    type: [String, Function] as PropType<string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps> | string) | Partial<ElTooltipProps>>,
     default: null,
   },
   formItem: {
@@ -28,28 +28,28 @@ const props = defineProps({
   },
 })
 
-const is = (val: any, type: string) => {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
-}
 const tooltipModel = computed(() => {
   let tooltip: any = props.tooltip
   if (!tooltip) {
-    return {}
+    return { content: "" }
   }
-  if (is(tooltip, "Function")) {
+  if (typeof tooltip == "function") {
     tooltip = tooltip(props.formModel, props.formItem)
     return getTooltip(tooltip)
   }
   return getTooltip(tooltip)
 })
 // 获取组件tooltip内容
-const getTooltip = (tooltip: ElTooltipProps | String) => {
+const getTooltip = (tooltip: Partial<ElTooltipProps> | string): Partial<ElTooltipProps> => {
   if (!tooltip) {
-    return ""
+    return { content: "" }
   }
-  if (is(tooltip, "String")) {
-    return { content: tooltip }
+  let t: Partial<ElTooltipProps> = {}
+  if (typeof tooltip == "string") {
+    t = { content: tooltip }
+  } else {
+    t = tooltip
   }
-  return tooltip
+  return t
 }
 </script>

@@ -20,8 +20,7 @@
   </el-popover>
 </template>
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
-import { useStore } from "vuex"
+import { ref, Ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { Bell } from "@element-plus/icons-vue"
 import NoticeList, { MessageItem } from "./NoticeList.vue"
@@ -32,17 +31,7 @@ const activeName = ref("0")
 const visible = ref(false)
 
 const list: Ref<MessageItem[]> = ref([])
-const getList = () => {
-  const params = {
-    pageIndex: 1,
-    pageSize: 10,
-    t: Math.random(),
-  }
-  // api.messageCenter.list(params).then((res) => {
-  list.value = []
-  // })
-}
-// getList()
+
 const toall = () => {
   if (route.path != "/admin/log/message") {
     router.push("/admin/log/message")

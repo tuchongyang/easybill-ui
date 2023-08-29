@@ -7,10 +7,6 @@
     </template>
     <FilterType ref="typeRef" :list-query="listQuery" @change="confirm" @close="visible = false"></FilterType>
   </el-popover>
-
-  <!-- <teleport to="body">
-    <FilterType ref="typeRef" :list-query="listQuery" @change="confirm"></FilterType>
-  </teleport> -->
 </template>
 <script lang="ts" setup>
 import { Filter } from "@element-plus/icons-vue"
@@ -18,7 +14,6 @@ import { PropType, ref, computed } from "vue"
 import FilterType from "../../TableFilter/src/components/FilterType.vue"
 import { ColumnItemFilter } from "./types"
 import { Fields } from "../../CurdForm"
-// import { useEventBus } from "@vueuse/core"
 import { ElPopover } from "element-plus"
 
 const props = defineProps({
@@ -34,7 +29,6 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(["change"])
-// const search = inject<any>("search")
 let currentValue = ref("")
 const visible = ref(false)
 const listQuery = computed(() => {
@@ -52,38 +46,8 @@ const confirm = (opt: any) => {
   currentValue.value = opt.value
   emit("change", opt.prop, opt.value)
 }
-// const bus = useEventBus<Fields>("tableItemFilter")
 const search = (event: Fields) => {
-  // let pass = false
-  // for (const i in event.selectList) {
-  //   const item = event.selectList[i]
-  //   if (item.prop == props.filter.prop && item.label == props.filter.label) {
   currentValue.value = event.listQuery[props.filter.prop || ""]
-  //     pass = true
-  //   }
-  // }
-  // if (!pass) {
-  //   currentValue.value = ""
-  // }
-  // console.log(pass, currentValue.value)
 }
 defineExpose({ search })
-// listener(search)
-// let hasInit = false
-// onActivated(() => {
-//   if (!hasInit) {
-//     bus.on(listener)
-//     hasInit = true
-//   }
-// })
-// bus.on(listener)
-// hasInit = true
-// onDeactivated(() => {
-//   bus.off(listener)
-//   hasInit = false
-// })
-// onBeforeUnmount(() => {
-//   bus.off(listener)
-//   hasInit = false
-// })
 </script>

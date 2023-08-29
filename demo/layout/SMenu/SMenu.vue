@@ -8,16 +8,14 @@
   <!-- </div> -->
 </template>
 <script lang="ts" setup>
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter, RouteRecordRaw } from "vue-router"
 import SMenuItem from "./SMenuItem.vue"
 const store = useStore()
 const isCollapse = computed(() => !store.state.layout.sideOpen)
 const route = useRoute()
-const getOpends = (menu: any): Array<string> => {
-  return menu.children?.map((a: any) => a.url) || []
-}
+
 const router = useRouter()
 const allroutes = router.getRoutes()
 const rootRoute = allroutes.find((a) => a.path == "/" && a.children.length)
@@ -39,8 +37,8 @@ const getChildren = (childrens: Array<RouteRecordRaw>, parentPath: string) => {
 }
 const routes = getChildren(rootRoute?.children || [], "")
 const defaultActive = computed(() => route.path)
-const menus = computed(() => store.state.menu.menus)
-const currentMenuIndex = computed(() => store.state.menu.currentMenuIndex)
+// const menus = computed(() => store.state.menu.menus)
+// const currentMenuIndex = computed(() => store.state.menu.currentMenuIndex)
 // const current = computed(() => store.state.menu.currentMenuIndex)
 // const defaultOpeneds = computed(() => (routes.value && routes.value.map((a: any) => a.path)) || [])
 

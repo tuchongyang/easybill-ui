@@ -76,6 +76,7 @@
       padding: 0;
       height: 28px;
       width: 28px;
+      vertical-align: middle;
       &:not(.is-disabled):active,
       &:not(.is-disabled):focus {
         border-color: var(--el-button-border-color);

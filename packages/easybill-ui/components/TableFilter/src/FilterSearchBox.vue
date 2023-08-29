@@ -36,6 +36,7 @@ const emit = defineEmits(["search"])
 const currentIndex = ref(0)
 const filterItemRef = ref()
 const confirm = () => {
+  console.log("dd")
   const current = props.selectParams[currentIndex.value]
   if (typeof current.type == "undefined" || current.type == "input") {
     filterItemRef.value.setValue(props.selectParams[currentIndex.value].prop)
@@ -46,7 +47,10 @@ const confirm = () => {
 const state = inject<Ref<any>>("state") || ref({})
 const setIndex = (i: number) => {
   currentIndex.value = i
-  filterItemRef.value.focus()
+  // filterItemRef.value.focus()
 }
-defineExpose({ currentIndex, setIndex })
+const loadOptions = (prop: string, config?: any) => {
+  return filterItemRef.value.loadOptions(prop, config)
+}
+defineExpose({ currentIndex, setIndex, loadOptions })
 </script>

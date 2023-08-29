@@ -3,11 +3,11 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed, PropType } from "vue"
-import { ElDatePicker, ModelValueType } from "element-plus"
+import { ElTimePicker, ModelValueType } from "element-plus"
 import { FormItemProps } from "../types"
 export default defineComponent({
-  name: "SchemaFormDatePicker",
-  components: { ElDatePicker },
+  name: "SchemaFormTimePicker",
+  components: { ElTimePicker },
   props: {
     ...FormItemProps,
     modelValue: {

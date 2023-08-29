@@ -6,9 +6,10 @@
 <script lang="ts" setup>
 import { ref, watch, Ref, PropType } from "vue"
 import * as I from "../../types"
-import container from "./typeComponents"
+
 import * as Utils from "../../../../utils/common"
 import { ListQuery } from "../../types"
+import TagsSelect from "./containers/TagsSelect.vue"
 
 const props = defineProps({
   listQuery: {
@@ -21,28 +22,11 @@ const props = defineProps({
 const emit = defineEmits(["click", "change", "cancel", "close"])
 const listQuery: Ref<ListQuery> = ref(props.listQuery)
 const query: Ref<ListQuery> = ref(Utils.deepClone(props.listQuery))
-const params: Ref<I.ParamsItem> = ref({} as I.ParamsItem)
+const params = ref<I.ParamsItem>({} as I.ParamsItem)
 const visible: Ref<boolean> = ref(false)
 const style = ref({})
-const typeList = container
-// 两个watch导致循环无限调用问题，去掉了query的watch，该由change主动触发listQuery的改变
-// watch(
-//   () => query.value,
-//   (val) => {
-//     let q = val as ListQuery
-//     if (params.value.tableKey && params.value.tableKey.length) {
-//       params.value.tableKey.forEach((a, i) => {
-//         q[a] = val[params.value.prop][i]
-//       })
-//     }
-//     for (let i in q) {
-//       let item = q[i]
-//       listQuery.value[i] = item
-//     }
-//     console.log("query监听里面", JSON.stringify(listQuery.value))
-//   },
-//   { immediate: true }
-// )
+const typeList: Record<string, any> = { select: TagsSelect }
+
 watch(
   () => props.listQuery,
   (val) => {
@@ -56,16 +40,16 @@ watch(
     }
     query.value = q
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 )
 const wrapperRef = ref()
 const open = (event: any, option: I.ParamsItem) => {
   params.value = option
   visible.value = true
+  console.log("params", params)
   document.getElementById("app")?.addEventListener("mousedown", close)
 }
 const close = () => {
-  // resizeObserver.disconnect()
   visible.value = false
   emit("close")
 }

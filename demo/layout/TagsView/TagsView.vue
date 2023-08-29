@@ -7,7 +7,7 @@
           ref="refTag"
           :key="tag.path"
           :class="isActive(tag) ? 'active' : ''"
-          :to="{ path: tag.path, query: tag.query, params: tag.params, fullPath: tag.fullPath, name: tag.name }"
+          :to="{ path: tag.path, query: tag.query, params: tag.params, name: tag.name }"
           class="tags-view-item"
           @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
           @contextmenu.prevent="openMenu(tag, $event)"
@@ -61,11 +61,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, Ref, nextTick, shallowRef } from "vue"
+import { computed, nextTick, shallowRef } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
 import { Back, CircleClose, Close, Menu, Refresh, Right } from "@element-plus/icons-vue"
-import * as Utils from "easybill-ui/utils"
+
 import { onMounted, reactive, toRefs, watch } from "vue"
 //获取store和router
 import { RouteRecordRaw } from "vue-router"
@@ -105,7 +105,7 @@ watch(
     }
     // tag remove has issue
     // moveToCurrentTag()
-  }
+  },
 )
 watch(
   () => state.visible,
@@ -115,7 +115,7 @@ watch(
     } else {
       document.body.removeEventListener("click", closeMenu)
     }
-  }
+  },
 )
 
 watch(
@@ -126,7 +126,7 @@ watch(
     } else {
       document.body.removeEventListener("click", closeMenu)
     }
-  }
+  },
 )
 
 onMounted(() => {

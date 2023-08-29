@@ -41,7 +41,7 @@ const props = defineProps({
     },
   },
 })
-const visibleMap = ref({})
+const visibleMap = ref<Record<string, boolean>>({})
 const listQuery: Ref<ListQuery> = ref(props.listQuery)
 const selectList = inject<Ref<I.ParamsItem[]>>("selectList") || ref([])
 const remove = (row: I.ParamsItem, index: number) => {
@@ -83,25 +83,26 @@ const isValue = (item: I.ParamsItem) => {
 const popoverRef = ref()
 const selectRef = ref()
 const tagsSelectRef = ref()
-const show = (i) => {
+const show = (i: number) => {
   if (selectList.value[i].type !== "select") return
 
   tagsSelectRef.value[i] && tagsSelectRef.value[i].focus && tagsSelectRef.value[i].focus()
 }
 
-const onChange = (opt) => {
+const onChange = (opt: any) => {
   for (let j in visibleMap.value) {
     visibleMap.value[j] = false
   }
   select(
     opt,
-    selectList.value.find((a) => a.prop == opt.prop)
+    selectList.value.find((a) => a.prop == opt.prop),
   )
   for (let i in popoverRef.value) {
     popoverRef.value[i].hide()
   }
 }
-const select = (option, params) => {
+const select = (option: any, params?: I.ParamsItem) => {
+  if (!params) return
   if (params.tableKey && params.tableKey.length) {
     params.tableKey.forEach((a, i) => {
       listQuery.value[a] = option.value[i]
@@ -112,7 +113,7 @@ const select = (option, params) => {
   params.tagNames = option.label
   emit("change", params)
 }
-const onClick = (item) => {
+const onClick = (item: I.ParamsItem) => {
   if (["select"].includes(item.type)) {
     return
   }

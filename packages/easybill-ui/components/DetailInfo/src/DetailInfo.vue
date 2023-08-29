@@ -15,7 +15,7 @@
       <slot></slot>
     </div>
     <div v-if="!$slots.default" class="detail-info-body" :class="[props.showType]">
-      <div class="table-detail-col" v-for="(item, i) in list" :key="i" :span="item.span" :style="getItemStyle(item)">
+      <div v-for="(item, i) in list" :key="i" class="table-detail-col" :span="item.span" :style="getItemStyle(item)">
         <div class="item-col">
           <div v-if="item.label" class="label" :style="getLabelStyle(item)">
             <span>{{ item.label }}</span>
@@ -30,7 +30,7 @@
               <template v-else-if="item.type == 'image'">
                 <el-image :src="item.value" :preview-src-list="[item.value]" style="width: 40px; height: 40px; vertical-align: top" :fit="'cover'" v-bind="item.props"></el-image>
               </template>
-              <component v-else-if="item.type" :is="item.type" v-model="item.value" v-bind="item.props"></component>
+              <component :is="item.type" v-else-if="item.type" v-model="item.value" v-bind="item.props"></component>
               <template v-else><DetailInfoContent :data="item" /></template>
             </template>
           </div>
@@ -88,10 +88,11 @@ const getLabelWidth = (dataItem: DetailDataItem): string => {
   return !isNum ? labelWidth + "" : labelWidth + "px"
 }
 const getLabelStyle = (item: DetailDataItem) => {
-  let s = item.labelStyle
-  if (typeof s == "object") {
-    s = Object.keys(item.labelStyle)
-      .map((a) => a + ":" + item.labelStyle[a])
+  let s = ""
+  if (item.labelStyle && typeof item.labelStyle == "object") {
+    const l = item.labelStyle
+    s = Object.keys(l)
+      .map((a) => a + ":" + l[a])
       .join(";")
   }
   return `width: ${getLabelWidth(item)}; justifyContent: ${item.labelPosition || props.labelPosition};` + s
