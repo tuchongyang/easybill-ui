@@ -1,18 +1,23 @@
-import { FormRules, FormItemRule, FormProps, ElForm, TooltipTriggerType } from "element-plus"
+import { FormRules, FormItemRule, ElForm, TooltipTriggerType } from "element-plus"
 import { PropType } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
-export interface FormSchema extends Partial<FormProps> {
+export interface FormSchema {
   formItem: FormItem[]
   rules?: FormRules
   getRules?: (formModel: Fields, context: FormContext) => FormRules
-  labelPosition?: LabelPosition
+  labelPosition?: "left" | "right" | "top" | string
   gutter?: number
-}
-export enum LabelPosition {
-  LEFT = "left",
-  RIGHT = "right",
-  TOP = "top",
+  labelWidth?: number | string
+  inline?: boolean
+  inlineMessage?: boolean
+  statusIcon?: boolean
+  showMessage?: boolean
+  size?: "default" | "small" | "large" | string
+  disabled?: boolean
+  validateOnRuleChange?: boolean
+  hideRequiredAsterisk?: boolean
+  scrollToError?: boolean
 }
 export interface FormItem {
   prop: string

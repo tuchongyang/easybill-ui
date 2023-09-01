@@ -8,7 +8,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { CurdForm, FormSchema, LabelPosition } from "easybill-ui/index"
+import { CurdForm, FormSchema } from "easybill-ui/index"
 import { ref, Ref, markRaw } from "vue"
 import FormSuffixBtn from "./components/FormSuffixBtn.vue"
 import { ElMessage } from "element-plus"
@@ -93,7 +93,7 @@ const formSchema: Ref<FormSchema> = ref({
     }
   },
   labelWidth: 120,
-  labelPosition: LabelPosition.LEFT,
+  labelPosition: "left",
   gutter: 10,
 })
 const formRef = ref<InstanceType<typeof CurdForm>>()
