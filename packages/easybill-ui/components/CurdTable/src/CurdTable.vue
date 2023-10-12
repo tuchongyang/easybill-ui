@@ -321,7 +321,10 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
           return curs.join(",")
         }
         if (schema.formatter) {
-          const result = schema.formatter(row, schema, val, i) as string
+          let result = schema.formatter(row, schema, val, i) as string
+          if (/^[0-9\.,+-]+.[0-9]{2}$/.test(String(result))) {
+            result = +parseFloat(String(result).replace(/,|$|￥/g, ""))
+          }
           return result === "--" ? "" : result
         }
         return val
