@@ -138,13 +138,14 @@ const table: Ref<CurdTableProps<any>> = ref({
       prop: "slider",
       form: { type: "el-slider" },
     },
+    { label: "金额", prop: "amount" },
   ],
   fetchData: ({ listQuery }) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         const list = [
-          { name: "张三", age: 9, status: 1, listQuery },
-          { name: "李四", age: 3, status: 2 },
+          { name: "张三", age: 9, status: 1, listQuery, amount: "222.00" },
+          { name: "李四", age: 3, status: 2, amount: "1,233.00" },
         ]
         resolve({
           list,

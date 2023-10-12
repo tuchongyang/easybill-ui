@@ -34,12 +34,12 @@ const tableToExcel = (function () {
       " padding:2px 5px;" +
       " text-align: center;" +
       " }" +
-      ".text-column{" +
-      "    mso-number-format:'@'; " +
-      "}" +
       "</style>" +
       '</head><body ><table class="excelTable">{table}</table></body></html>',
     base64 = function (s: string) {
+      const encoder = new TextEncoder()
+      const utf8Array = encoder.encode(s) as any
+      return btoa(String.fromCharCode.apply(null, utf8Array))
       return window.btoa(decodeURIComponent(encodeURIComponent(s)))
     },
     format = function (s: string, c: any) {
@@ -54,18 +54,13 @@ const tableToExcel = (function () {
         return `<tr>${td}</tr>`
       })
       .join("")
-    // console.log("tableStr", tableStr)
-    // var textColumns = getByClassName(table, "text-column")
-    // for (var i = 0; i < textColumns.length; i++) {
-    //   textColumns[i].setAttribute("style", "mso-number-format:\\@;")
-    // }
 
     setTimeout(() => {
       const ctx = { worksheet: worksheetName || "Worksheet", table: tableStr }
       //    window.location.href = uri + base64(format(template, ctx)) ;
       const a = document.createElement("a")
       a.href = uri + base64(format(template, ctx))
-      console.log(format(template, ctx))
+      // console.log(format(template, ctx))
       a.download = filename
       a.click()
     })
