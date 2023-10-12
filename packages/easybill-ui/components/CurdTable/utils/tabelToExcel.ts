@@ -32,8 +32,9 @@ const tableToExcel = (function () {
       " .excelTable td{" +
       " border:thin solid #999;" +
       " padding:2px 5px;" +
-      " text-align: center;" +
+      " text-align: left;" +
       " }" +
+      " .excelTable .text-right{text-align:right;}" +
       "</style>" +
       '</head><body ><table class="excelTable">{table}</table></body></html>',
     base64 = function (s: string) {
@@ -48,14 +49,12 @@ const tableToExcel = (function () {
       })
     }
   return function (data: string[][], worksheetName: string, filename: string) {
-    console.log("data", data)
     const tableStr = data
       .map((a) => {
-        const td = a.map((td) => "<td style='" + (typeof td != "number" ? "mso-number-format:\\@;" : "") + "'>" + (td === undefined || td === null ? "" : td) + "</td>").join("")
+        const td = a.map((td) => "<td class='" + (typeof td == "number" ? "text-right" : "") + "' style='" + (typeof td != "number" ? "mso-number-format:\\@;" : "") + "'>" + (td === undefined || td === null ? "" : td) + "</td>").join("")
         return `<tr>${td}</tr>`
       })
       .join("")
-    console.log("tableStr", tableStr)
     setTimeout(() => {
       const ctx = { worksheet: worksheetName || "Worksheet", table: tableStr }
       //    window.location.href = uri + base64(format(template, ctx)) ;
