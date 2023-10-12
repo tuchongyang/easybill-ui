@@ -17,3 +17,9 @@ export interface TableFilterContext {
 export interface ListQuery {
   [key: string]: any //string | boolean | number | Array<string> | Array<number>
 }
+export interface FilterOption {
+  formProps: {
+    labelWidth?: string | number
+    labelPosition?: "left" | "right" | "center" | string
+  }
+}

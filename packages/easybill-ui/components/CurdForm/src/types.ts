@@ -1,10 +1,11 @@
 import { FormRules, FormItemRule, ElForm, TooltipTriggerType } from "element-plus"
+import type { Arrayable } from "element-plus/es/utils"
 import { PropType } from "vue"
 import { OptionItem } from "../../ConstantStatus"
 import { defineComponent } from "vue"
 export interface FormSchema {
   formItem: FormItem[]
-  rules?: FormRules
+  rules?: FormRules | ((formModel: Fields, context: FormContext) => FormRules)
   getRules?: (formModel: Fields, context: FormContext) => FormRules
   labelPosition?: "left" | "right" | "top" | string
   gutter?: number
@@ -29,7 +30,7 @@ export interface FormItem {
   asyncOptions?: (modelRef: Fields, formItem: any, context: FormContext, config?: any) => Promise<Array<CurdFormOptionItem>>
   loading?: boolean
   hidden?: boolean | ((model: Fields) => boolean)
-  rules?: FormItemRule[]
+  rules?: Arrayable<FormItemRule>
   props?: FormItemPropObject | ((formModel: Fields, formItem: any) => FormItemPropObject)
   formItemProps?: FormItemPropObject | ((formModel: Fields, formItem: any) => void)
   labelWidth?: string | number

@@ -4,7 +4,7 @@ import { defineComponent } from "vue"
 
 export interface DetailDataItem extends Record<string, any> {
   label?: string
-  value?: string | number | boolean
+  value?: any
   /** 当前项占的宽度，最大24, 默认24 */
   span?: number
   /** 当前数据的选项，里面包含的图标、颜色信息会自动显示 */

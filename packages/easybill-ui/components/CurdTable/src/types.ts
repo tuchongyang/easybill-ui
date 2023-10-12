@@ -112,7 +112,7 @@ export interface PropOption {
   customActivatedFetch: boolean // 自定义执行onActivated内部的fetch执行，完全交由父组件控制
   autoload: boolean
   menuEvent: Partial<Record<MenuEventKey, () => void>>
-  filterAttrs: Partial<FormProps>
+  filterAttrs: Partial<FormSchema>
   formAttrs: FormAttrs
   editOptions: FormDialogOptions
   createOptions: FormDialogOptions

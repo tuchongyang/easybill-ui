@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { markRaw } from "vue"
 import { ElMessage, ElSlider } from "element-plus"
-import { FormDialog, LabelPosition } from "easybill-ui/index"
+import { FormDialog } from "easybill-ui/index"
 const open = () => {
   FormDialog.show({
     title: "添加数据",
@@ -52,7 +52,7 @@ const open = () => {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
       },
       labelWidth: "120px",
-      labelPosition: LabelPosition.LEFT,
+      labelPosition: "left",
     },
     handleOk: () => {
       return new Promise((resolve) => {
@@ -100,7 +100,7 @@ const openStep = () => {
             name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
           },
           labelWidth: "120px",
-          labelPosition: LabelPosition.LEFT,
+          labelPosition: "left",
         },
       },
       {
@@ -151,7 +151,7 @@ const openStep = () => {
             name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
           },
           labelWidth: "120px",
-          labelPosition: LabelPosition.LEFT,
+          labelPosition: "left",
         },
       },
       {
@@ -170,7 +170,7 @@ const openStep = () => {
             name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
           },
           labelWidth: "120px",
-          labelPosition: LabelPosition.LEFT,
+          labelPosition: "left",
         },
       },
     ],

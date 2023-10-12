@@ -1,14 +1,14 @@
 <template>
-  <CurdForm ref="formRef" v-model="query" inline class="filter-external" :form-schema="formSchema" @change="onChange">
+  <CurdForm ref="formRef" v-model="query" inline class="filter-external" :form-schema="formSchema" v-bind="option?.formProps" @change="onChange">
     <template #defaultFilter>
       <slot></slot>
     </template>
   </CurdForm>
 </template>
 <script lang="ts" setup>
-import { ref, watch, PropType } from "vue"
+import { ref, watch, PropType, inject } from "vue"
 import CurdForm from "../../../CurdForm"
-import { ParamsItem, ListQuery } from "../../types"
+import { ParamsItem, ListQuery, FilterOption } from "../../types"
 import { Fields, FormSchema, FormItem } from "../../../CurdForm"
 const props = defineProps({
   selectParams: {
@@ -28,6 +28,7 @@ const props = defineProps({
     default: false,
   },
 })
+const option = inject<FilterOption>("option")
 const query = ref<any>({})
 // 特殊处理数组
 const formItemLeft = props.selectParams.filter((a) => a.external === true || a.external === "left").sort((a, b) => parseInt(String(b.sortIndex || 0)) - parseInt(String(a.sortIndex || 0))) as FormItem[]

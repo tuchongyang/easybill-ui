@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, markRaw, Ref } from "vue"
-import { CurdTableProps, LabelPosition } from "easybill-ui/index"
+import { CurdTableProps } from "easybill-ui/index"
 import { CircleCheck } from "@element-plus/icons-vue"
 import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
 
@@ -27,7 +27,7 @@ const table: Ref<CurdTableProps<any>> = ref({
   option: {
     autoload: true,
     filterAttrs: {
-      labelPosition: LabelPosition.LEFT,
+      // labelPosition: "left",
     },
     menuEvent: {
       // export() {
@@ -139,11 +139,11 @@ const table: Ref<CurdTableProps<any>> = ref({
       form: { type: "el-slider" },
     },
   ],
-  fetchData: () => {
+  fetchData: ({ listQuery }) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         const list = [
-          { name: "张三", age: 9, status: 1 },
+          { name: "张三", age: 9, status: 1, listQuery },
           { name: "李四", age: 3, status: 2 },
         ]
         resolve({

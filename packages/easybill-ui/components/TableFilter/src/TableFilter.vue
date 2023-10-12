@@ -51,6 +51,10 @@ const props = defineProps({
     type: Object as PropType<I.ListQuery>,
     default: undefined,
   },
+  option: {
+    type: Object as PropType<Partial<I.FilterOption>>,
+    default: undefined,
+  },
 })
 const emit = defineEmits(["search"])
 const searchRef = ref()
@@ -174,7 +178,9 @@ const clear = () => {
 }
 // 重新调用selectParams
 const refreshSelectParams = () => {
-  selectParams.value = deepClone(props.schema)
+  if (props.schema) {
+    selectParams.value = deepClone(props.schema)
+  }
 }
 const getCurrentIndex = () => {
   return searchRef.value && searchRef.value.currentIndex
@@ -195,6 +201,7 @@ provide("tableFilter", tableFilterContext)
 provide("state", state)
 provide("selectList", selectList)
 provide("selectParams", selectParams)
+provide("option", props.option)
 defineExpose({ setItem, selectList, loadOptions, clear, refreshSelectParams, getCurrentIndex, listQuery, selectParams })
 onMounted(() => {
   getTags()

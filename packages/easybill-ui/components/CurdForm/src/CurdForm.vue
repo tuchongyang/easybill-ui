@@ -121,6 +121,9 @@ export default defineComponent({
 
     // 生成表单验证规则
     const rules = computed(() => {
+      if (typeof sFormSchema.value.rules == "function") {
+        return sFormSchema.value.rules(formModel, curdFormContext)
+      }
       if (typeof sFormSchema.value.getRules == "function") {
         return sFormSchema.value.getRules(formModel, curdFormContext)
       }

@@ -1,5 +1,5 @@
 <template>
-  <el-input v-model="model" v-trim :disabled="formItem.disabled || false" v-bind="props" :placeholder="(props.placeholder && String(props.placeholder)) || '请输入' + formItem.label" autocomplete="new-password" v-on="eventObject" />
+  <el-input v-model="model" v-trim :disabled="formItem.disabled || false" v-bind="props" :placeholder="(props.placeholder && String(props.placeholder)) || '请输入' + (props.label || formItem.label)" autocomplete="new-password" v-on="eventObject" />
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue"

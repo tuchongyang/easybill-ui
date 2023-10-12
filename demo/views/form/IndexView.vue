@@ -87,9 +87,9 @@ const formSchema: Ref<FormSchema> = ref({
     { label: "插件自带组件", prop: "slider", type: "el-slider", span: 12, props: { min: 1, max: 100, step: 1, marks: { 0: "0G", 30: "30G", 50: "50G", 100: "100G" } } },
     { label: "自定义表格", prop: "table", type: markRaw(FormTable), span: 24 },
   ],
-  getRules: () => {
+  rules: (form) => {
     return {
-      name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+      name: [{ required: form.name1 == 1, message: "名称不能为空", trigger: "blur" }],
     }
   },
   labelWidth: 120,

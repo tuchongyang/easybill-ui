@@ -366,7 +366,9 @@ const create = (row?: any) => {
     if (rules) {
       let rulesItem: FormItemRule[] = []
       if (!formSchema.rules) formSchema.rules = {}
-      formSchema.rules[item.prop] = rules
+      if (typeof formSchema.rules !== "function") {
+        formSchema.rules[item.prop] = rules
+      }
     }
   }
   columns.value.map((a) => {
