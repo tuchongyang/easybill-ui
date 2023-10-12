@@ -322,17 +322,21 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
         }
         if (schema.formatter) {
           let result = schema.formatter(row, schema, val, i) as string
-          if (/^[0-9\.,+-]+.[0-9]{2}$/.test(String(result))) {
+          if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(result))) {
             result = +parseFloat(String(result).replace(/,|$|￥/g, ""))
           }
           return result === "--" ? "" : result
+        }
+        if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(val))) {
+          val = +parseFloat(String(val).replace(/,|$|￥/g, ""))
         }
         return val
       }
       const data = list.value.map((a) => columns.value.filter((b) => !b.hidden && !b.neverShow).map((b, i) => getTableValue(a[b.prop], b, a, i)))
       const header = columns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label)
       const tabledata = [header, ...data]
-      exportExcel(tabledata, "data", "data.xls")
+      const filename = "导出数据"
+      exportExcel(tabledata, "data", (option.excelTitle || filename) + ".xls")
       ElMessage.success("导出成功!")
       break
     }

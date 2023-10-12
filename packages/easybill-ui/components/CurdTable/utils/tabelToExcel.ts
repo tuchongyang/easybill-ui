@@ -48,13 +48,14 @@ const tableToExcel = (function () {
       })
     }
   return function (data: string[][], worksheetName: string, filename: string) {
+    console.log("data", data)
     const tableStr = data
       .map((a) => {
-        const td = a.map((td) => "<td style='mso-number-format:\\@;'>" + (td === undefined || td === null ? "" : td) + "</td>").join("")
+        const td = a.map((td) => "<td style='" + (typeof td != "number" ? "mso-number-format:\\@;" : "") + "'>" + (td === undefined || td === null ? "" : td) + "</td>").join("")
         return `<tr>${td}</tr>`
       })
       .join("")
-
+    console.log("tableStr", tableStr)
     setTimeout(() => {
       const ctx = { worksheet: worksheetName || "Worksheet", table: tableStr }
       //    window.location.href = uri + base64(format(template, ctx)) ;

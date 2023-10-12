@@ -144,7 +144,7 @@ const table: Ref<CurdTableProps<any>> = ref({
     return new Promise((resolve) => {
       setTimeout(() => {
         const list = [
-          { name: "张三", age: 9, status: 1, listQuery, amount: "222.00" },
+          { name: "张三", age: 9, status: 1, listQuery, amount: "222.00", slider: "1231231233" },
           { name: "李四", age: 3, status: 2, amount: "1,233.00" },
         ]
         resolve({
