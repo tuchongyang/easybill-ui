@@ -68,7 +68,7 @@
         </template>
       </el-table>
     </div>
-    <div class="table-pager">
+    <div v-if="$slots.pageLeft || !option.hidePage" class="table-pager">
       <div class="page-left"><slot name="pageLeft"></slot></div>
       <el-pagination
         v-if="total != -1 && !option.hidePage"

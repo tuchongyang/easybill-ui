@@ -50,6 +50,7 @@ import { ConstantStatus } from "../../ConstantStatus/src"
 import { DetailDataItem } from "./types"
 import DetailInfoTooltip from "./DetailInfoTooltip.vue"
 import DetailInfoContent from "./DetailInfoContent.vue"
+import { ElImage } from "element-plus"
 
 const props = defineProps({
   data: {

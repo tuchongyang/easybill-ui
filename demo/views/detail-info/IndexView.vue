@@ -7,6 +7,7 @@
         <el-button type="primary" link>编辑按钮</el-button>
         <el-button type="danger" link>删除</el-button>
       </template>
+      <template #testSlot="{ row }"> {{ row.value }} </template>
     </DetailInfo>
   </div>
 </template>
@@ -18,9 +19,9 @@ const list = ref<DetailDataItem[]>([
   { label: "同步完成", value: 2, tooltip: "这是一个提示消息", span: 12 },
   { label: "已取消", value: 3, span: 12 },
   { label: "错误", span: 12, type: "el-image", props: { src: "https://element-plus.gitee.io/images/element-plus-logo.svg", style: "height: 50px;" } },
-  { label: "描述", value: "这里是一大段文字这里是一大段文<span style='color:red'>字这</span>里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", labelStyle: "align-items: flex-start" },
+  { label: "描述1", value: "这里是一大段文字这里是一大段文<span style='color:red'>字这</span>里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", labelStyle: "align-items: flex-start" },
   {
-    label: "描述",
+    label: "描述2",
     value:
       "<div style='width: 400px'>这里是<span style='color:red'>一大段文字</span>这里是一大段文字这里是一大这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字段文字这里是一大段文字这里是一大段文字这里是一大段文字</div>",
     showOverflowTooltip: { rawContent: true },
@@ -30,5 +31,6 @@ const list = ref<DetailDataItem[]>([
   { label: "描述", value: "这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", showOverflowTooltip: true, span: 6 },
   { label: "描述", value: "这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", showOverflowTooltip: true, span: 6 },
   { label: "描述", value: "这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字这里是一大段文字", showOverflowTooltip: true, span: 6 },
+  { label: "插槽", value: "11", slot: "testSlot" },
 ])
 </script>
