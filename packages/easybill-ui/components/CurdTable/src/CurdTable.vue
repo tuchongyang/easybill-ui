@@ -101,7 +101,7 @@ import STableDetail from "./STableDetail.vue"
 import { deepClone } from "../utils/common"
 import { exportExcel } from "../utils/tabelToExcel"
 import { Edit, Delete, Plus, ArrowDown, Document } from "@element-plus/icons-vue"
-import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey, FormAttrs } from "./types"
+import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey, FormAttrs, FeachDataParam } from "./types"
 import { ListQuery } from "../../TableFilter"
 import FormDialog from "../../FormDialog"
 import { ElMessageBox, ElMessage, ElLoading, FormItemRule, ElTable } from "element-plus"
@@ -125,7 +125,7 @@ const props = defineProps({
     },
   },
   pageOptions: {
-    type: Object,
+    type: Object as PropType<{ pageIndex?: number; pageSize?: number; total?: number } & Fields>,
     default() {
       return {
         pageIndex: 1,
@@ -135,27 +135,27 @@ const props = defineProps({
   },
   // 调用接口获取数据
   fetchData: {
-    type: Function,
+    type: Function as PropType<(opt: FeachDataParam) => Promise<{ total?: number; list?: any[] } | void>>,
     default: null,
   },
   // 自定义创建函数
   fetchCreate: {
-    type: Function,
+    type: Function as PropType<(formModel: Fields) => Promise<void>>,
     default: null,
   },
   // 自定义编辑函数
   fetchEdit: {
-    type: Function,
+    type: Function as PropType<(row: any, formItem: any) => Promise<void>>,
     default: null,
   },
   // 自定义删除函数
   fetchRemove: {
-    type: Function,
+    type: Function as PropType<(row: any, index: number) => Promise<void>>,
     default: null,
   },
   // 专门配置一些公共的参数
   option: {
-    type: Object as PropType<PropOption>,
+    type: Object as PropType<Partial<PropOption>>,
     default() {
       return {}
     },
@@ -240,7 +240,7 @@ const fetchData = async (opt?: FetchDataOpt) => {
       sTableFilter.value?.setItem(i)
       tableItemRefs.value[i]?.search && tableItemRefs.value[i].search({ listQuery: search })
     }
-    const params: Fields = { ...listQuery, ...search }
+    const params: Fields & { pageIndex: number; pageSize: number } = { ...listQuery, ...search }
     const fetchDataRes = await props.fetchData({ listQuery: params }).finally(() => {
       loading.value = false
     })
@@ -311,7 +311,7 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
       break
     }
     case "export": {
-      const getTableValue = (val: string, schema: ColumnItem, row: any, i: number) => {
+      const getTableValue = (val: any, schema: ColumnItem, row: any, i: number) => {
         if (schema.options) {
           const vals = String(val).split(",")
           const curs = vals.map((item) => {
@@ -323,7 +323,8 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
         if (schema.formatter) {
           let result = schema.formatter(row, schema, val, i) as string
           if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(result))) {
-            result = +parseFloat(String(result).replace(/,|$|￥/g, ""))
+            const resultNum = +parseFloat(String(result).replace(/,|$|￥/g, ""))
+            return resultNum
           }
           return result === "--" ? "" : result
         }

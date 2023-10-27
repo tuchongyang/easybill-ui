@@ -4,7 +4,7 @@ import { FormItem as FormItemType, Fields, TooltipProps } from "../../CurdForm"
 import { OptionItem } from "../../ConstantStatus"
 import { TableProps } from "element-plus/es/components/table/src/table/defaults"
 // import { TableColumnCtx } from "element-plus"
-import { FormProps } from "element-plus"
+
 import type { VNode } from "vue"
 import { FormDialogOptions } from "../../FormDialog/src/types"
 
@@ -118,7 +118,7 @@ export interface PropOption {
   createOptions: FormDialogOptions
 }
 export type MenuEventKey = "refresh" | "searchToggle" | "size" | "export" | "operation"
-export type FormAttrs = Partial<FormSchema> & { width: string }
+export type FormAttrs = Partial<FormSchema> & { width?: string | number }
 export interface ColumnItemFilter extends Partial<ParamsItem> {
   inner?: boolean
 }
@@ -134,9 +134,8 @@ export interface TableAttr {
 }
 
 export interface TableListQuery {
-  pageIndex?: number
-  pageSize?: number
-  total?: number
+  pageIndex: number
+  pageSize: number
 
   [key: string]: any
 }

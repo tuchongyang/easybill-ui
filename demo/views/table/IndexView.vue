@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, markRaw, Ref } from "vue"
-import { CurdTableProps } from "easybill-ui/index"
+import { CurdTableProps, CurdTable } from "easybill-ui/index"
 import { CircleCheck } from "@element-plus/icons-vue"
 import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
 

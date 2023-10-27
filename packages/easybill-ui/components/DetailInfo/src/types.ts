@@ -11,7 +11,7 @@ export interface DetailDataItem extends Record<string, any> {
   options?: Array<OptionItem>
   /** type为image时，会把value当做image的url来显示图片 */
   type?: string | ReturnType<typeof defineComponent>
-  labelWidth?: number
+  labelWidth?: number | string
   props?: Record<string, string>
   slot?: string
   tooltip?: string | import("element-plus/es/components/tooltip").ElTooltipProps

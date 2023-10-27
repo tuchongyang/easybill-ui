@@ -23,7 +23,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { OptionItem } from "easybill-ui/index"
+import { OptionItem, ConstantStatus } from "easybill-ui/index"
 import { ref, Ref } from "vue"
 
 const options1: Ref<OptionItem[]> = ref([

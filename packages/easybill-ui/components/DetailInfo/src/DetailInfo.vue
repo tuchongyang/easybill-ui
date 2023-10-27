@@ -54,7 +54,7 @@ import { ElImage } from "element-plus"
 
 const props = defineProps({
   data: {
-    type: Array as PropType<Array<DetailDataItem>>,
+    type: Array as PropType<DetailDataItem[]>,
     default: () => [],
   },
   title: {
