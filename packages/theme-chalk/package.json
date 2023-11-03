@@ -27,6 +27,7 @@
     "@types/sass": "^1.43.1",
     "chalk": "^5.0.1",
     "consola": "^2.15.3",
+    "define-properties": "^1.2.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
