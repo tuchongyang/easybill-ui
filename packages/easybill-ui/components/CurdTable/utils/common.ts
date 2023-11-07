@@ -2,12 +2,12 @@ export function deepClone<T extends Array<T> | any>(sourceData: T): T {
   if (Array.isArray(sourceData)) {
     return sourceData.map((item) => deepClone(item)) as T
   }
-  if (typeof sourceData !== "object" || sourceData === null) {
+  if (typeof sourceData !== "object" || sourceData === null || sourceData instanceof Function || sourceData instanceof Date || sourceData instanceof File || sourceData instanceof Symbol) {
     return sourceData
   }
   const obj: T = {} as T
   for (const key in sourceData) {
-    if (typeof sourceData[key] === "object" && sourceData[key] !== null) {
+    if ((typeof sourceData[key] === "object" || sourceData[key] instanceof Date || sourceData[key] instanceof File) && sourceData[key] !== null) {
       obj[key] = deepClone(sourceData[key])
     } else {
       obj[key] = sourceData[key]

@@ -73,5 +73,8 @@ export function getFilterFromColumn(a: ColumnItem) {
   if (!item.asyncOptions && a.asyncOptions) {
     item.asyncOptions = a.asyncOptions
   }
+  if (!item.eventObject && a.eventObject) {
+    item.eventObject = a.eventObject
+  }
   return item
 }

@@ -1,4 +1,4 @@
-import { FormSchema } from "./../../CurdForm/src/types"
+import {EventObject, FormSchema} from "./../../CurdForm/src/types"
 import { ParamsItem } from "../../TableFilter"
 import { FormItem as FormItemType, Fields, TooltipProps } from "../../CurdForm"
 import { OptionItem } from "../../ConstantStatus"
@@ -29,8 +29,10 @@ export interface ColumnItemCtx<T> extends Partial<TableColumnCtx<T>> {
   children?: ColumnItem<T>[]
   options?: Array<OptionItem> //数据字典
   asyncOptions?: () => Promise<OptionItem[]>
+  eventObject?:EventObject
   form?: Partial<FormItemType> | ((formItem: FormItemType, row: T, query: Fields) => Partial<FormItemType>)
   filter?: ColumnItemFilter
+  empty?: string | any
   detail?: ColumnItemDetail
   value?: any
   copy?: boolean // 对某一列的单元格的值进行复制

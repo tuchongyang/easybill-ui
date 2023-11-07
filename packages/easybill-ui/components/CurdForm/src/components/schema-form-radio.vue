@@ -18,7 +18,7 @@
       </template>
     </el-radio-group>
     <div v-if="!formItem.loading && !formItem.options?.length" class="empty">
-      <component :is="formItem.empty" v-if="formItem.empty" :form-model="formModel" :form-item="formItem" :props="props" />
+      <component :is="empty" v-if="empty" :form-model="formModel" :form-item="formItem" :props="props" />
       <template v-else>
         <el-icon><Warning /></el-icon> <span>{{ props.noDataText || "暂无数据" }}</span>
       </template>
@@ -47,9 +47,9 @@ export default defineComponent({
       get: () => props.modelValue,
       set: (val) => emit("update:modelValue", val),
     })
-
     return {
       model,
+      empty:toRaw(props.formItem.empty) || ""
     }
   },
 })

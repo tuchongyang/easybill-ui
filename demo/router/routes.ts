@@ -13,6 +13,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/table/IndexView.vue"),
       },
       {
+        path: "/tableTestView",
+        name: "tableTestView",
+        meta: { title: "curd-table-test-view" },
+        component: () => import("@/views/table/TestView.vue"),
+      },
+      {
         path: "/form",
         name: "form",
         meta: { title: "curd-form" },
