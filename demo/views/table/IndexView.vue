@@ -141,7 +141,7 @@ const table: Ref<CurdTableProps<any>> = ref({
     { label: "金额", prop: "amount" },
   ],
   fetchData: ({ listQuery }) => {
-    return new Promise((resolve) => {
+    return new Promise<any>((resolve) => {
       setTimeout(() => {
         const list = [
           { name: "张三", age: 9, status: 1, listQuery, amount: "222.00", slider: "1231231233" },

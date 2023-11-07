@@ -40,6 +40,7 @@ export interface FormItem {
   autoload?: boolean
   prefix?: string | any
   suffix?: string | any
+  empty?: string | any
   sortIndex?: number
 }
 export type FormItemTypeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value"

@@ -1,5 +1,5 @@
 <template>
-  <div class="form-empty">这里是自定义的空的模版</div>
+  <div class="form-empty">{{props.props.noDataText || '这里是自定义的空的模版'}}</div>
 </template>
 <script lang="ts" setup>
 import { Plus, Refresh } from "@element-plus/icons-vue"
@@ -8,7 +8,7 @@ const props = defineProps({
   ...FormItemProps,
 })
 const { formContext } = useForm()
-console.log("formContext", formContext)
+// console.log("formContext", formContext)
 const refresh = () => {
   formContext?.loadOptions(props.formItem.prop)
 }

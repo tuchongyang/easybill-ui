@@ -18,7 +18,7 @@
       </template>
     </el-radio-group>
     <div v-if="!formItem.loading && !formItem.options?.length" class="empty">
-      <component :is="props.empty" v-if="props.empty" :form-model="formModel" :form-item="formItem" :props="props" />
+      <component :is="formItem.empty" v-if="formItem.empty" :form-model="formModel" :form-item="formItem" :props="props" />
       <template v-else>
         <el-icon><Warning /></el-icon> <span>{{ props.noDataText || "暂无数据" }}</span>
       </template>
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
+import {defineComponent, computed, isReactive, isRef, markRaw,toRaw} from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
 import { ElIcon, ElRadioGroup, ElRadio, ElRadioButton } from "element-plus"
 import { FormItemProps } from "../types"
