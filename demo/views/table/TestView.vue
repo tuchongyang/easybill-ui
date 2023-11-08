@@ -22,16 +22,16 @@ const table: Ref<CurdTableProps<any>> = ref({
       filter: {
         prop: "cloudType",
         external: true, type: "radio",
-        props: {componentName: "button" , span: 24, labelWidth: "90px", value: "" ,},
+        props: {componentName: "button" , span: 24, labelWidth: "90px", value: "" ,
         empty: markRaw(formEmpty)},
-      asyncOptions:async ()=>{
-        return [
-          { label: "全部", value: "" },
-          { label: "阿里云", value: "aliyun" },
-          { label: "腾讯云", value: "tencent" },
-        ]
-      },
-      eventObject: {
+        asyncOptions:async ()=>{
+          return [
+            { label: "全部", value: "" },
+            { label: "阿里云", value: "aliyun" },
+            { label: "腾讯云", value: "tencent" },
+          ]
+        },
+        eventObject: {
         optionLoaded(modelRef, formItem,context) {
           modelRef.cloudType = 'tencent'
           context.loadOptions("region")
@@ -40,21 +40,23 @@ const table: Ref<CurdTableProps<any>> = ref({
           context.loadOptions("region")
         },
       },
+      }
     },
     {
       label: "地域",
       prop: "region",
       filter: {
         external: true, type: "radio",
-        props: {componentName: "button" , span: 24, labelWidth: "90px", value: "" ,noDataText: "当前云平台下地域为空",},
+        props: {componentName: "button" , span: 24, labelWidth: "90px", value: "" ,noDataText: "当前云平台下地域为空",
         empty: markRaw(formEmpty)},
-      autoload:false,
-      asyncOptions:async (modelRef)=>{
-        return [
-          { label: "阿里地域1", value: 'aliyun' },
-          { label: "阿里地域2", value: 'aliyun' },
-        ].filter((a) => a.value==modelRef?.cloudType)
-      },
+        autoload:false,
+        asyncOptions:async (modelRef)=>{
+          return [
+            { label: "阿里地域1", value: 'aliyun' },
+            { label: "阿里地域2", value: 'aliyun' },
+          ].filter((a) => a.value==modelRef?.cloudType)
+        },
+      }
     },
   ],
   fetchData: ({ listQuery }) => {

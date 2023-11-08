@@ -44,7 +44,7 @@ export default defineComponent({
 
     return {
       model,
-      empty:toRaw(props.formItem.empty) || ""
+      empty:toRaw(props.props.empty) || ""
     }
   },
 })
