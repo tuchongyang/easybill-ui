@@ -1,4 +1,7 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress"
+import nav from "./src/nav"
+import sidebar from "./src/sidebar"
+import { resolve } from "path"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -6,23 +9,19 @@ export default defineConfig({
   description: "A VitePress Site",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
-    ],
+    nav,
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
+    sidebar,
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
-  }
+    socialLinks: [{ icon: "github", link: "https://github.com/vuejs/vitepress" }],
+  },
+  vite: {
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "demo"),
+        "easybill-ui": resolve(__dirname, "../../packages/easybill-ui"),
+      },
+      extensions: [".ts", ".js", ".vue", ".json", ".mjs"],
+    },
+  },
 })
