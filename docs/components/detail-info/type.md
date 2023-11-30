@@ -1,6 +1,8 @@
-<template>
+# 不同的风格
+<br/>
+<hr/>
+
   <div>
-    <DetailInfo title="默认模式" :data="list" />
     <DetailInfo title="表格模式" :data="list" show-type="table" label-width="120px" />
     <DetailInfo title="卡片模式" :data="list" show-type="card" shadow label-width="120px" label-position="left">
       <template #headerRight>
@@ -10,7 +12,7 @@
       <template #testSlot="{ row }"> {{ row.value }} </template>
     </DetailInfo>
   </div>
-</template>
+
 <script lang="ts" setup>
 import { ref, Ref } from "vue"
 import { DetailInfo, DetailDataItem } from "easybill-ui/index"
