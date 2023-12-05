@@ -47,7 +47,7 @@ export default {
         { text: "自定义组件", link: "/components/curd-form/component" },
         { text: "使用全局组件", link: "/components/curd-form/global" },
 
-        { text: "属性", link: "/components/curd-formprops" },
+        { text: "属性", link: "/components/curd-form/props" },
       ],
     },
   ],
