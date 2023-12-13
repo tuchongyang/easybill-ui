@@ -2,6 +2,7 @@ import { defineConfig } from "vitepress"
 import nav from "./src/nav"
 import sidebar from "./src/sidebar"
 import { resolve } from "path"
+import { mdPlugin } from "./config/plugins.ts"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -23,5 +24,9 @@ export default defineConfig({
       },
       extensions: [".ts", ".js", ".vue", ".json", ".mjs"],
     },
+  },
+
+  markdown: {
+    config: (md) => mdPlugin(md),
   },
 })

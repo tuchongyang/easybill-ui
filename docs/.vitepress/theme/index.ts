@@ -3,7 +3,7 @@ import DefaultTheme from "vitepress/theme"
 import ElementPlus from "element-plus"
 import "element-plus/dist/index.css"
 import EasybillUi from "../../../packages/easybill-ui/index"
-
+import {VPDemo} from "../vitepress"
 import "../../../packages/theme-chalk/src/index.scss"
 
 export default {
@@ -13,6 +13,7 @@ export default {
     // app is the Vue 3 app instance from createApp()
     // router is VitePress' custom router (see `lib/app/router.js`)
     // siteData is a ref of current site-level metadata.
+    app.component("Demo",VPDemo)
     app.use(ElementPlus).use(EasybillUi)
   },
 }

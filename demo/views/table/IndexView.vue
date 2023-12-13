@@ -26,6 +26,9 @@ const table: Ref<CurdTableProps<any>> = ref({
   pageOptions: { age: "8", cateId: 1 },
   option: {
     autoload: true,
+    hideOperation:false,
+    hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
+    hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
     filterAttrs: {
       // labelPosition: "left",
     },
@@ -67,6 +70,7 @@ const table: Ref<CurdTableProps<any>> = ref({
           ],
         },
       ],
+      fixed:"left",
     },
     { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
     { label: "账期范围", prop: "cycle", filter: { external: true, labelWidth: "90px", type: "date-picker", props: { type: "monthrange", format: "YYYY-MM", valueFormat: "YYYY-MM" }, tableKey: ["startTime", "endTime"], value: ["2023-04", "2023-05"] } },
@@ -156,7 +160,7 @@ const table: Ref<CurdTableProps<any>> = ref({
   },
   fetchCreate: async () => {},
 })
-setTimeout(() => {
-  table.value.option && (table.value.option.hideOperation = true)
-}, 1000)
+// setTimeout(() => {
+//   table.value.option && (table.value.option.hideOperation = true)
+// }, 1000)
 </script>

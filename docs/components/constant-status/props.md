@@ -1,6 +1,5 @@
 ## 属性
 
-
   <div>
     <div style="font-weight:600;">ConstantStatus 属性</div>
     <br/>

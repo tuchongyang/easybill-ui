@@ -42,6 +42,7 @@ export default {
           items: [
             { text: "input输入框", link: "/components/curd-form/input" },
             { text: "Select选择器", link: "/components/curd-form/select" },
+            { text: "Radio单选框", link: "/components/curd-form/radio" },
           ],
         },
         { text: "自定义组件", link: "/components/curd-form/component" },
