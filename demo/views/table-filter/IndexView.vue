@@ -30,7 +30,7 @@ const filterSchema: Ref<FilterItem[]> = ref([
   },
   { label: "名称", prop: "name" },
   { label: "年龄", prop: "age" },
-  { label: "账期", prop: "date", type: "date-picker", external: true },
+  { label: "账期", prop: "date", type: "date-picker", external: true ,sortIndex:10},
   {
     label: "多选",
     prop: "checkboc",

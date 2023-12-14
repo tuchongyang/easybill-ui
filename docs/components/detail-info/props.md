@@ -18,6 +18,7 @@
         <el-table-column prop="type" label="类型" />
         <el-table-column prop="default" label="默认值" />
     </el-table>
+    
   </div>
 
 <script lang="ts" setup>
