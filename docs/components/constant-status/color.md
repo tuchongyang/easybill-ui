@@ -3,7 +3,7 @@
 :::demo
 ConstantStatus/color
 :::
-
+也可以通过 `option` 中的 `color` 属性设置
 
 
 

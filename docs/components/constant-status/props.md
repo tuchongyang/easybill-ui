@@ -15,68 +15,130 @@
     <el-table :data="tableData2">
         <el-table-column prop="name" label="属性名" width="180" />
         <el-table-column prop="info" label="说明" width="180" />
-        <el-table-column prop="type" label="类型" />
+        <el-table-column prop="type" label="类型"  >
+            <template #="{row}">
+                <el-popover
+                    v-if="Object.keys(row).findIndex((item)=>item=='enum')!=-1"
+                    placement="bottom-start"
+                    :width="200"
+                    trigger="click"
+                >
+                    <template #default>
+                        <span>{{row.enum}}</span>
+                    </template>
+                    <template #reference>
+                        <div>
+                            <span>{{row.type}}</span>
+                            <el-button class="m-2" round  link >| enum<el-icon class="el-icon--right"><Warning /></el-icon></el-button>
+                        </div>
+                    </template>
+                </el-popover>
+            </template>
+        </el-table-column>
         <el-table-column prop="default" label="默认值" />
     </el-table>
   </div>
 
 <script lang="ts" setup>
+    import {Warning} from '@element-plus/icons-vue'
     const tableData1 = [
         {
             name: 'value',
+            info: "绑定值",
+            type: "String | Number | Boolean",
+            default: "undefined",
         },
         {
             name: "options",
+            info: "配置项",
+            type: "Array",
+            default: "[ ]"
         }
     ]
     const tableData2 = [
         {
             name: 'label',
+            info: "显示的内容",
+            type: "String",
         },
         {
             name: "value",
+            info: "每项对应的绑定值",
+            type: "String | Number |Boolean"
         },
         {
             name: "disabled",
+            info: "",
+            type: "Boolean"
+
         },
         {
             name: "type",
+            info: "ConstantStatus 的类型",
+            type: 'String',
+            enum: `"default" | "primary" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"`
         },
         {
             name: "icon",
+            info: "图标",
+            type: "Any"
         },
         {
             name: "hit",
+            info: "",
+            type: "Boolean",
         },
         {
             name: "color",
+            info: "ConstantStatus 的颜色",
+            type: "String",
         },
         {
             name: "size",
+            info: "ConstantStatus 的尺寸",
+            type: "String",
+            enum: `"large" | "default" | "small"`
         },
         {
             name: "effect",
+            info: "ConstantStatus 的风格",
+            type: "String",
+            enum: `"dark" | "light" | "plain"`
         },
         {
             name: "round",
+            info: "",
+            type: "Boolean"
         },
         {
             name: "border",
+            info: "",
+            type: "Boolean",
         },
         {
             name: "className",
+            info: "",
+            type: "String"
         },
         {
             name: "iconClass",
+            info: "",
+            type: "String | String[]"
         },
         {
             name: "dot",
+            info: "",
+            type: "Boolean",
         },
         {
             name: "tooltip",
+            info: "",
+            type: "Any",
         },
         {
             name: "html",
+            info: "",
+            type: "String"
         }
     ]
 </script>

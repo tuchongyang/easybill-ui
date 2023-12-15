@@ -10,9 +10,10 @@
 
 <script lang="ts" setup>
 import { ref, Ref } from "vue"
+import {Warning} from '@element-plus/icons-vue'
 
 const options1: Ref<OptionItem[]> = ref([
-  { label: "default", value: 10, type: "default" },
+  { label: "default", value: 10, type: "default",icon:Warning},
   { label: "primary", value: 0, type: "primary" },
   { label: "warning", value: 1, type: "warning" },
   { label: "success", value: 2, type: "success" },

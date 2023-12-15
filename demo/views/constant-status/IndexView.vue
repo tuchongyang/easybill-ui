@@ -24,11 +24,12 @@
 </template>
 <script lang="ts" setup>
 import { OptionItem, ConstantStatus } from "easybill-ui/index"
-import { ref, Ref } from "vue"
+import { ref, Ref ,markRaw} from "vue"
+import {Warning} from '@element-plus/icons-vue'
 
 const options1: Ref<OptionItem[]> = ref([
-  { label: "default", value: 10, type: "default" },
-  { label: "primary", value: 0, type: "primary" },
+  { label: "default", value: 10, type: "default" ,icon:markRaw(Warning),color:"#fff000"},
+  { label: "primary", value: 0, type: "primary",size:"large"},
   { label: "warning", value: 1, type: "warning" },
   { label: "success", value: 2, type: "success" },
   { label: "info", value: 3, type: "info" },
