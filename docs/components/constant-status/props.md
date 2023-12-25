@@ -4,18 +4,18 @@
     <div style="font-weight:600;">ConstantStatus 属性</div>
     <br/>
     <el-table :data="tableData1">
-        <el-table-column prop="name" label="属性名" width="180" />
+        <el-table-column prop="name" label="属性名" width="150" />
         <el-table-column prop="info" label="说明" width="180" />
-        <el-table-column prop="type" label="类型" />
+        <el-table-column prop="type" label="类型" width="180"/>
         <el-table-column prop="default" label="默认值" />
     </el-table>
     <br/>
     <hr/>
     <div style="font-weight:600;">Options 属性</div>
     <el-table :data="tableData2">
-        <el-table-column prop="name" label="属性名" width="180" />
+        <el-table-column prop="name" label="属性名" width="150" />
         <el-table-column prop="info" label="说明" width="180" />
-        <el-table-column prop="type" label="类型"  >
+        <el-table-column prop="type" label="类型"  width="180">
             <template #="{row}">
                 <el-popover
                     v-if="Object.keys(row).findIndex((item)=>item=='enum')!=-1"
@@ -85,39 +85,40 @@
         },
         {
             name: "hit",
-            info: "",
+            info: "让普通风格的 ConstantStatus 有边框描边 (没有dot、effect属性时)",
             type: "Boolean",
+            default: "false"
         },
         {
             name: "color",
-            info: "ConstantStatus 的颜色",
+            info: "背景色",
             type: "String",
         },
         {
             name: "size",
-            info: "ConstantStatus 的尺寸",
+            info: "尺寸",
             type: "String",
             enum: `"large" | "default" | "small"`
         },
         {
             name: "effect",
-            info: "ConstantStatus 的风格",
+            info: "风格",
             type: "String",
             enum: `"dark" | "light" | "plain"`
         },
         {
             name: "round",
-            info: "",
+            info: "是否为圆形",
             type: "Boolean"
         },
         {
             name: "border",
-            info: "",
+            info: "只要有border属性，ConstantStatus就没有边框及背景",
             type: "Boolean",
         },
         {
             name: "className",
-            info: "",
+            info: "给 ConstantStatus 添加类名",
             type: "String"
         },
         {
@@ -127,7 +128,7 @@
         },
         {
             name: "dot",
-            info: "",
+            info: "是否显示dot风格",
             type: "Boolean",
         },
         {
@@ -137,7 +138,7 @@
         },
         {
             name: "html",
-            info: "",
+            info: "让 label 显示的内容能够解析 html",
             type: "String"
         }
     ]
