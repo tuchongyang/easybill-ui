@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CurdForm ref="formRef" v-model="form" :form-schema="formSchema">
+    <CurdForm ref="formRef" v-model="form" :form-schema="formSchema" :extend-context="{a:123}" @change="change">
       <template #operate-button>
         <el-button @click="submit">提交</el-button>
       </template>
@@ -20,11 +20,15 @@ const form = ref({
   modelForm: {},
   name2: ["2"],
 })
+const change = (formModel,formItem) =>{
+  console.log('1',formModel,formItem);
+  
+}
 
 const formSchema: Ref<FormSchema> = ref({
   formItem: [
-    { label: "直接显示值", prop: "anyway", value: "1", type: "value" },
-    { label: "名称", prop: "name", type: "input", prefix: '<span style="color:red;white-space:nowrap;margin-right: 20px;">前缀</span>', suffix: '<span style="color:orange;white-space:nowrap;margin-left: 20px;">后缀</span>' },
+    { label: "直接显示值", prop: "anyway", value: "1", type: "value" ,},
+    { label: "名称", prop: "name", type: "input", prefix: '<span style="color:red;white-space:nowrap;margin-right: 20px;">前缀</span>', suffix: '<span style="color:orange;white-space:nowrap;margin-left: 20px;">后缀</span>' ,disabled:true},
     {
       label: "年龄",
       prop: "age",
@@ -34,6 +38,14 @@ const formSchema: Ref<FormSchema> = ref({
       formItemProps(formModel, formItem) {
         return { rules: [{ required: true, message: "请输入" + formItem.label, trigger: "blur" }] }
       },
+      eventObject:{
+        change:(formModel,formItem,context)=>{
+          console.log('formModel',formModel);
+          console.log('formItem',formItem);
+          console.log('context',context);
+          
+        }
+      }
     },
     {
       label: "爱好",
@@ -69,6 +81,14 @@ const formSchema: Ref<FormSchema> = ref({
         { label: "唱歌", value: "1", html: "<div style='display:flex;justify-content:space-between;'><span>唱歌</span><span style='color:#999'>22</span></div>" },
         { label: "跳舞", value: "2" },
       ],
+      eventObject:{
+        change:(formModel,formItem,context)=>{
+          console.log('formModel',formModel);
+          console.log('formItem',formItem);
+          console.log('context',context);
+          
+        }
+      }
     },
     {
       label: "名称",
@@ -118,9 +138,13 @@ const formSchema: Ref<FormSchema> = ref({
       name: [{ required: form.name1 == 1, message: "名称不能为空", trigger: "blur" }],
     }
   },
-  labelWidth: 120,
-  labelPosition: "left",
-  gutter: 10,
+  labelWidth: 250,
+  labelPosition: "right",
+  // gutter: 120,
+  inline:true,
+  inlineMessage:true,
+  size: "large",
+  // disabled:true
 })
 const formRef = ref<InstanceType<typeof CurdForm>>()
 const submit = () => {
