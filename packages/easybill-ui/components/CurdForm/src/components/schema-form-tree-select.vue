@@ -15,11 +15,11 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
-import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup, ElIcon } from "element-plus"
+import { ElTreeSelect, ElIcon } from "element-plus"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormTreeSelect",
-  components: { Loading, ElCheckbox, ElCheckboxButton, ElCheckboxGroup, ElIcon, Warning },
+  components: { Loading, ElTreeSelect, ElIcon, Warning },
   props: {
     ...FormItemProps,
     modelValue: {
