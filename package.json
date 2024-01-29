@@ -14,6 +14,7 @@
     "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
+    "@vueuse/core": "^10.7.0",
     "markdown-it": "^13.0.2",
     "markdown-it-container": "^4.0.0",
     "prism-theme-vars": "^0.2.4",

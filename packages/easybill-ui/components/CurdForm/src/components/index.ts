@@ -3,6 +3,7 @@ import SchemaFormInputNumber from "./schema-form-input-number.vue"
 import SchemaFormInput from "./schema-form-input.vue"
 import SchemaFormRadio from "./schema-form-radio.vue"
 import SchemaFormSelect from "./schema-form-select.vue"
+import SchemaFormTreeSelect from "./schema-form-tree-select.vue"
 import SchemaFormSwitch from "./schema-form-switch.vue"
 import SchemaFormDatePicker from "./schema-form-date-picker.vue"
 import SchemaFormTimePicker from "./schema-form-time-picker.vue"
@@ -27,6 +28,7 @@ const presetMap: PresetMap = {
   "schema-value": SchemaFormValue,
   "schema-cascader": SchemaFormCascader,
   "schema-autocomplete": SchemaFormAutocomplete,
+  "schema-tree-select": SchemaFormTreeSelect,
 }
 
 export default presetMap
