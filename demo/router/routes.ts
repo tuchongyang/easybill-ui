@@ -25,6 +25,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/form/IndexView.vue"),
       },
       {
+        path: "/form/form-item",
+        name: "formItem",
+        meta: { title: "curd-form" },
+        component: () => import("@/views/form/form-item/IndexView.vue"),
+      },
+      {
         path: "/formTestView",
         name: "formTestView",
         meta: { title: "curd-form-test-view" },
