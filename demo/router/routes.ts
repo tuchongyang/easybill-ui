@@ -22,20 +22,28 @@ const routes: Array<RouteRecordRaw> = [
         path: "/form",
         name: "form",
         meta: { title: "curd-form" },
-        component: () => import("@/views/form/IndexView.vue"),
+        component: () => import("@/layout/EmptyLayout.vue"),
+        children: [
+          {
+            path: "",
+            meta: { title: "curd-form" },
+            component: () => import("@/views/form/IndexView.vue"),
+          },
+          {
+            path: "form-item",
+            name: "form-item",
+            meta: { title: "curd-form-item" },
+            component: () => import("@/views/form/form-item/IndexView.vue"),
+          },
+          {
+            path: "test",
+            name: "formTestView",
+            meta: { title: "curd-form-test-view" },
+            component: () => import("@/views/form/TestView.vue"),
+          },
+        ],
       },
-      {
-        path: "/form/form-item",
-        name: "formItem",
-        meta: { title: "curd-form" },
-        component: () => import("@/views/form/form-item/IndexView.vue"),
-      },
-      {
-        path: "/formTestView",
-        name: "formTestView",
-        meta: { title: "curd-form-test-view" },
-        component: () => import("@/views/form/TestView.vue"),
-      },
+
       {
         path: "/constant-status",
         name: "constant-status",

@@ -23,4 +23,8 @@ const mergeConfig = (a: any, b: any): any => {
 
 export interface GlobalConfig {
   size: "default" | "small" | "medium"
+  form?: FormConfig
+}
+interface FormConfig {
+  components?: any[]
 }

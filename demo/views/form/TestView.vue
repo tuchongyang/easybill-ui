@@ -1,9 +1,9 @@
 <template>
   <div>
     <CurdForm ref="formRef" v-model="form" :form-schema="formSchema">
-<!--      <template #operate-button>-->
-<!--        <el-button @click="submit">提交</el-button>-->
-<!--      </template>-->
+      <template #operate-button>
+        <el-button @click="submit">提交</el-button>
+      </template>
     </CurdForm>
   </div>
 </template>
@@ -29,13 +29,25 @@ const formSchema: Ref<FormSchema> = ref({
       prop: "emptyData",
       span: 12,
       type: "radio",
-      props: (form) => ( { componentName: "button", noDataText: form.name || "数据空空的"}),
+      props: (form) => ({ componentName: "button", noDataText: form.name || "数据空空的" }),
       empty: markRaw(formEmpty),
-      options:[
+      options: [
         // { label: "唱歌", value: "1" },
         // { label: "跳舞", value: "2" },
       ],
       value: "1",
+    },
+    {
+      label: "列表",
+      prop: "items",
+      type: "list",
+      props: {
+        columns: [
+          { label: "标题", prop: "title" },
+          { label: "描述", prop: "desc", props: { type: "textarea", rows: 3 } },
+          { label: "图片", prop: "image", type: "image" },
+        ],
+      },
     },
   ],
   rules: (form) => {

@@ -7,7 +7,8 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue"
-import { CurdFormItem } from "easybill-ui/index"
+import * as dd from "easybill-ui/index"
+console.log("dd", dd)
 const formItem = ref({
   label: "名称",
   prop: "name",

@@ -17,7 +17,8 @@ import { FormItem, Fields } from "./types"
 import { getComponent } from "./components"
 import FormTooltip from "./FormTooltip.vue"
 import { useForm } from "./hooks"
-
+import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
+const config = useGlobalConfig()
 const props = defineProps({
   // 动态验证表单
   formItem: {
@@ -31,7 +32,7 @@ const props = defineProps({
 })
 const emit = defineEmits(["change"])
 const modelRef: Ref<Fields> = ref(props.formModel || {})
-const comp = computed(() => getComponent(props.formItem.type))
+const comp = computed(() => getComponent(props.formItem.type) || (config.value.form && config.value.form.components && config.value.form.components[props.formItem.type]))
 // 重新组装props
 const formItemProps = computed(() => {
   if (!props.formItem.props) {
