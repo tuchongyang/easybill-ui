@@ -13,7 +13,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, PropType, toRaw } from "vue"
+import { defineComponent, computed, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
 import { ElTreeSelect, ElIcon } from "element-plus"
 import { FormItemProps } from "../types"
@@ -23,8 +23,8 @@ export default defineComponent({
   props: {
     ...FormItemProps,
     modelValue: {
-      type: Array as PropType<(string | number)[]>,
-      default: () => [],
+      type: [String, Number, Boolean],
+      default: "",
     }, // 表单项值
   },
   emits: ["update:modelValue"],
@@ -33,9 +33,6 @@ export default defineComponent({
       get: () => props.modelValue,
       set: (val) => emit("update:modelValue", val),
     })
-    if (!(model.value instanceof Array)) {
-      model.value = []
-    }
 
     return {
       model,
