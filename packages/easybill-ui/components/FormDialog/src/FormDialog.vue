@@ -5,7 +5,7 @@
     </el-steps>
     <div v-loading="confirmLoading">
       <template v-for="(item, i) in stepSchemaList" :key="i">
-        <curd-form v-show="step == i" ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" :extend-context="extendContext" style="margin: 0 40px 0 20px" />
+        <curd-form v-show="step == i" ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" :extend-context="extendContexts" style="margin: 0 40px 0 20px" />
       </template>
     </div>
     <template #footer>
@@ -61,6 +61,10 @@ export default defineComponent({
     },
     stepProps: {
       type: Object as PropType<Fields>,
+      default: () => ({}),
+    },
+    extendContext: {
+      type: Object,
       default: () => ({}),
     },
   },
@@ -128,8 +132,9 @@ export default defineComponent({
         }
       }
     }
-    const extendContext = {
+    const extendContexts = {
       loadOptions,
+      ...props.extendContext,
     }
     if (props.setForm) {
       props.setForm(form)
@@ -145,7 +150,7 @@ export default defineComponent({
       form,
       prev,
       next,
-      extendContext,
+      extendContexts,
     }
   },
 })
