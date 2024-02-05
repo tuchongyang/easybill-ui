@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CurdForm ref="formRef" v-model="form" :form-schema="formSchema">
+    <CurdForm ref="formRef" v-model="form" :form-schema="formSchema" :extend-context="extendContext">
       <template #operate-button>
         <el-button @click="submit">提交</el-button>
       </template>
@@ -12,7 +12,7 @@ import { CurdForm, FormSchema } from "easybill-ui/index"
 import { ref, Ref, markRaw } from "vue"
 import FormSuffixBtn from "./components/FormSuffixBtn.vue"
 import { ElMessage } from "element-plus"
-import FormTable from "./components/FormTable.vue"
+import FormTable from "@/components/FormTable/IndexView.vue"
 import formEmpty from "./components/formEmpty.vue"
 
 const form = ref({
@@ -20,6 +20,7 @@ const form = ref({
   modelForm: {},
   name2: ["2"],
 })
+const extendContext = { components: { "w-grid": FormTable } }
 
 const formSchema: Ref<FormSchema> = ref({
   formItem: [
@@ -40,7 +41,7 @@ const formSchema: Ref<FormSchema> = ref({
     {
       label: "列表",
       prop: "items",
-      type: "list",
+      type: "w-grid",
       props: {
         columns: [
           { label: "标题", prop: "title" },
