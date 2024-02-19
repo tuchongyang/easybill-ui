@@ -26,6 +26,9 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:modelValue"])
 const model = ref(props.formModel || {})
+if (props.modelValue) {
+  model.value[props.formItem.prop] = props.modelValue
+}
 const onChange = () => {
   emit("update:modelValue", model.value[props.formItem.prop])
 }
