@@ -7,8 +7,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue"
-import * as dd from "easybill-ui/index"
-console.log("dd", dd)
+
 const formItem = ref({
   label: "名称",
   prop: "name",
@@ -24,7 +23,7 @@ const model = ref("")
 const model2 = ref("")
 
 setTimeout(() => {
-  formItem.value.type = "input-number"
+  formItem.value.props = { type: "textarea", rows: 3 }
 }, 1000)
 setTimeout(() => {
   formItem1.value = { label: "aa", prop: "ai", type: "radio", options: [{ label: "a", value: "a" }] }

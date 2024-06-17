@@ -25,8 +25,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/layout/EmptyLayout.vue"),
         children: [
           {
-            path: "",
-            meta: { title: "curd-form" },
+            path: "base",
+            name: "formbase",
+            meta: { title: "Base" },
             component: () => import("@/views/form/IndexView.vue"),
           },
           {

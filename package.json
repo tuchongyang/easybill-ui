@@ -29,7 +29,7 @@
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "chalk": "^5.0.1",
     "consola": "^2.15.3",
-    "element-plus": "2.2.27",
+    "element-plus": "2.7.4",
     "escape-html": "^1.0.3",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",

@@ -20,7 +20,7 @@ const form = ref({
   modelForm: {},
   name2: ["2"],
 })
-const extendContext = { components: { "w-grid": FormTable } }
+const extendContext = { components: { "w-grid": markRaw(FormTable) } }
 
 const formSchema: Ref<FormSchema> = ref({
   formItem: [

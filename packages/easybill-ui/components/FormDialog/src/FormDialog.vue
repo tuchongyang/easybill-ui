@@ -5,7 +5,7 @@
     </el-steps>
     <div v-loading="confirmLoading">
       <template v-for="(item, i) in stepSchemaList" :key="i">
-        <curd-form v-show="step == i" ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" :extend-context="extendContexts" style="margin: 0 40px 0 20px" />
+        <curd-form v-show="step == i" ref="curdFormRef" v-model="form" :fields="fields" :form-schema="item.formSchema" :extend-context="extendContexts" />
       </template>
     </div>
     <template #footer>

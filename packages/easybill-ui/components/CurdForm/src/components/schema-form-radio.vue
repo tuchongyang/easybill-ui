@@ -5,12 +5,12 @@
     </div>
     <el-radio-group v-if="!formItem.loading && formItem.options && formItem.options.length" v-model="model" :class="[props?.showType]" v-bind="props" v-on="eventObject">
       <template v-for="option in formItem.options" :key="option.value">
-        <el-radio-button v-if="props?.componentName == 'button'" :label="option.value" :disabled="option.disabled">
+        <el-radio-button v-if="props?.componentName == 'button'" :value="option.value" :disabled="option.disabled">
           <span v-if="option.html" v-html="option.html"></span>
           <span v-else>{{ option.label }}</span>
           <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
         </el-radio-button>
-        <el-radio v-else :label="option.value" :disabled="option.disabled">
+        <el-radio v-else :value="option.value" :disabled="option.disabled">
           <span v-if="option.html" v-html="option.html"></span>
           <span v-else>{{ option.label }}</span>
           <FormTooltip v-if="option.tooltip" :tooltip="option.tooltip" :form-item="formItem" :form-model="formModel" />
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, computed, isReactive, isRef, markRaw,toRaw} from "vue"
+import { defineComponent, computed, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
 import { ElIcon, ElRadioGroup, ElRadio, ElRadioButton } from "element-plus"
 import { FormItemProps } from "../types"
@@ -49,7 +49,7 @@ export default defineComponent({
     })
     return {
       model,
-      empty:toRaw(props.props.empty) || ""
+      empty: toRaw(props.props.empty) || "",
     }
   },
 })

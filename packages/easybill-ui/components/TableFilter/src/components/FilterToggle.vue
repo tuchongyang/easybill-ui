@@ -1,5 +1,5 @@
 <template>
-  <el-popover ref="popoverRef" trigger="click" placement="bottom-start" popper-class="table-filter-tag-popper">
+  <el-popover ref="popoverRef" trigger="click" placement="bottom-start" hide-delay="0" popper-class="table-filter-tag-popper">
     <template #reference>
       <div ref="toggleRef" class="table-filter-toggle">
         <span class="current-filter-label">{{ props.selectParams[props.index].label }}</span>
