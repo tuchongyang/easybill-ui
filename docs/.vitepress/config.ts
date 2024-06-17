@@ -6,8 +6,9 @@ import { mdPlugin } from "./config/plugins.ts"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "My Awesome Project",
-  description: "A VitePress Site",
+  title: "Easybill UI",
+  description: "A Easybill-ui components Site",
+  base: "/easybill-ui",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav,
