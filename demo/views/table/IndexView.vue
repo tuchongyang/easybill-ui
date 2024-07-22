@@ -29,9 +29,7 @@ const table: Ref<CurdTableProps<any>> = ref({
     hideOperation: false,
     hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
     hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
-    filterAttrs: {
-      // labelPosition: "left",
-    },
+    filterAttrs: {},
     menuEvent: {
       // export() {
       //   alert("自定义导出")
