@@ -9,7 +9,7 @@
       </template>
     </div>
     <template #footer>
-      <span class="dialog-footer">
+      <span v-if="handleOk" class="dialog-footer">
         <el-button :disabled="confirmLoading" type="default" @click="onCancel()">取消</el-button>
         <el-button v-if="stepSchemaList.length > 1 && step > 0" :disabled="confirmLoading" type="primary" plain @click="prev">上一步</el-button>
         <el-button v-if="stepSchemaList.length > 1 && step < stepSchemaList.length - 1" :disabled="confirmLoading" type="primary" plain @click="next">下一步</el-button>

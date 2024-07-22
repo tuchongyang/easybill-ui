@@ -37,6 +37,12 @@ const routes: Array<RouteRecordRaw> = [
             component: () => import("@/views/form/form-item/IndexView.vue"),
           },
           {
+            path: "cascade",
+            name: "formCascade",
+            meta: { title: "级联" },
+            component: () => import("@/views/form/cascade/IndexView.vue"),
+          },
+          {
             path: "test",
             name: "formTestView",
             meta: { title: "curd-form-test-view" },

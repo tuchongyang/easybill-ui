@@ -92,7 +92,9 @@ const onChange = (formModel: Fields, formItem: any) => {
   if (!formItem.tableKey) {
     l[formItem.prop] = formModel[formItem.prop]
   }
-  emit("change")
+  setTimeout(() => {
+    emit("change")
+  })
 }
 const formRef = ref()
 const loadOptions = (prop: string, option?: any) => {
