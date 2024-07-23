@@ -2,7 +2,7 @@
   <div class="table-filter">
     <slot name="top"></slot>
     <div>
-      <FilterExternal ref="filterExternalRef" :select-params="selectParams" :list-query="listQuery" :has-slot="selectParams.some((a) => !a.external)" v-bind="$attrs" @change="onChange">
+      <FilterExternal ref="filterExternalRef" :select-params="selectParams" :list-query="listQuery" :has-slot="selectParams.some((a) => !a.external)" :extendContext="extendContext" v-bind="$attrs" @change="onChange">
         <template #default>
           <FilterSearchBox v-if="selectParams.some((a) => !a.external)" ref="searchRef" :select-params="selectParams.filter((a) => !a.external)" :select-list="selectList" :list-query="listQuery" @search="onChange" />
         </template>
@@ -176,6 +176,9 @@ const loadOptions = (prop: string, option?: any) => {
     return filterExternalRef.value.loadOptions(prop, option)
   }
   return searchRef.value.loadOptions(prop, option)
+}
+const extendContext = {
+  loadOptions: loadOptions,
 }
 const clear = () => {
   for (let i = 0; i < selectList.value.length; i++) {

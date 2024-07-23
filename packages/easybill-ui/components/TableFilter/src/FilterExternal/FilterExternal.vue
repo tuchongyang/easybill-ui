@@ -1,5 +1,5 @@
 <template>
-  <CurdForm ref="formRef" v-model="query" inline class="filter-external" :form-schema="formSchema" v-bind="option?.formProps" @change="onChange">
+  <CurdForm ref="formRef" v-model="query" inline class="filter-external" :form-schema="formSchema" v-bind="option?.formProps" :extend-context="props.extendContext" @change="onChange">
     <template #defaultFilter>
       <slot></slot>
     </template>
@@ -26,6 +26,10 @@ const props = defineProps({
   hasSlot: {
     type: Boolean,
     default: false,
+  },
+  extendContext: {
+    type: Object,
+    default: () => ({}),
   },
 })
 const option = inject<FilterOption>("option")
@@ -100,5 +104,6 @@ const formRef = ref()
 const loadOptions = (prop: string, option?: any) => {
   return formRef.value.loadOptions(prop, option)
 }
+
 defineExpose({ loadOptions })
 </script>

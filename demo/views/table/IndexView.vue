@@ -71,6 +71,7 @@ const table: Ref<CurdTableProps<any>> = ref({
               change(formModel, formItem, context) {
                 formModel.age = ""
                 context.change(formModel, formItem)
+                context.loadOptions("cateId")
               },
             },
           },
@@ -93,6 +94,7 @@ const table: Ref<CurdTableProps<any>> = ref({
         inner: true,
         props: { filterable: true },
         asyncOptions: async (modelRef, formItem, context, config) => {
+          // console.log("调了cateId的options")
           return [
             { label: "一级1", value: 1 },
             { label: "一级2", value: 2 },
