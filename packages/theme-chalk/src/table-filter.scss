@@ -149,6 +149,9 @@
       --el-select-border-color-hover: transparent;
       --el-select-input-focus-border-color: transparent;
     }
+    .el-select__wrapper{
+      box-shadow: none;
+    }
   }
 }
 .table-filter-type {

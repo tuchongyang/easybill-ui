@@ -1,7 +1,7 @@
 <template>
   <div class="filter-search-box" :class="{ 'is-focus': state.isFocus }">
     <FilterToggle v-model:index="currentIndex" :select-params="props.selectParams" />
-    <FilterItem ref="filterItemRef" :params-item="props.selectParams[currentIndex]" :list-query="props.listQuery" @search="confirm"></FilterItem>
+    <FilterItem ref="filterItemRef" :params-item="props.selectParams[currentIndex]" v-model="query" @search="confirm"></FilterItem>
     <div class="filter-action">
       <div class="search" @click="confirm">
         <el-icon>
@@ -12,7 +12,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { PropType, Ref, ref, inject } from "vue"
+import { PropType, Ref, ref, inject, watch } from "vue"
 import * as I from "../types"
 import { Search } from "@element-plus/icons-vue"
 import FilterToggle from "./components/FilterToggle.vue"
@@ -35,8 +35,17 @@ const props = defineProps({
 const emit = defineEmits(["search"])
 const currentIndex = ref(0)
 const filterItemRef = ref()
+const query = ref(props.listQuery)
+watch(
+  () => query.value,
+  () => {
+    const m = props.listQuery
+    for (let i in m) {
+      m[i] = query.value[i]
+    }
+  },
+)
 const confirm = () => {
-  console.log("dd")
   const current = props.selectParams[currentIndex.value]
   if (typeof current.type == "undefined" || current.type == "input") {
     filterItemRef.value.setValue(props.selectParams[currentIndex.value].prop)

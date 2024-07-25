@@ -1,13 +1,12 @@
 <template>
-  <el-tag v-if="current" class="constant-status" :class="{ 'dot-status': current.dot }" v-bind="currentProps">
+  <div class="el-tag constant-status" :class="tagClass" v-bind="currentProps">
     <el-icon v-if="(current.icon || current.iconClass) && !current.dot" :class="current.iconClass" style="margin-right: 5px">
       <component :is="current.icon" v-if="current.icon" class="icon" :size="14" style="width: 12px; height: 12px" />
     </el-icon>
     <span v-if="current.dot" class="dot"></span>
     <span v-if="current.html" class="name" v-html="current.label"></span>
     <span v-else class="name">{{ current.label }}</span>
-  </el-tag>
-  <span v-else>{{ typeof value === "undefined" || value === "" ? "--" : value }}</span>
+  </div>
 </template>
 <script lang="ts">
 export default {
@@ -37,27 +36,33 @@ const current = computed(() => {
       label: curs.map((a) => a.label).join(","),
     }
   }
-  if (value === "" || value === undefined) {
-    return undefined
-  }
-  return result && result.find((a) => a.value == props.value)
+  return (result && result.find((a) => a.value == props.value)) || {}
 })
 const currentProps = computed(() => {
-  const defaults = { type: "", label: "", value: "", class: [""], style: {} } as OptionItem
+  const defaults = { type: "", label: "", value: "", style: {} } as OptionItem
   const result = props.options || []
   const cur = result.find((a) => a.value == props.value)
   if (!cur) return {}
   const { label, value, border, type, ...args } = cur
   if (typeof border !== "undefined") {
-    defaults.class = ["no-border"]
     defaults.style = args.color ? { color: args.color, backgroundColor: "transparent" } : {}
   }
-  // 判断type在不在里面
-  if (type && ["success", "info", "warning", "danger"].includes(String(type))) {
-    defaults.type = type
-  } else {
-    defaults.class.push("el-tag--" + (type || "default"))
-  }
   return { ...defaults, ...args }
+})
+const tagClass = computed(() => {
+  const result = [current.value?.dot ? "dot-status" : "", "el-tag--" + (current.value?.type || "default"), "el-tag--" + (current.value?.effect || "light")]
+  if (current.value?.size) {
+    result.push("el-tag--" + current.value?.size)
+  }
+  if (current.value?.hit) {
+    result.push("is-hit")
+  }
+  if (current.value?.round) {
+    result.push("is-round")
+  }
+  if (typeof current.value?.border !== "undefined") {
+    result.push("no-border")
+  }
+  return result
 })
 </script>

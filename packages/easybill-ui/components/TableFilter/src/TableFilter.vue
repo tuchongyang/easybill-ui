@@ -2,7 +2,7 @@
   <div class="table-filter">
     <slot name="top"></slot>
     <div>
-      <FilterExternal ref="filterExternalRef" :select-params="selectParams" :list-query="listQuery" :has-slot="selectParams.some((a) => !a.external)" v-bind="$attrs" @change="onChange">
+      <FilterExternal ref="filterExternalRef" :select-params="selectParams" :list-query="listQuery" :has-slot="selectParams.some((a) => !a.external)" :extendContext="extendContext" v-bind="$attrs" @change="onChange">
         <template #default>
           <FilterSearchBox v-if="selectParams.some((a) => !a.external)" ref="searchRef" :select-params="selectParams.filter((a) => !a.external)" :select-list="selectList" :list-query="listQuery" @search="onChange" />
         </template>
@@ -63,6 +63,15 @@ const selectParams = ref<I.ParamsItem[]>(props.schema || props.selectParams || [
 const listQuery = reactive<I.ListQuery>(props.modelValue || props.listQuery || {})
 
 const onChange = (d: any) => {
+  //清除一遍
+  for (let i = 0; i < selectList.value.length; i++) {
+    const sitem = selectList.value[i]
+    if (!listQuery[sitem.prop] && listQuery[sitem.prop] !== 0) {
+      selectList.value.splice(i, 1)
+      i--
+    }
+  }
+  // console.log("selectList", selectList, listQuery)
   if (d) {
     const cur = selectList.value.find((j) => d.prop == j.prop && d.label == j.label)
     if (cur) {
@@ -167,6 +176,9 @@ const loadOptions = (prop: string, option?: any) => {
     return filterExternalRef.value.loadOptions(prop, option)
   }
   return searchRef.value.loadOptions(prop, option)
+}
+const extendContext = {
+  loadOptions: loadOptions,
 }
 const clear = () => {
   for (let i = 0; i < selectList.value.length; i++) {

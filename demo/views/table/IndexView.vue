@@ -26,12 +26,10 @@ const table: Ref<CurdTableProps<any>> = ref({
   pageOptions: { age: "8", cateId: 1 },
   option: {
     autoload: true,
-    hideOperation:false,
+    hideOperation: false,
     hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
     hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
-    filterAttrs: {
-      // labelPosition: "left",
-    },
+    filterAttrs: {},
     menuEvent: {
       // export() {
       //   alert("自定义导出")
@@ -62,7 +60,21 @@ const table: Ref<CurdTableProps<any>> = ref({
         {
           label: "云平台",
           prop: "cloudType",
-          filter: { external: true, type: "radio", props: { componentName: "button" }, span: 24, labelWidth: "90px", value: "" },
+          filter: {
+            external: true,
+            type: "radio",
+            props: { componentName: "button" },
+            span: 24,
+            labelWidth: "90px",
+            value: "",
+            eventObject: {
+              change(formModel, formItem, context) {
+                formModel.age = ""
+                context.change(formModel, formItem)
+                context.loadOptions("cateId")
+              },
+            },
+          },
           options: [
             { label: "全部", value: "" },
             { label: "阿里云", value: "aliyun" },
@@ -70,7 +82,7 @@ const table: Ref<CurdTableProps<any>> = ref({
           ],
         },
       ],
-      fixed:"left",
+      fixed: "left",
     },
     { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
     { label: "账期范围", prop: "cycle", filter: { external: true, labelWidth: "90px", type: "date-picker", props: { type: "monthrange", format: "YYYY-MM", valueFormat: "YYYY-MM" }, tableKey: ["startTime", "endTime"], value: ["2023-04", "2023-05"] } },
@@ -82,6 +94,7 @@ const table: Ref<CurdTableProps<any>> = ref({
         inner: true,
         props: { filterable: true },
         asyncOptions: async (modelRef, formItem, context, config) => {
+          // console.log("调了cateId的options")
           return [
             { label: "一级1", value: 1 },
             { label: "一级2", value: 2 },

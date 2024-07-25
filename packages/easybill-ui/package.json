@@ -1,6 +1,6 @@
 {
   "name": "easybill-ui",
-  "version": "1.0.21",
+  "version": "1.0.26",
   "description": "A component library for easybill",
   "author": "tuchongyang <779311998@qq.com>",
   "private": false,
@@ -14,5 +14,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "481107977d389b4192ee733e0acfd64cee2f7275"
+  "gitHead": "53f19925067d7e3a3d77021b376d3e4ad4e18692"
 }

@@ -71,7 +71,6 @@ export interface FormContext {
   change: (formModel: Fields, formItem: FormItem) => void
   formModel: Fields
   formRef: InstanceType<typeof ElForm> | undefined
-  setValue: (prop: string, value?: any) => void
   components: Record<string, any>
 }
 export interface Fields {

@@ -11,7 +11,7 @@ import { ListQuery } from "../../types"
 import { FormSchema } from "../../../CurdForm"
 
 const props = defineProps({
-  listQuery: {
+  modelValue: {
     type: Object as PropType<ListQuery>,
     default: () => {
       return {}
@@ -24,8 +24,8 @@ const props = defineProps({
 })
 const emit = defineEmits(["change", "search"])
 
-const listQuery = reactive<ListQuery>(props.listQuery)
-const query: Ref<ListQuery> = ref(Utils.deepClone(props.listQuery))
+const listQuery = reactive<ListQuery>(props.modelValue)
+const query: Ref<ListQuery> = defineModel<any>() //ref(Utils.deepClone(props.listQuery))
 const formRef = ref()
 const selectParams = inject<Ref<I.ParamsItem[]>>("selectParams") || ref([])
 const formSchema = ref<FormSchema>({
@@ -54,21 +54,22 @@ watch(
       })
   },
 )
-watch(
-  () => props.listQuery,
-  (val) => {
-    let q = Utils.deepClone(val)
-    let arr: Array<string> = []
-    if (props.paramsItem.tableKey && props.paramsItem.tableKey.length) {
-      props.paramsItem.tableKey.forEach((a) => {
-        arr.push(listQuery[a] + "")
-      })
-      q[props.paramsItem.prop] = arr
-    }
-    query.value = q
-  },
-  { immediate: true, deep: true },
-)
+// watch(
+//   () => props.listQuery,
+//   (val) => {
+//     let q = Utils.deepClone(val)
+//     let arr: Array<string> = []
+//     if (props.paramsItem.tableKey && props.paramsItem.tableKey.length) {
+//       props.paramsItem.tableKey.forEach((a) => {
+//         arr.push(listQuery[a] + "")
+//       })
+//       q[props.paramsItem.prop] = arr
+//     }
+//     console.log("外面变了", q)
+//     query.value = q
+//   },
+//   { immediate: true, deep: true },
+// )
 
 const wrapperRef = ref()
 
@@ -80,7 +81,6 @@ const onChange = () => {
   } else {
     listQuery[props.paramsItem.prop] = query.value[props.paramsItem.prop]
   }
-
   emit("search", props.paramsItem)
 }
 const setValue = (prop: string) => {
