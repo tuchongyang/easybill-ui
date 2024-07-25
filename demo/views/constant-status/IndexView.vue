@@ -24,13 +24,13 @@
 </template>
 <script lang="ts" setup>
 import { OptionItem, ConstantStatus } from "easybill-ui/index"
-import { ref, Ref ,markRaw} from "vue"
-import {Warning} from '@element-plus/icons-vue'
+import { ref, Ref, markRaw } from "vue"
+import { Warning } from "@element-plus/icons-vue"
 
 const options1: Ref<OptionItem[]> = ref([
-  { label: "<span style='color:red;'>html</span>", value: 10, type: "default" ,icon:markRaw(Warning),color:"#fff000",html:"true",iconClass:"iii"},
-  { label: "primary", value: 0, type: "primary",size:"large",hit:true,tooltip:"123"},
-  { label: "warning", value: 1, type: "warning" ,},
+  { label: "<span style='color:red;'>html</span>", value: 10, type: "default", icon: markRaw(Warning), color: "#fff000", html: "true", iconClass: "iii" },
+  { label: "primary", value: 0, type: "primary", size: "large", hit: true, tooltip: "123" },
+  { label: "warning", value: 1, type: "warning" },
   { label: "success", value: 2, type: "success" },
   { label: "info", value: 3, type: "info" },
   { label: "danger", value: 4, type: "danger" },
@@ -41,8 +41,8 @@ const options1: Ref<OptionItem[]> = ref([
   { label: "blueness", value: 9, type: "blueness" },
 ])
 const options2 = ref<OptionItem[]>([
-  { label: "primary", value: 0, dot: true, type: "primary", effect: "plain", border: false, hit:true,tooltip:"123"},
-  { label: "warning", value: 1, dot: true, type: "warning", effect: "plain", border: false ,className:"active"},
+  { label: "primary", value: 0, dot: true, type: "primary", effect: "plain", border: false, hit: true, tooltip: "123" },
+  { label: "warning", value: 1, dot: true, type: "warning", effect: "plain", border: false },
   { label: "success", value: 2, dot: true, type: "success", effect: "plain", border: false },
   { label: "info", value: 3, dot: true, type: "info", effect: "plain", border: false },
   { label: "danger", value: 4, dot: true, type: "danger", effect: "plain", border: false },
@@ -53,7 +53,7 @@ const options2 = ref<OptionItem[]>([
   { label: "blueness", value: 9, dot: true, type: "blueness", effect: "plain", border: false },
 ])
 const options3 = ref<OptionItem[]>([
-  { label: "primary", value: 0, type: "primary", effect: "dark" ,hit:true,round:true},
+  { label: "primary", value: 0, type: "primary", effect: "dark", hit: true, round: true },
   { label: "warning", value: 1, type: "warning", effect: "dark" },
   { label: "success", value: 2, type: "success", effect: "dark" },
   { label: "info", value: 3, type: "info", effect: "dark" },
@@ -65,7 +65,7 @@ const options3 = ref<OptionItem[]>([
   { label: "blueness", value: 9, type: "blueness", effect: "dark" },
 ])
 const options4 = ref<OptionItem[]>([
-  { label: "primary", value: 0, type: "primary", effect: "plain" ,hit:true},
+  { label: "primary", value: 0, type: "primary", effect: "plain", hit: true },
   { label: "warning", value: 1, type: "warning", effect: "plain" },
   { label: "success", value: 2, type: "success", effect: "plain" },
   { label: "info", value: 3, type: "info", effect: "plain" },
@@ -77,7 +77,7 @@ const options4 = ref<OptionItem[]>([
   { label: "blueness", value: 9, type: "blueness", effect: "plain" },
 ])
 const options5 = ref<OptionItem[]>([
-  { label: "primary", value: 0, type: "primary", effect: "light" },
+  { label: "primary", value: "", type: "primary", effect: "light" },
   { label: "warning", value: 1, type: "warning", effect: "light" },
   { label: "success", value: 2, type: "success", effect: "light" },
   { label: "info", value: 3, type: "info", effect: "light" },
@@ -91,7 +91,7 @@ const options5 = ref<OptionItem[]>([
 ])
 </script>
 <style lang="scss" scoped>
-.active{
+.active {
   color: red;
 }
 .title {
@@ -104,5 +104,4 @@ const options5 = ref<OptionItem[]>([
     margin-right: 10px;
   }
 }
-
 </style>
