@@ -22,8 +22,7 @@
         </template>
       </template>
       <template v-if="!props.isSlot">
-        <!-- <div v-if="props.schema.options">{{ ops }}</div> -->
-        <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="ops" />
+        <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="props.schema.options" />
         <span v-else-if="props.schema.copy">
           <el-icon class="copy" title="点击复制" @click.stop="copyValue(getValue(scope))"><CopyDocument /></el-icon>
           <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
@@ -38,7 +37,7 @@
   </el-table-column>
 </template>
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, Ref, shallowRef } from "vue"
+import { computed, inject, PropType, ref, Ref } from "vue"
 import ConstantStatus from "../../ConstantStatus"
 import STableItemFilter from "./STableItemFilter.vue"
 import STableItemHeader from "./STableItemHeader.vue"
@@ -52,7 +51,7 @@ const props = defineProps({
   schema: {
     type: Object as PropType<ColumnItem>,
     default() {
-      return {}
+      return { options: [] }
     },
   },
   isSlot: {
@@ -68,7 +67,6 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-const ops = shallowRef(props.schema.options)
 const selectParams = inject<Ref<Array<ParamsItem>>>("selectParams")
 const filterSchema = computed(() => {
   let result = selectParams?.value.filter((a) => a.prop == props.schema.filter?.prop || a.prop == props.schema.prop) //getFilterFromColumn(props.schema)
