@@ -9,7 +9,10 @@ export interface FormDialogOptions extends Partial<DialogProps> {
   stepSchema?: { name: string; description?: string; formSchema: FormSchema }[]
   formSchema?: FormSchema
   handleOk?: (modelRef: Fields) => Promise<void>
+  handleClose?: (e: "close" | "cancel") => void
   setForm?: (form: Fields) => void
   stepProps?: Partial<StepProps & Fields>
   extendContext?: FormContext
+  confirmBtnText?: string
+  cancelBtnText?: string
 }

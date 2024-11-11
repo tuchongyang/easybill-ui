@@ -10,10 +10,10 @@
     </div>
     <template #footer>
       <span v-if="handleOk" class="dialog-footer">
-        <el-button :disabled="confirmLoading" type="default" @click="onCancel()">取消</el-button>
+        <el-button v-if="cancelBtnText" :disabled="confirmLoading" type="default" @click="onCancel()">{{ cancelBtnText }}</el-button>
         <el-button v-if="stepSchemaList.length > 1 && step > 0" :disabled="confirmLoading" type="primary" plain @click="prev">上一步</el-button>
         <el-button v-if="stepSchemaList.length > 1 && step < stepSchemaList.length - 1" :disabled="confirmLoading" type="primary" plain @click="next">下一步</el-button>
-        <el-button v-if="step >= stepSchemaList.length - 1" :disabled="confirmLoading" type="primary" :loading="confirmLoading" @click="onOk">确 定</el-button>
+        <el-button v-if="step >= stepSchemaList.length - 1" :disabled="confirmLoading" type="primary" :loading="confirmLoading" @click="onOk">{{ confirmBtnText }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -54,8 +54,13 @@ export default defineComponent({
       type: Function as PropType<(form: Fields) => void>,
       default: null,
     },
+    // 点击确定
     handleOk: {
-      // 点击确定
+      type: Function,
+      default: null,
+    },
+    // 关闭的回调,通过类型判断是点取消按钮还是右上角关闭按钮
+    handleClose: {
       type: Function,
       default: null,
     },
@@ -66,6 +71,14 @@ export default defineComponent({
     extendContext: {
       type: Object,
       default: () => ({}),
+    },
+    confirmBtnText: {
+      type: String,
+      default: "确 定",
+    },
+    cancelBtnText: {
+      type: String,
+      default: "取消",
     },
   },
   setup(props) {
@@ -109,12 +122,14 @@ export default defineComponent({
     }
     const onCancel = () => {
       state.visible = false
+      props.handleClose && props.handleClose("cancel")
       setTimeout(() => {
         props.remove && props.remove()
       }, 300)
     }
     const onBeforeClose = () => {
       state.visible = false
+      props.handleClose && props.handleClose("close")
       setTimeout(() => {
         props.remove && props.remove()
       }, 300)

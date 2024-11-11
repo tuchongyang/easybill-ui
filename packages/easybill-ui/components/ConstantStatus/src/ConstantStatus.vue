@@ -36,7 +36,7 @@ const current = computed(() => {
       label: curs.map((a) => a.label).join(","),
     }
   }
-  return (result && result.find((a) => a.value == props.value)) || {}
+  return (result && result.find((a) => a.value == props.value)) || { label: props.value }
 })
 const currentProps = computed(() => {
   const defaults = { type: "", label: "", value: "", style: {} } as OptionItem

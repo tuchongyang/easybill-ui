@@ -322,13 +322,13 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
         }
         if (schema.formatter) {
           let result = schema.formatter(row, schema, val, i) as string
-          if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(result))) {
+          if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(result)) && String(result).split(".").length < 3) {
             const resultNum = +parseFloat(String(result).replace(/,|$|￥/g, ""))
             return resultNum
           }
           return result === "--" ? "" : result
         }
-        if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(val))) {
+        if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(val)) && String(val).split(".").length < 3) {
           val = +parseFloat(String(val).replace(/,|$|￥/g, ""))
         }
         return val
