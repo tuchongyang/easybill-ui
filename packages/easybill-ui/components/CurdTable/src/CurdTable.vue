@@ -413,10 +413,7 @@ const startremove = (scope: any) => {
     await (props.fetchRemove && props.fetchRemove(scope.row, scope.$index)).finally(() => {
       loading.close()
     })
-    ElMessage({
-      type: "success",
-      message: "删除成功",
-    })
+    ElMessage({ type: "success", message: "删除成功" })
   })
 }
 
