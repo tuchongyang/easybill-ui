@@ -15,10 +15,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, markRaw, Ref } from "vue"
+import { ref, markRaw, Ref, h } from "vue"
 import { CurdTableProps, CurdTable } from "easybill-ui/index"
 import { CircleCheck } from "@element-plus/icons-vue"
 import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
+import PrivateTooltip from "./components/PrivateTooltip.vue"
 
 const tableRef = ref()
 const table: Ref<CurdTableProps<any>> = ref({
@@ -154,6 +155,12 @@ const table: Ref<CurdTableProps<any>> = ref({
       label: "滑动条",
       prop: "slider",
       form: { type: "el-slider" },
+    },
+    {
+      prop: "isPublic",
+      label: "Formatter",
+      formatter: () => h(PrivateTooltip, { privateReason: "dddd" }),
+      // formatter: () => "1111",
     },
     { label: "金额", prop: "amount" },
   ],

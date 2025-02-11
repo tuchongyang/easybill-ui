@@ -26,11 +26,15 @@
         <span v-else-if="props.schema.copy">
           <el-icon class="copy" title="点击复制" @click.stop="copyValue(getValue(scope))"><CopyDocument /></el-icon>
           <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
-          <template v-else> {{ getValue(scope) }} </template>
+          <template v-else-if="props.schema.formatter"> <STableItemFormatter :row="scope.row" :index="scope.index" :schema="props.schema" /> </template>
+          <template v-else>{{ getValue(scope) }}</template>
         </span>
         <span v-else>
           <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
-          <template v-else> {{ getValue(scope) }} </template>
+          <template v-else-if="props.schema.formatter">
+            <STableItemFormatter :row="scope.row" :index="scope.index" :schema="props.schema" />
+          </template>
+          <template v-else>{{ getValue(scope) }}</template>
         </span>
       </template>
     </template>
@@ -41,6 +45,7 @@ import { computed, inject, PropType, ref, Ref } from "vue"
 import ConstantStatus from "../../ConstantStatus"
 import STableItemFilter from "./STableItemFilter.vue"
 import STableItemHeader from "./STableItemHeader.vue"
+import STableItemFormatter from "./STableItemFormatter.vue"
 import { ParamsItem } from "../../TableFilter"
 import { ColumnItem } from "./types"
 import { CopyDocument } from "@element-plus/icons-vue"
@@ -80,9 +85,6 @@ const getColumnAttrs = computed(() => {
   return args || children
 })
 const getValue = (scope: any) => {
-  if (props.schema.formatter) {
-    return props.schema.formatter(scope.row, scope.column, scope.row[props.schema.prop], scope.index)
-  }
   return typeof scope.row[props.schema.prop] == "undefined" || scope.row[props.schema.prop] === "" ? "--" : scope.row[props.schema.prop]
 }
 
