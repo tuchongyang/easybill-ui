@@ -12,6 +12,7 @@
       </template>
       <template #expand> 这里是展开杭 </template>
     </CurdTable>
+    <el-button type="primary" @click="FormatterRowValueChange">FormatterRowValueChange测试</el-button>
   </div>
 </template>
 <script lang="ts" setup>
@@ -20,7 +21,9 @@ import { CurdTableProps, CurdTable } from "easybill-ui/index"
 import { CircleCheck } from "@element-plus/icons-vue"
 import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
 import PrivateTooltip from "./components/PrivateTooltip.vue"
-
+const FormatterRowValueChange = () => {
+  table.value.data[0].isPublic = !table.value.data[0].isPublic
+}
 const tableRef = ref()
 const table: Ref<CurdTableProps<any>> = ref({
   data: [],
@@ -159,7 +162,7 @@ const table: Ref<CurdTableProps<any>> = ref({
     {
       prop: "isPublic",
       label: "Formatter",
-      formatter: () => h(PrivateTooltip, { privateReason: "dddd" }),
+      formatter: (row) => h(PrivateTooltip, { privateReason: row.isPublic ? "" : "有提示" }),
       // formatter: () => "1111",
     },
     { label: "金额", prop: "amount" },
@@ -171,6 +174,7 @@ const table: Ref<CurdTableProps<any>> = ref({
           { name: "张三", age: 9, status: 1, listQuery, amount: "222.00", slider: "1231231233" },
           { name: "李四", age: 3, status: 2, amount: "1,233.00" },
         ]
+        table.value.data = list
         resolve({
           list,
           total: list.length,
