@@ -158,6 +158,8 @@ const table: Ref<CurdTableProps<any>> = ref({
       label: "滑动条",
       prop: "slider",
       form: { type: "el-slider" },
+      showOverflowTooltip: true,
+      formatter: (row) => row.slider,
     },
     {
       prop: "isPublic",

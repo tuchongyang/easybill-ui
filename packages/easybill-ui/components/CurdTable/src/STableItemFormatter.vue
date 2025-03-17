@@ -20,7 +20,7 @@ const props = defineProps({
 const formatterResult = ref(props.schema.formatter(props.row, props.row.column, props.row[props.schema.prop], props.index))
 const comp = computed(() => {
   const type = formatterResult.value
-  if (isReactive(type) || isRef(type) || isVNode(type) || (<any>type).setup) return type
+  if (type !== null && typeof type === "object" && (isReactive(type) || isRef(type) || isVNode(type) || (<any>type).setup)) return type
   return null
 })
 watchEffect(() => {
@@ -29,9 +29,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="s-table-item-formatter">
-    <component :is="comp" v-if="comp" />
-    <div v-else>{{ formatterResult }}</div>
-  </div>
+  <component :is="comp" v-if="comp" />
+  <template v-else>{{ formatterResult }}</template>
 </template>
 <style scoped lang="scss"></style>
