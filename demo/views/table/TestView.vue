@@ -86,5 +86,18 @@ const table: Ref<CurdTableProps<any>> = ref({
 })
 setTimeout(() => {
   table.value.option && (table.value.option.hideOperation = true)
+  table.value.columns = [
+    {
+      label: "状态",
+      prop: "status",
+      filter: {
+        type: "select",
+      },
+      options: [
+        { label: "正常", value: 1 },
+        { label: "异常", value: 2 },
+      ],
+    },
+  ]
 }, 1000)
 </script>

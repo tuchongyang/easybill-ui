@@ -34,18 +34,20 @@ const props = defineProps({
 })
 const option = inject<FilterOption>("option")
 const query = ref<any>({})
-// 特殊处理数组
-const formItemLeft = props.selectParams.filter((a) => a.external === true || a.external === "left").sort((a, b) => parseInt(String(b.sortIndex || 0)) - parseInt(String(a.sortIndex || 0))) as FormItem[]
-const formItemRight = props.selectParams.filter((a) => a.external === "right") as FormItem[]
-const as = [...formItemLeft]
-if (props.hasSlot) {
-  as.push({ prop: "defaultFilter", type: "defaultFilter" })
-}
-const formItem: FormItem[] = [...as, ...formItemRight]
+
 const formSchema = ref<FormSchema>({
-  formItem,
+  formItem: [],
 })
 const init = () => {
+  // 特殊处理数组
+  const formItemLeft = props.selectParams.filter((a) => a.external === true || a.external === "left").sort((a, b) => parseInt(String(b.sortIndex || 0)) - parseInt(String(a.sortIndex || 0))) as FormItem[]
+  const formItemRight = props.selectParams.filter((a) => a.external === "right") as FormItem[]
+  const as = [...formItemLeft]
+  if (props.hasSlot) {
+    as.push({ prop: "defaultFilter", type: "defaultFilter" })
+  }
+  const formItem: FormItem[] = [...as, ...formItemRight]
+  formSchema.value.formItem = formItem
   // const query = deepClone(query.value)
   for (let i in formSchema.value.formItem) {
     const item = formSchema.value.formItem[i] as ParamsItem
@@ -68,6 +70,12 @@ const init = () => {
   // query.value = query
 }
 init()
+watch(
+  () => props.selectParams,
+  () => {
+    init()
+  },
+)
 
 const emit = defineEmits(["change"])
 watch(

@@ -16,7 +16,7 @@
 export default { name: "TableFilter" }
 </script>
 <script lang="ts" setup>
-import { PropType, provide, Ref, ref, reactive, onMounted } from "vue"
+import { PropType, provide, Ref, ref, reactive, onMounted, watch } from "vue"
 import * as I from "../types"
 import FilterExternal from "./FilterExternal/FilterExternal.vue"
 import FilterSearchBox from "./FilterSearchBox.vue"
@@ -190,8 +190,8 @@ const clear = () => {
 }
 // 重新调用selectParams
 const refreshSelectParams = () => {
-  if (props.schema) {
-    selectParams.value = deepClone(props.schema)
+  if (props.schema || props.selectParams) {
+    selectParams.value = deepClone(props.schema || props.selectParams)
   }
 }
 const getCurrentIndex = () => {
@@ -209,6 +209,13 @@ const tableFilterContext = reactive<I.TableFilterContext>({
   },
   setValue,
 })
+watch(
+  () => [props.schema, props.selectParams],
+  () => {
+    refreshSelectParams()
+    getTags()
+  },
+)
 provide("tableFilter", tableFilterContext)
 provide("state", state)
 provide("selectList", selectList)
