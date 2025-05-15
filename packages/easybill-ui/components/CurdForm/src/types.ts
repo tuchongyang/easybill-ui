@@ -1,8 +1,7 @@
-import { FormRules, FormItemRule, ElForm, TooltipTriggerType } from "element-plus"
+import { ElForm, type FormItemRule, type FormRules, type TooltipTriggerType } from "element-plus"
 import type { Arrayable } from "element-plus/es/utils"
-import { PropType } from "vue"
-import { OptionItem } from "../../ConstantStatus"
-import { defineComponent } from "vue"
+import { defineComponent, type PropType } from "vue"
+import type { OptionItem } from "../../ConstantStatus"
 export interface FormSchema {
   formItem: FormItem[]
   rules?: FormRules | ((formModel: Fields, context: FormContext) => FormRules)
@@ -24,28 +23,28 @@ export interface FormItem {
   prop: string
   label?: string
   type?: FormItemTypeEmun | ReturnType<typeof defineComponent>
-  value?: any
+  value?: unknown
   eventObject?: EventObject
   options?: Array<CurdFormOptionItem>
-  asyncOptions?: (modelRef: Fields, formItem: any, context: FormContext, config?: any) => Promise<Array<CurdFormOptionItem>>
+  asyncOptions?: (modelRef: Fields, formItem: FormItem, context: FormContext, config?: unknown) => Promise<Array<CurdFormOptionItem>>
   loading?: boolean
   hidden?: boolean | ((model: Fields) => boolean)
   rules?: Arrayable<FormItemRule>
-  props?: FormItemPropObject | ((formModel: Fields, formItem: any) => FormItemPropObject)
-  formItemProps?: FormItemPropObject | ((formModel: Fields, formItem: any) => void)
+  props?: FormItemPropObject | ((formModel: Fields, formItem: FormItem) => FormItemPropObject)
+  formItemProps?: FormItemPropObject | ((formModel: Fields, formItem: FormItem) => void)
   labelWidth?: string | number
   span?: number
   disabled?: boolean
-  tooltip?: string | ((formModel: Fields, formItem: any) => Partial<TooltipProps> | string) | Partial<TooltipProps>
+  tooltip?: string | ((formModel: Fields, formItem: FormItem) => Partial<TooltipProps> | string) | Partial<TooltipProps>
   autoload?: boolean
-  prefix?: string | any
-  suffix?: string | any
-  empty?: string | any
+  prefix?: string | unknown
+  suffix?: string | unknown
+  empty?: string | unknown
   sortIndex?: number
 }
 export type FormItemTypeEmun = "input" | "select" | "radio" | "checkbox" | "input-number" | "switch" | "file" | "date-picker" | "time-picker" | "color-picker" | "value" | "tree-select"
 export interface FormItemPropObject {
-  [key: string]: any
+  [key: string]: unknown
 }
 export interface TooltipProps {
   effect: "dark" | "light"
@@ -55,7 +54,7 @@ export interface TooltipProps {
   disabled: boolean
   offset: number
   transition: string
-  popperOptions: any
+  popperOptions: unknown
   showAfter: number
   showArrow: boolean
   hideAfter: number
@@ -67,25 +66,25 @@ export interface TooltipProps {
 }
 export interface FormContext {
   loadOptions: (prop: string, config?: Fields) => void
-  setOptions: (prop: string, options: CurdFormOptionItem[], config?: any) => void
+  setOptions: (prop: string, options: CurdFormOptionItem[], config?: unknown) => void
   change: (formModel: Fields, formItem: FormItem) => void
   formModel: Fields
   formRef: InstanceType<typeof ElForm> | undefined
-  components: Record<string, any>
+  components: Record<string, unknown>
 }
 export interface Fields {
-  [key: string]: any
+  [key: string]: unknown
 }
 export interface CurdFormOptionItem extends OptionItem {
-  [key: string]: any
+  [key: string]: unknown
 }
 // interface EventObjectDefault {
 //   change?: (formModel: Fields, formItem: FormItem, proxy: any) => void
 // }
 export interface EventObject {
-  change?: (formModel: Fields, formItem: FormItem, context: FormContext, ...args: any[]) => void | boolean
-  optionLoaded?: (formModel: Fields, formItem: FormItem, context: FormContext, config?: any) => void
-  [key: string]: ((formModel: Fields, formItem: FormItem, context: FormContext, config?: any) => void) | undefined
+  change?: (formModel: Fields, formItem: FormItem, context: FormContext, ...args: unknown[]) => void | boolean
+  optionLoaded?: (formModel: Fields, formItem: FormItem, context: FormContext, config?: unknown) => void
+  [key: string]: ((formModel: Fields, formItem: FormItem, context: FormContext, config?: unknown) => void) | undefined
 }
 // export interface OptionItem {
 //   label: string
@@ -96,7 +95,7 @@ export interface EventObject {
 // }
 interface FormItemEventObject {
   change?: () => void
-  [key: string]: any
+  [key: string]: unknown
 }
 export const FormItemProps = {
   formItem: {

@@ -9,10 +9,10 @@
   </el-tooltip>
 </template>
 <script lang="ts" setup>
-import { PropType, computed } from "vue"
 import { Warning } from "@element-plus/icons-vue"
-import { ElButton, ElIcon, ElTooltip, ElTooltipProps } from "element-plus"
-import { FormItem, Fields } from "./types"
+import { ElButton, ElIcon, ElTooltip, type ElTooltipProps } from "element-plus"
+import { type PropType, computed } from "vue"
+import type { Fields, FormItem } from "./types"
 const props = defineProps({
   tooltip: {
     type: [String, Function] as PropType<string | ((formModel: Fields, formItem: FormItem) => Partial<ElTooltipProps> | string) | Partial<ElTooltipProps>>,
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const tooltipModel = computed(() => {
-  let tooltip: any = props.tooltip
+  let tooltip = props.tooltip
   if (!tooltip) {
     return { content: "" }
   }

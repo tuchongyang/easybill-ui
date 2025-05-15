@@ -10,11 +10,11 @@
 </template>
 <script lang="ts" setup>
 import { Filter } from "@element-plus/icons-vue"
-import { PropType, ref, computed } from "vue"
-import FilterType from "../../TableFilter/src/components/FilterType.vue"
-import { ColumnItemFilter } from "./types"
-import { Fields } from "../../CurdForm"
 import { ElPopover } from "element-plus"
+import { computed, type PropType, ref } from "vue"
+import type { Fields } from "../../CurdForm"
+import FilterType from "../../TableFilter/src/components/FilterType.vue"
+import type { ColumnItemFilter } from "./types"
 
 const props = defineProps({
   filter: {
@@ -29,10 +29,10 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(["change"])
-let currentValue = ref("")
+let currentValue = ref<unknown>("")
 const visible = ref(false)
 const listQuery = computed(() => {
-  const o: any = {}
+  const o: Record<string, unknown> = {}
   o[props.filter.prop || ""] = props.modelValue || currentValue.value
   return o
 })
@@ -42,11 +42,11 @@ const openFilter = () => {
   visible.value = true
   typeRef.value.open(toggleRef.value, props.filter)
 }
-const confirm = (opt: any) => {
+const confirm = (opt: { prop: string; value: unknown }) => {
   currentValue.value = opt.value
   emit("change", opt.prop, opt.value)
 }
-const search = (event: Fields) => {
+const search = (event: { listQuery: Fields }) => {
   currentValue.value = event.listQuery[props.filter.prop || ""]
 }
 defineExpose({ search })

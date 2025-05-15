@@ -12,11 +12,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { PropType, Ref, ref, inject, watch } from "vue"
-import * as I from "../types"
 import { Search } from "@element-plus/icons-vue"
-import FilterToggle from "./components/FilterToggle.vue"
+import { inject, type PropType, type Ref, ref, watch } from "vue"
+import * as I from "../types"
 import FilterItem from "./components/FilterItem.vue"
+import FilterToggle from "./components/FilterToggle.vue"
 
 const props = defineProps({
   selectParams: {
@@ -53,12 +53,12 @@ const confirm = () => {
   emit("search", props.selectParams[currentIndex.value])
 }
 
-const state = inject<Ref<any>>("state") || ref({})
+const state = inject<Ref<I.State>>("state", ref({} as I.State))
 const setIndex = (i: number) => {
   currentIndex.value = i
   // filterItemRef.value.focus()
 }
-const loadOptions = (prop: string, config?: any) => {
+const loadOptions = (prop: string, config?: unknown) => {
   return filterItemRef.value.loadOptions(prop, config)
 }
 defineExpose({ currentIndex, setIndex, loadOptions })

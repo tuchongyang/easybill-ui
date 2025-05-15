@@ -103,7 +103,7 @@ class ElementPlusError extends Error {
 export function throwError(scope: string, m: string): never {
   throw new ElementPlusError(`[${scope}] ${m}`)
 }
-function isNil(value: any) {
+function isNil(value: unknown) {
   return value == null
 }
 
@@ -120,6 +120,6 @@ export interface UploadRequestOptions {
   headers: Headers | Record<string, string | number | null | undefined>
   onError: (evt: UploadAjaxError) => void
   onProgress: (evt: UploadProgressEvent) => void
-  onSuccess: (response: any) => void
+  onSuccess: (response: XMLHttpRequestResponseType) => void
   withCredentials: boolean
 }

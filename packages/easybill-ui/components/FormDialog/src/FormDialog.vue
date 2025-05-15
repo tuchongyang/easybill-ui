@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, shallowRef, toRefs, ref, PropType } from "vue"
-import { CurdForm, FormSchema, Fields } from "../../CurdForm"
-import { ElDialog, ElButton, ElSteps, ElStep } from "element-plus"
+import { ElButton, ElDialog, ElStep, ElSteps } from "element-plus"
+import { defineComponent, type PropType, reactive, ref, type Ref, shallowRef, toRefs } from "vue"
+import { CurdForm, type Fields, type FormSchema } from "../../CurdForm"
 export default defineComponent({
   name: "FormDialog",
   components: { CurdForm, ElDialog, ElButton, ElSteps, ElStep },
@@ -51,7 +51,7 @@ export default defineComponent({
       default: () => ({}),
     },
     setForm: {
-      type: Function as PropType<(form: Fields) => void>,
+      type: Function as PropType<(form: Ref<Fields>) => void>,
       default: null,
     },
     // 点击确定
@@ -100,7 +100,7 @@ export default defineComponent({
         state.confirmLoading = true
         curdFormRef.value[state.step]?.validate((valid: boolean) => {
           state.confirmLoading = false
-          valid && state.step++
+          if (valid) state.step++
         })
       }
     }
@@ -122,19 +122,19 @@ export default defineComponent({
     }
     const onCancel = () => {
       state.visible = false
-      props.handleClose && props.handleClose("cancel")
+      if (props.handleClose) props.handleClose("cancel")
       setTimeout(() => {
-        props.remove && props.remove()
+        if (props.remove) props.remove()
       }, 300)
     }
     const onBeforeClose = () => {
       state.visible = false
-      props.handleClose && props.handleClose("close")
+      if (props.handleClose) props.handleClose("close")
       setTimeout(() => {
-        props.remove && props.remove()
+        if (props.remove) props.remove()
       }, 300)
     }
-    const loadOptions = (prop: string, config?: any) => {
+    const loadOptions = (prop: string, config?: unknown) => {
       if (!stepSchemaList.value.length) return
       for (const i in stepSchemaList.value) {
         const group = stepSchemaList.value[i]

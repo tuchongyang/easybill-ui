@@ -7,9 +7,9 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { PropType, ref, watch, getCurrentInstance, reactive } from "vue"
+import { getCurrentInstance, type PropType, reactive, ref, watch } from "vue"
 import FormItemVue from "./FormItem.vue"
-import { FormItem, Fields } from "./types"
+import type { Fields, FormContext, FormItem } from "./types"
 const props = defineProps({
   formItem: {
     required: true,
@@ -39,9 +39,10 @@ watch(
   },
 )
 const instance = getCurrentInstance()
-const curdFormContext = reactive({})
+const curdFormContext = reactive<FormContext>({} as FormContext)
 // 调用某个表单项的异步数据接口
-const loadOptions = async (cur) => {
+const loadOptions = async (_prop: string) => {
+  const cur = props.formItem
   if (cur && cur.asyncOptions && !instance?.isUnmounted) {
     cur.loading = true
     cur.options =
@@ -49,13 +50,13 @@ const loadOptions = async (cur) => {
         .asyncOptions(model.value, cur, curdFormContext)
         .catch((err) => console.error("loadOptionError", err))
         .finally(() => (cur.loading = false))) || []
-    !instance?.isUnmounted && cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(model.value, cur, curdFormContext)
+    if (!instance?.isUnmounted && cur.eventObject?.optionLoaded) cur.eventObject.optionLoaded(model.value, cur, curdFormContext)
   }
   return cur?.options || []
 }
 const init = () => {
   if (props.formItem.asyncOptions) {
-    loadOptions(props.formItem)
+    loadOptions(props.formItem.prop)
   }
 }
 curdFormContext.loadOptions = loadOptions

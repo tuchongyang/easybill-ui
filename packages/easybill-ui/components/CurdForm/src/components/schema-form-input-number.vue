@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue"
 import { ElInputNumber } from "element-plus"
+import { computed, defineComponent } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormInputNumber",

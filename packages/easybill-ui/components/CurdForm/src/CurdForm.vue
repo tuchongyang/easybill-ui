@@ -24,13 +24,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, provide, ref, computed, watch, PropType, Ref, getCurrentInstance, onMounted, triggerRef } from "vue"
-import { isFunction, isAsyncFunction } from "./utils/is"
-import { deepClone } from "./utils/common"
-import components from "./components"
 import { ElForm, ElFormItem } from "element-plus"
-import { FormSchema, Fields, FormItem as FormItemType, CurdFormOptionItem, FormContext } from "./types"
+import { type PropType, type Ref, computed, defineComponent, getCurrentInstance, onMounted, provide, reactive, ref, triggerRef, watch } from "vue"
+import components from "./components"
 import FormItem from "./FormItem.vue"
+import type { CurdFormOptionItem, Fields, FormContext, FormItem as FormItemType, FormSchema } from "./types"
+import { deepClone } from "./utils/common"
 export default defineComponent({
   name: "CurdForm",
   components: {
@@ -56,7 +55,7 @@ export default defineComponent({
       default: undefined,
     },
     extendContext: {
-      type: Object as PropType<Record<string, any>>,
+      type: Object as PropType<Partial<FormContext>>,
       default: undefined,
     },
   },
@@ -87,13 +86,15 @@ export default defineComponent({
     // 先从schema中读取默认值
     const schemaValues = sFormSchema.value.formItem.reduce<Fields>((previousValue, currentValue) => {
       currentValue.eventObject ??= {}
-      typeof currentValue.value == "undefined" ? false : currentValue.prop && (typeof formModel[currentValue.prop] == "undefined" || formModel[currentValue.prop] === "" || formModel[currentValue.prop] === null) && (previousValue[currentValue.prop] = currentValue.value)
+      if (typeof currentValue.value !== "undefined" && currentValue.prop && (typeof formModel[currentValue.prop] == "undefined" || formModel[currentValue.prop] === "" || formModel[currentValue.prop] === null)) {
+        previousValue[currentValue.prop] = currentValue.value
+      }
       return previousValue
     }, {})
 
     Object.assign(formModel, schemaValues)
     // 如果有默认值，则覆盖
-    props.fields && Object.assign(formModel, props.fields)
+    if (props.fields) Object.assign(formModel, props.fields)
     // Object.assign(formModel, props.modelValue)
     // props.modelValue && Object.assign(formModel, props.modelValue)
 
@@ -112,10 +113,10 @@ export default defineComponent({
     sFormSchema.value.formItem.forEach(async (item) => {
       //
       // 异步选项
-      if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions))) {
+      if (item.asyncOptions && (item.autoload || typeof item.autoload == "undefined") && item.asyncOptions instanceof Function) {
         item.loading = true
         item.options = await item.asyncOptions(formModel, item, curdFormContext).finally(() => (item.loading = false))
-        !instance?.isUnmounted && item.eventObject?.optionLoaded && item.eventObject?.optionLoaded(formModel, item, curdFormContext)
+        if (!instance?.isUnmounted && item.eventObject?.optionLoaded) item.eventObject.optionLoaded(formModel, item, curdFormContext)
       }
     })
 
@@ -135,7 +136,7 @@ export default defineComponent({
       return schemaFormRef.value?.validate(callback)
     }
     // 调用某个表单项的异步数据接口
-    const loadOptions = async (prop: string, option?: any) => {
+    const loadOptions = async (prop: string, option?: unknown) => {
       const cur: FormItemType | undefined = sFormSchema.value.formItem.find((a) => a.prop == prop)
       if (cur && cur.asyncOptions && !instance?.isUnmounted) {
         cur.loading = true
@@ -146,16 +147,16 @@ export default defineComponent({
             .catch((err) => console.error("loadOptionError", err))
             .finally(() => (cur.loading = false))) || []
         triggerRef(schemaItems)
-        !instance?.isUnmounted && cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
+        if (!instance?.isUnmounted && cur.eventObject?.optionLoaded) cur.eventObject.optionLoaded(formModel, cur, curdFormContext, option)
       }
       return cur?.options || []
     }
     // 给某个item赋值options
-    const setOptions = async (prop: string, options: CurdFormOptionItem[], option?: any) => {
+    const setOptions = async (prop: string, options: CurdFormOptionItem[], option?: unknown) => {
       const cur = sFormSchema.value.formItem.find((a) => a.prop == prop)
       if (cur) {
         cur.options = options
-        !instance?.isUnmounted && cur.eventObject?.optionLoaded && cur.eventObject?.optionLoaded(formModel, cur, curdFormContext, option)
+        if (!instance?.isUnmounted && cur.eventObject?.optionLoaded) cur.eventObject.optionLoaded(formModel, cur, curdFormContext, option)
       }
       // return cur
     }
@@ -185,11 +186,11 @@ export default defineComponent({
       return {}
     }
     const getFormProps = computed(() => {
-      const args: any = {}
-      const sm = props.formSchema as any
+      const args: Record<string, unknown> = {}
+      const sm = props.formSchema
       for (const i in sm) {
         if (!["formItem", "rules", "getRules"].includes(i)) {
-          args[i] = sm[i]
+          args[i] = sm[i as keyof FormSchema]
         }
       }
       return { ...args }
@@ -200,7 +201,7 @@ export default defineComponent({
     curdFormContext.change = onChange
     curdFormContext.formModel = formModel
 
-    props.extendContext && Object.assign(curdFormContext, props.extendContext)
+    if (props.extendContext) Object.assign(curdFormContext, props.extendContext)
     provide("curdFormContext", curdFormContext)
     onMounted(() => {
       curdFormContext.formRef = schemaFormRef.value

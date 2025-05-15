@@ -26,11 +26,11 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
-import { ElIcon, ElRadioGroup, ElRadio, ElRadioButton } from "element-plus"
-import { FormItemProps } from "../types"
+import { ElIcon, ElRadio, ElRadioButton, ElRadioGroup } from "element-plus"
+import { computed, defineComponent, toRaw } from "vue"
 import FormTooltip from "../FormTooltip.vue"
+import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormRadio",
   components: { Loading, ElIcon, ElRadioGroup, ElRadio, ElRadioButton, Warning, FormTooltip },

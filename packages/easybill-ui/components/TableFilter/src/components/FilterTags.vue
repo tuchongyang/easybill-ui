@@ -27,10 +27,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, Ref, PropType, inject } from "vue"
-import * as I from "../../types"
-import { ListQuery } from "../../types"
 import { CircleCloseFilled } from "@element-plus/icons-vue"
+import { inject, type PropType, ref, type Ref } from "vue"
+import type { ListQuery } from "../../types"
+import * as I from "../../types"
 import TagsSelect from "./containers/TagsSelect.vue"
 const emit = defineEmits(["change", "remove", "itemClick"])
 const props = defineProps({
@@ -76,6 +76,7 @@ const isValue = (item: I.ParamsItem) => {
           text = cur.label
         }
       }
+      break
     default:
       return text || listQuery.value[item.prop]
   }
@@ -86,10 +87,10 @@ const tagsSelectRef = ref()
 const show = (i: number) => {
   if (selectList.value[i].type !== "select") return
 
-  tagsSelectRef.value[i] && tagsSelectRef.value[i].focus && tagsSelectRef.value[i].focus()
+  if (tagsSelectRef.value[i] && tagsSelectRef.value[i].focus) tagsSelectRef.value[i].focus()
 }
 
-const onChange = (opt: any) => {
+const onChange = (opt: { prop: string; label: string; value: unknown }) => {
   for (let j in visibleMap.value) {
     visibleMap.value[j] = false
   }
@@ -101,14 +102,22 @@ const onChange = (opt: any) => {
     popoverRef.value[i].hide()
   }
 }
-const select = (option: any, params?: I.ParamsItem) => {
+const select = (
+  option: {
+    prop: string
+    label: string
+    value: unknown
+  },
+  params?: I.ParamsItem,
+) => {
   if (!params) return
-  if (params.tableKey && params.tableKey.length) {
+  const val = option.value
+  if (params.tableKey && params.tableKey.length && Array.isArray(val)) {
     params.tableKey.forEach((a, i) => {
-      listQuery.value[a] = option.value[i]
+      listQuery.value[a] = val[i]
     })
   } else {
-    listQuery.value[params.prop] = option.value
+    listQuery.value[params.prop] = val
   }
   params.tagNames = option.label
   emit("change", params)

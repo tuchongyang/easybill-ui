@@ -2,8 +2,8 @@
   <el-color-picker v-model="model" show-alpha v-bind="props" v-on="eventObject"> </el-color-picker>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
 import { ElColorPicker } from "element-plus"
+import { computed, defineComponent } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormColorPicker",

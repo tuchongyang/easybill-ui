@@ -2,8 +2,8 @@
   <el-cascader v-model="model" :options="options" v-bind="props" v-on="eventObject"></el-cascader>
 </template>
 <script lang="ts" setup>
+import { CascaderOption, CascaderValue, ElCascader } from "element-plus"
 import { computed, PropType } from "vue"
-import { ElCascader, CascaderOption, CascaderValue } from "element-plus"
 import { FormItemProps } from "../types"
 const props = defineProps({
   ...FormItemProps,

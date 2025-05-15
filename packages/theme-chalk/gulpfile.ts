@@ -1,12 +1,12 @@
-import path from "path"
 import chalk from "chalk"
+import consola from "consola"
 import { dest, parallel, series, src } from "gulp"
-import gulpSass from "gulp-sass"
-import dartSass from "sass"
 import autoprefixer from "gulp-autoprefixer"
 import cleanCSS from "gulp-clean-css"
 import rename from "gulp-rename"
-import consola from "consola"
+import gulpSass from "gulp-sass"
+import path from "path"
+import dartSass from "sass"
 
 const distFolder = path.resolve(__dirname, "dist")
 const distBundle = path.resolve(__dirname, "..", "easybill-ui", "theme-chalk")

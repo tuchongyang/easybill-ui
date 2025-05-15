@@ -2,8 +2,8 @@
   <el-time-picker v-model="model" v-bind="props" :placeholder="(formItem.props && props.placeholder && String(props.placeholder)) || '请选择' + formItem.label" v-on="eventObject"> </el-time-picker>
 </template>
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue"
 import { ElTimePicker, ModelValueType } from "element-plus"
+import { computed, defineComponent, PropType } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormTimePicker",

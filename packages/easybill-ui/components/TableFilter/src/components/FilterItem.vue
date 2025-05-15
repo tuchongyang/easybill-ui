@@ -4,11 +4,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watch, inject, reactive, Ref, PropType } from "vue"
+import { inject, type PropType, reactive, ref, type Ref, watch } from "vue"
+import type { FormSchema } from "../../../CurdForm"
+import type { ListQuery } from "../../types"
 import * as I from "../../types"
-import * as Utils from "../../../../utils/common"
-import { ListQuery } from "../../types"
-import { FormSchema } from "../../../CurdForm"
 
 const props = defineProps({
   modelValue: {
@@ -25,7 +24,7 @@ const props = defineProps({
 const emit = defineEmits(["change", "search"])
 
 const listQuery = reactive<ListQuery>(props.modelValue)
-const query: Ref<ListQuery> = defineModel<any>() //ref(Utils.deepClone(props.listQuery))
+const query = defineModel<ListQuery>({} as ListQuery) //ref(Utils.deepClone(props.listQuery))
 const formRef = ref()
 const selectParams = inject<Ref<I.ParamsItem[]>>("selectParams") || ref([])
 const formSchema = ref<FormSchema>({
@@ -43,50 +42,34 @@ watch(
   () => props.paramsItem.prop,
   () => {
     show.value = false
-    ;(formSchema.value.formItem = selectParams.value
+    formSchema.value.formItem = selectParams.value
       .filter((a) => !a.external)
       .map((a) => {
         a.hidden = props.paramsItem.prop != a.prop
         return a
-      })),
-      setTimeout(() => {
-        show.value = true
       })
+    setTimeout(() => {
+      show.value = true
+    })
   },
 )
-// watch(
-//   () => props.listQuery,
-//   (val) => {
-//     let q = Utils.deepClone(val)
-//     let arr: Array<string> = []
-//     if (props.paramsItem.tableKey && props.paramsItem.tableKey.length) {
-//       props.paramsItem.tableKey.forEach((a) => {
-//         arr.push(listQuery[a] + "")
-//       })
-//       q[props.paramsItem.prop] = arr
-//     }
-//     console.log("外面变了", q)
-//     query.value = q
-//   },
-//   { immediate: true, deep: true },
-// )
-
 const wrapperRef = ref()
 
 const onChange = () => {
-  if (props.paramsItem.tableKey && props.paramsItem.tableKey.length) {
+  const val = query.value && query.value[props.paramsItem.prop]
+  if (props.paramsItem.tableKey && props.paramsItem.tableKey.length && Array.isArray(val)) {
     props.paramsItem.tableKey.forEach((a, i) => {
-      listQuery[a] = query.value[props.paramsItem.prop][i]
+      listQuery[a] = val[i]
     })
   } else {
-    listQuery[props.paramsItem.prop] = query.value[props.paramsItem.prop]
+    listQuery[props.paramsItem.prop] = val || ""
   }
   emit("search", props.paramsItem)
 }
 const setValue = (prop: string) => {
-  listQuery[prop] = query.value[prop]
+  if (query.value) listQuery[prop] = query.value[prop]
 }
-const loadOptions = (prop: string, config?: any) => {
+const loadOptions = (prop: string, config?: unknown) => {
   return formRef.value.loadOptions(prop, config)
 }
 defineExpose({ setValue, loadOptions })

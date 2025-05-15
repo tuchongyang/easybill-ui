@@ -4,11 +4,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watch, Ref, PropType } from "vue"
+import { type PropType, ref, type Ref, watch } from "vue"
 import * as I from "../../types"
 
 import * as Utils from "../../../../utils/common"
-import { ListQuery } from "../../types"
+import type { ListQuery } from "../../types"
 import TagsSelect from "./containers/TagsSelect.vue"
 
 const props = defineProps({
@@ -25,7 +25,7 @@ const query: Ref<ListQuery> = ref(Utils.deepClone(props.listQuery))
 const params = ref<I.ParamsItem>({} as I.ParamsItem)
 const visible: Ref<boolean> = ref(false)
 const style = ref({})
-const typeList: Record<string, any> = { select: TagsSelect }
+const typeList: Record<string, unknown> = { select: TagsSelect }
 
 watch(
   () => props.listQuery,
@@ -43,7 +43,7 @@ watch(
   { immediate: true, deep: true },
 )
 const wrapperRef = ref()
-const open = (event: any, option: I.ParamsItem) => {
+const open = (_event: Event, option: I.ParamsItem) => {
   params.value = option
   visible.value = true
   console.log("params", params)
@@ -55,14 +55,15 @@ const close = () => {
 }
 defineExpose({ close, open })
 const onChange = (option: ChangeOption) => {
-  if (params.value.tableKey && params.value.tableKey.length) {
+  const val = option.value
+  if (params.value.tableKey && params.value.tableKey.length && Array.isArray(val)) {
     params.value.tableKey.forEach((a, i) => {
-      listQuery.value[a] = option.value[i]
+      listQuery.value[a] = val[i]
     })
   } else {
-    listQuery.value[option.prop] = option.value
+    listQuery.value[option.prop] = val
   }
-  emit("change", option, params)
+  emit("change", option, params.value)
   close()
 }
 
@@ -72,6 +73,6 @@ const onCancel = () => {
 }
 interface ChangeOption {
   prop: string
-  value: any
+  value: unknown
 }
 </script>

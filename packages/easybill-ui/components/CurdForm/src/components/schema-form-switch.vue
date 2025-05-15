@@ -2,8 +2,8 @@
   <el-switch v-model="model" v-bind="props" v-on="eventObject" />
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
 import { ElSwitch } from "element-plus"
+import { computed, defineComponent } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormTextarea",

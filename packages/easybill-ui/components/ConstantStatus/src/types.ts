@@ -1,9 +1,9 @@
-export interface OptionItem extends Record<string, any> {
+export interface OptionItem extends Record<string, unknown> {
   label: string
   value: string | number | boolean
   disabled?: boolean
   type?: string | "default" | "primary" | "success" | "info" | "warning" | "danger" | "blue" | "blue-dark" | "yellow" | "blueness" | "red-purple" | "error"
-  icon?: any
+  icon?: unknown
   hit?: boolean
   color?: string
   size?: string | "large" | "default" | "small"
@@ -13,6 +13,6 @@ export interface OptionItem extends Record<string, any> {
   className?: string
   iconClass?: string | string[]
   dot?: boolean
-  tooltip?: any
+  tooltip?: unknown
   html?: string
 }

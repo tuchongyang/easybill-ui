@@ -19,10 +19,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, inject, PropType, Ref, computed, onMounted } from "vue"
-import * as I from "../../../types"
 import { Search } from "@element-plus/icons-vue"
-import { CurdFormOptionItem } from "easybill-ui/components/CurdForm"
+import { computed, inject, onMounted, type PropType, ref, type Ref } from "vue"
+import type { CurdFormOptionItem } from "../../../../CurdForm"
+import * as I from "../../../types"
 const emit = defineEmits(["update:modelValue", "change"])
 const props = defineProps({
   paramsItem: {
@@ -32,7 +32,7 @@ const props = defineProps({
     },
   },
   modelValue: {
-    type: [String, Number, Boolean, Array],
+    type: [Number, String, Boolean, Array],
     default: "",
   },
   listQuery: {
@@ -42,9 +42,9 @@ const props = defineProps({
     },
   },
 })
-const model: Ref<string | number | boolean | Array<any>> = ref(props.modelValue)
+const model: Ref<string | number | boolean | Array<unknown>> = ref(props.modelValue)
 
-const tableFilterContext = inject<any>("tableFilter")
+const tableFilterContext = inject<I.TableFilterContext>("tableFilter")
 
 const paramsItem = ref(props.paramsItem)
 const selectInputRef = ref()
@@ -85,7 +85,7 @@ const onInput = () => {
   }
 }
 const focus = () => {
-  selectInputRef.value && selectInputRef.value.focus()
+  if (selectInputRef.value) selectInputRef.value.focus()
 }
 defineExpose({ focus })
 </script>

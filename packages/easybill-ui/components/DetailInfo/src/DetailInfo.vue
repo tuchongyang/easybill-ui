@@ -45,12 +45,12 @@ export default {
 }
 </script>
 <script lang="ts" setup>
+import { ElImage } from "element-plus"
 import { PropType, computed } from "vue"
 import { ConstantStatus } from "../../ConstantStatus/src"
-import { DetailDataItem } from "./types"
-import DetailInfoTooltip from "./DetailInfoTooltip.vue"
 import DetailInfoContent from "./DetailInfoContent.vue"
-import { ElImage } from "element-plus"
+import DetailInfoTooltip from "./DetailInfoTooltip.vue"
+import { DetailDataItem } from "./types"
 
 const props = defineProps({
   data: {

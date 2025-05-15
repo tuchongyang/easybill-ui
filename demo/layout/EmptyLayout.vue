@@ -1,13 +1,19 @@
 <template>
-  <router-view v-slot="{ Component }">
-    <keep-alive :exclude="aliveExcludes">
-      <component :is="Component" />
+  <router-view v-slot="{ Component, route }">
+    <keep-alive :include="getExcludes(Component)">
+      <component :is="Component" :key="route.meta.key || route.fullPath" />
     </keep-alive>
   </router-view>
 </template>
-<script setup lang="ts">
-import { computed } from "vue"
-import { useStore } from "vuex"
-const store = useStore()
-const aliveExcludes = computed(() => store.state.app.aliveExcludes)
+
+<script lang="ts" setup>
+import type { VNode, VNodeTypes } from "vue"
+const aliveExcludes: string[] = []
+const getExcludes = (com: VNode) => {
+  const name = (com?.type as VNodeTypes & { name: string })?.name
+  if (name && !aliveExcludes.includes(name)) {
+    aliveExcludes.push(name)
+  }
+  return aliveExcludes
+}
 </script>

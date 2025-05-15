@@ -24,37 +24,37 @@
       <template v-if="!props.isSlot">
         <ConstantStatus v-if="props.schema.options" :value="scope.row[props.schema.prop]" :options="props.schema.options" />
         <span v-else-if="props.schema.copy">
-          <el-icon class="copy" title="点击复制" @click.stop="copyValue(getValue(scope))"><CopyDocument /></el-icon>
-          <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
+          <el-icon class="copy" title="点击复制" @click.stop="copyValue(getValue(scope.row))"><CopyDocument /></el-icon>
+          <span v-if="props.schema.vHtml" v-html="getValue(scope.row)"></span>
           <template v-else-if="props.schema.formatter"> <STableItemFormatter :row="scope.row" :index="scope.index" :schema="props.schema" /> </template>
-          <template v-else>{{ getValue(scope) }}</template>
+          <template v-else>{{ getValue(scope.row) }}</template>
         </span>
         <span v-else>
-          <span v-if="props.schema.vHtml" v-html="getValue(scope)"></span>
+          <span v-if="props.schema.vHtml" v-html="getValue(scope.row)"></span>
           <template v-else-if="props.schema.formatter">
             <STableItemFormatter :row="scope.row" :index="scope.index" :schema="props.schema" />
           </template>
-          <template v-else>{{ getValue(scope) }}</template>
+          <template v-else>{{ getValue(scope.row) }}</template>
         </span>
       </template>
     </template>
   </el-table-column>
 </template>
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, Ref } from "vue"
-import ConstantStatus from "../../ConstantStatus"
-import STableItemFilter from "./STableItemFilter.vue"
-import STableItemHeader from "./STableItemHeader.vue"
-import STableItemFormatter from "./STableItemFormatter.vue"
-import { ParamsItem } from "../../TableFilter"
-import { ColumnItem } from "./types"
 import { CopyDocument } from "@element-plus/icons-vue"
 import { ElMessage } from "element-plus"
+import { computed, inject, type PropType, ref, type Ref } from "vue"
+import ConstantStatus from "../../ConstantStatus"
+import type { ParamsItem } from "../../TableFilter"
 import { copy } from "../utils/common"
+import STableItemFilter from "./STableItemFilter.vue"
+import STableItemFormatter from "./STableItemFormatter.vue"
+import STableItemHeader from "./STableItemHeader.vue"
+import type { ColumnItem } from "./types"
 
 const props = defineProps({
   schema: {
-    type: Object as PropType<ColumnItem>,
+    type: Object as PropType<ColumnItem<Record<string, unknown>>>,
     default() {
       return { options: [] }
     },
@@ -84,24 +84,24 @@ const getColumnAttrs = computed(() => {
   const { children, ...args } = props.schema
   return args || children
 })
-const getValue = (scope: any) => {
-  return typeof scope.row[props.schema.prop] == "undefined" || scope.row[props.schema.prop] === "" ? "--" : scope.row[props.schema.prop]
+const getValue = (row: Record<string, unknown>) => {
+  return typeof row[props.schema.prop] == "undefined" || row[props.schema.prop] === "" ? "--" : row[props.schema.prop]
 }
 
 // 复制值
-const copyValue = async (value: any) => {
-  copy(value)
+const copyValue = async (value: unknown) => {
+  copy(String(value))
   ElMessage.success(`复制成功: ${value}`)
 }
 const emits = defineEmits(["search"])
 const onChange = (prop: string, value: string) => {
   emits("search", prop, value, filterSchema.value)
 }
-const tableItemFilterRef = ref()
-const search = (opt: any) => {
-  tableItemFilterRef.value?.search && tableItemFilterRef.value.search(opt)
+const tableItemFilterRef = ref<InstanceType<typeof STableItemFilter>>()
+const search = (opt: { listQuery: Record<string, unknown> }) => {
+  if (tableItemFilterRef.value) tableItemFilterRef.value.search(opt)
 }
-const tableItemRefs: Ref<Record<string, any>> = ref({})
+const tableItemRefs: Ref<Record<string, unknown>> = ref({})
 const onItemChange = (prop: string, value: string) => {
   emits("search", prop, value, filterSchema.value)
 }

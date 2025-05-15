@@ -21,10 +21,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { Download, Operation, Refresh, ScaleToOriginal, Search } from "@element-plus/icons-vue"
 import { computed, ref } from "vue"
-import STableColumnControl from "./STableColumnControl.vue"
-import { Refresh, Search, ScaleToOriginal, Download, Operation } from "@element-plus/icons-vue"
 import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
+import STableColumnControl from "./STableColumnControl.vue"
 const emits = defineEmits(["operation"])
 const props = defineProps({
   filterVisible: {
@@ -52,14 +52,14 @@ const controlButtons = computed(() => [
   { label: "列设置", value: "operation", icon: Operation },
 ])
 const visible = ref(false)
-const onClick = (item: any) => {
+const onClick = (item: ButtonItem) => {
   emits("operation", item.value)
   if (item.value == "operation") {
     visible.value = true
   }
 }
 const currentSize = ref(globalConfig.value.size || "default")
-const handleSizeCommand = (val: any) => {
+const handleSizeCommand = (val: "default" | "small" | "large") => {
   currentSize.value = val
   emits("operation", "size", val)
 }
@@ -67,4 +67,10 @@ const openColumnControl = () => {
   visible.value = true
 }
 defineExpose({ openColumnControl })
+interface ButtonItem {
+  label: string
+  icon: unknown
+  value: string
+  options?: Array<{ label: string; value: string }>
+}
 </script>

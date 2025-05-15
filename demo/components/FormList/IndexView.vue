@@ -2,7 +2,7 @@
   <div class="form-list" style="width: 100%">
     <div class="list-box">
       <div class="list">
-        <div v-for="(item, i) in model" :key="i" class="item" :class="{ active: currentIndex == i }" @click="select(i)">
+        <div v-for="(_item, i) in model" :key="i" class="item" :class="{ active: currentIndex == i }" @click="select(i)">
           {{ i + 1 }}
           <div class="control">
             <el-button type="primary" link :icon="Delete" @click="remove(i)"></el-button>
@@ -29,9 +29,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { FormItemProps } from "easybill-ui/index"
 import { Delete } from "@element-plus/icons-vue"
-import { ref, computed } from "vue"
+import { FormItemProps } from "easybill-ui/index"
+import { ref } from "vue"
 const props = defineProps({
   ...FormItemProps,
   modelValue: {
@@ -45,7 +45,7 @@ const add = () => {
   model.value.push({})
   emit("update:modelValue", model.value)
 }
-const remove = (i) => {
+const remove = (i: number) => {
   model.value.splice(i, 1)
 }
 const currentIndex = ref(0)
@@ -53,7 +53,7 @@ const form = ref(model.value[currentIndex.value])
 const formSchema = ref({
   formItem: props.props.columns,
 })
-const select = (i) => {
+const select = (i: number) => {
   currentIndex.value = i
   form.value = null
   setTimeout(() => {
@@ -117,8 +117,6 @@ const onChange = () => {
         color: #fff;
       }
     }
-  }
-  .btn-add {
   }
 }
 .config-box {

@@ -16,8 +16,8 @@
   </el-popover>
 </template>
 <script lang="ts" setup>
-import { PropType, ref } from "vue"
 import { ArrowDown } from "@element-plus/icons-vue"
+import { PropType, ref } from "vue"
 import * as I from "../../types"
 const props = defineProps({
   selectParams: {

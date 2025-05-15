@@ -1,52 +1,101 @@
 <template>
-  <el-container class="a-container" :class="{ 'has-aside': routes.length }">
-    <SAside />
-    <el-container class="right-container" :class="layout" direction="vertical">
-      <SHeader />
-      <TagsView />
-      <Breadcrumb />
-      <SSubHeader />
-      <el-main class="center-main">
-        <router-view v-slot="{ Component }">
-          <keep-alive :exclude="aliveExcludes">
-            <component :is="Component" />
-          </keep-alive>
-        </router-view>
-      </el-main>
-    </el-container>
-  </el-container>
+  <Layout :setting="setting">
+    <template #headerRight> </template>
+    <template #headerLeft> </template>
+  </Layout>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
+import routes from "~pages"
+// import { useLayoutStore } from "@/stores/layout"
 import { computed } from "vue"
-import { useStore } from "vuex"
-import SHeader from "./SHeader"
-import SAside from "./SAside"
-import TagsView from "./TagsView"
-import Breadcrumb from "./Breadcrumb"
-import SSubHeader from "./SSubHeader"
-const store = useStore()
-const layout = computed(() => store.state.layout.layout)
-const routes = computed(() => (store.state.menu.menus && store.state.menu.menus[store.state.menu.currentMenuIndex]?.children) || [])
-const aliveExcludes = computed(() => store.state.app.aliveExcludes)
-</script>
-<style scoped lang="scss">
-.a-container {
-  background: var(--el-bg-color-page);
-  --aside-width-open: 220px;
-  --aside-width-close: 64px;
-  --header-height: 50px;
+import Layout from "./CommonBasicLayout.vue"
+// const layout = useLayoutStore()
+/*
 
-  &.has-aside {
-    .a-header {
-      :deep(.s-logo) {
-        display: none;
-      }
+routes = [
+    {
+        "name": "index-form-form-item-IndexView",
+        "path": "form/form-item/indexview",
+    },
+    {
+        "name": "index-form-cascade-IndexView",
+        "path": "form/cascade/indexview",
+    },
+    {
+        "name": "index-table-filter",
+        "path": "table-filter",
+    },
+    {
+        "name": "index-table",
+        "path": "table",
+    },
+    {
+        "name": "index-form-dialog",
+        "path": "form-dialog",
+    },
+    {
+        "name": "index-form",
+        "path": "form",
+    },
+    {
+        "name": "index-detail-info",
+        "path": "detail-info",
+    },
+    {
+        "name": "index-constant-status",
+        "path": "constant-status",
+    },
+    {
+        "name": "index-table-TestView",
+        "path": "table/testview",
+    },
+    {
+        "name": "index-form-TestView",
+        "path": "form/testview"
     }
-  }
-}
+]
+// 根据routes生成树状结构的菜单，以path的/为分隔符,其中path前面增加/。例：[{name:'form',path:'/form',children:[{name:'form-item',path:'/form/form-item'}]}]
 
-.right-container {
-  height: 100vh;
-  position: relative;
+*/
+const getRoutes = (routes: any) => {
+  const result: any = []
+  routes.forEach((route: any) => {
+    const paths = route.path.split("/")
+    let current = result
+    let index = 0
+    let path = paths[index]
+    let currentPaths = []
+    while (index < paths.length) {
+      path = paths[index]
+      currentPaths.push(path)
+      if (path) {
+        const find = current.find((item: any) => item.name === path)
+        if (find) {
+          current = find.children
+          // 如果children中没有当前的path，则添加
+          if (!current.find((item: any) => item.name === path) && currentPaths.length == 1) {
+            current.push({
+              name: path,
+              path: `/${currentPaths.join("/")}`,
+              children: [],
+            })
+          }
+        } else {
+          // 子集的path需要每级都加上
+          const newItem = {
+            name: path,
+            path: `/${currentPaths.join("/")}`,
+            children: [],
+          }
+          current.push(newItem)
+          current = newItem.children
+        }
+      }
+      index++
+    }
+  })
+  return result
 }
-</style>
+const setting = computed(() => ({ routes: getRoutes(routes[0].children) }))
+console.log("routes", routes, getRoutes(routes[0].children))
+</script>

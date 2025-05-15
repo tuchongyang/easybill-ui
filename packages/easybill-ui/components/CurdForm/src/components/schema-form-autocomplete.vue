@@ -7,9 +7,9 @@
   </el-autocomplete>
 </template>
 <script lang="ts" setup>
-import { computed, PropType } from "vue"
-import { CascaderValue } from "element-plus"
 import { FormItemProps } from "easybill-ui/components/CurdForm/src/types"
+import { CascaderValue } from "element-plus"
+import { computed, PropType } from "vue"
 const props = defineProps({
   ...FormItemProps,
   modelValue: {

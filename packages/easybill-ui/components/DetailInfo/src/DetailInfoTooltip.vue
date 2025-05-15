@@ -9,8 +9,8 @@
   </el-tooltip>
 </template>
 <script lang="ts" setup>
-import { PropType } from "vue"
 import { Warning } from "@element-plus/icons-vue"
+import type { PropType } from "vue"
 const props = defineProps({
   tooltip: {
     type: [String, Object] as PropType<string | import("element-plus/es/components/tooltip").ElTooltipProps>,
@@ -18,19 +18,16 @@ const props = defineProps({
   },
 })
 const getTooltipContent = () => {
-  const tooltip: any = props.tooltip
+  const tooltip = props.tooltip
   if (!tooltip) {
     return ""
   }
-  if (is(tooltip, "Object")) {
-    return tooltip.content
-  }
-  if (is(tooltip, "String")) {
+  if (typeof tooltip === "string") {
     return tooltip
   }
+  if (typeof tooltip === "object") {
+    return tooltip.content
+  }
   return ""
-}
-const is = (val: any, type: string) => {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
 }
 </script>

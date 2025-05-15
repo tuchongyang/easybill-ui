@@ -18,9 +18,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, PropType, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
 import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup, ElIcon } from "element-plus"
+import { computed, defineComponent, PropType, toRaw } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormCheckbox",

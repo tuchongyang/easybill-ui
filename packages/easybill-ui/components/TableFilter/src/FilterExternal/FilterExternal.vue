@@ -6,10 +6,10 @@
   </CurdForm>
 </template>
 <script lang="ts" setup>
-import { ref, watch, PropType, inject } from "vue"
+import { type PropType, inject, ref, watch } from "vue"
+import type { Fields, FormItem, FormSchema } from "../../../CurdForm"
 import CurdForm from "../../../CurdForm"
-import { ParamsItem, ListQuery, FilterOption } from "../../types"
-import { Fields, FormSchema, FormItem } from "../../../CurdForm"
+import type { FilterOption, ListQuery, ParamsItem } from "../../types"
 const props = defineProps({
   selectParams: {
     type: Array as PropType<Array<ParamsItem>>,
@@ -33,7 +33,7 @@ const props = defineProps({
   },
 })
 const option = inject<FilterOption>("option")
-const query = ref<any>({})
+const query = ref<ListQuery>({})
 
 const formSchema = ref<FormSchema>({
   formItem: [],
@@ -52,7 +52,9 @@ const init = () => {
   for (let i in formSchema.value.formItem) {
     const item = formSchema.value.formItem[i] as ParamsItem
     if (item.tableKey && props.listQuery[item.tableKey[0]]) {
-      query.value[item.prop] = [props.listQuery[item.tableKey[0]], props.listQuery[item.tableKey[1]]]
+      const val1 = props.listQuery[item.tableKey[0]] as string
+      const val2 = props.listQuery[item.tableKey[1]] as string
+      query.value[item.prop] = [val1, val2]
     }
   }
   const l = props.listQuery
@@ -83,10 +85,11 @@ watch(
   (val) => {
     const l = props.listQuery
     for (let i in val) {
-      const cur = formSchema.value.formItem.find((a) => a.prop == i) as any
-      if (cur && cur.tableKey) {
-        l[cur.tableKey[0]] = (val[i] && val[i][0]) || ""
-        l[cur.tableKey[1]] = (val[i] && val[i][1]) || ""
+      const cur = formSchema.value.formItem.find((a) => a.prop == i) as ParamsItem
+      const valItem = val[i]
+      if (cur && cur.tableKey && Array.isArray(valItem)) {
+        l[cur.tableKey[0]] = valItem[0] || ""
+        l[cur.tableKey[1]] = valItem[1] || ""
       } else {
         l[i] = val[i]
       }
@@ -95,21 +98,22 @@ watch(
   },
   { immediate: true, deep: true },
 )
-const onChange = (formModel: Fields, formItem: any) => {
+const onChange = (formModel: Fields, formItem: ParamsItem) => {
   const l = props.listQuery
-  if (formItem.tableKey) {
-    l[formItem.tableKey[0]] = formModel[formItem.prop]?.length ? formModel[formItem.prop][0] : ""
-    l[formItem.tableKey[1]] = formModel[formItem.prop]?.length ? formModel[formItem.prop][1] : ""
+  const val = formModel[formItem.prop]
+  if (formItem.tableKey && Array.isArray(val)) {
+    l[formItem.tableKey[0]] = val[0] || ""
+    l[formItem.tableKey[1]] = val[1] || ""
   }
   if (!formItem.tableKey) {
-    l[formItem.prop] = formModel[formItem.prop]
+    l[formItem.prop] = formModel[formItem.prop] as string
   }
   setTimeout(() => {
     emit("change")
   })
 }
 const formRef = ref()
-const loadOptions = (prop: string, option?: any) => {
+const loadOptions = (prop: string, option?: unknown) => {
   return formRef.value.loadOptions(prop, option)
 }
 

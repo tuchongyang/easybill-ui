@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, isReactive, isRef, ref, isVNode, PropType, watchEffect } from "vue"
-import { ColumnItem } from "easybill-ui/components/CurdTable"
+import { computed, isReactive, isRef, isVNode, type PropType, ref, watchEffect } from "vue"
+import type { ColumnItem } from "./types"
 const props = defineProps({
   schema: {
-    type: Object as PropType<ColumnItem>,
+    type: Object as PropType<ColumnItem<Record<string, unknown>>>,
     default() {
       return { options: [] }
     },
@@ -17,14 +17,14 @@ const props = defineProps({
     default: () => 0,
   },
 })
-const formatterResult = ref(props.schema.formatter(props.row, props.row.column, props.row[props.schema.prop], props.index))
+const formatterResult = ref(props.schema.formatter ? props.schema.formatter(props.row, props.row.column, props.row[props.schema.prop], props.index) : props.row[props.schema.prop])
 const comp = computed(() => {
   const type = formatterResult.value
-  if (type !== null && typeof type === "object" && (isReactive(type) || isRef(type) || isVNode(type) || (<any>type).setup)) return type
+  if (type !== null && type !== "" && typeof type === "object" && (isReactive(type) || isRef(type) || isVNode(type) || type.setup)) return type
   return null
 })
 watchEffect(() => {
-  formatterResult.value = props.schema.formatter(props.row, props.row.column, props.row[props.schema.prop], props.index)
+  formatterResult.value = props.schema.formatter ? props.schema.formatter(props.row, props.row.column, props.row[props.schema.prop], props.index) : props.row[props.schema.prop]
 })
 </script>
 

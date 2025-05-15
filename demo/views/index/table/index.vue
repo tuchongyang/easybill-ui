@@ -1,0 +1,195 @@
+<template>
+  <div>
+    <CurdTable ref="tableRef" v-bind="table">
+      <template #menuLeft>
+        <el-button type="primary" plain>左边插槽</el-button>
+      </template>
+      <template #menuRight>
+        <el-button type="primary" plain>右边边插槽</el-button>
+      </template>
+      <template #pageLeft>
+        <el-button type="primary" plain>左边插槽</el-button>
+      </template>
+      <template #expand> 这里是展开杭 </template>
+    </CurdTable>
+    <el-button type="primary" @click="FormatterRowValueChange">FormatterRowValueChange测试</el-button>
+  </div>
+</template>
+<script lang="ts" setup>
+import { CircleCheck } from "@element-plus/icons-vue"
+import { CurdTable, type CurdTableProps } from "easybill-ui/index"
+import { h, markRaw, ref, type Ref } from "vue"
+import FormSuffixBtn from "../form/components/FormSuffixBtn.vue"
+import PrivateTooltip from "./components/PrivateTooltip.vue"
+const FormatterRowValueChange = () => {
+  if (table.value.data) {
+    table.value.data[0].isPublic = !table.value.data[0].isPublic
+  }
+}
+const tableRef = ref()
+const table: Ref<CurdTableProps<Record<string, unknown>>> = ref({
+  data: [],
+  pageOptions: { age: "8", cateId: 1 },
+  option: {
+    autoload: true,
+    hideOperation: false,
+    hideOperationEdit: false, // 是否隐藏操作列中的编辑按钮
+    hideOperationDelete: false, // 是否隐藏操作列中的删除按钮
+    filterAttrs: {},
+    menuEvent: {
+      // export() {
+      //   alert("自定义导出")
+      // },
+    },
+  },
+  columns: [
+    {
+      label: "三级表头",
+      prop: "third",
+      children: [
+        {
+          label: "用户信息",
+          prop: "s",
+          children: [
+            {
+              label: "姓名",
+              prop: "name",
+              filter: {},
+              header: "姓名字符串",
+              form: {
+                suffix: [markRaw(FormSuffixBtn)],
+              },
+            },
+            { label: "年龄", prop: "age", filter: {}, header: { tooltip: "这是年龄的提示" }, form: { type: "input-number", value: 1 } },
+          ],
+        },
+        {
+          label: "云平台",
+          prop: "cloudType",
+          filter: {
+            external: true,
+            type: "radio",
+            props: { componentName: "button" },
+            span: 24,
+            labelWidth: "90px",
+            value: "",
+            eventObject: {
+              change(formModel, formItem, context) {
+                formModel.age = ""
+                context.change(formModel, formItem)
+                context.loadOptions("cateId")
+              },
+            },
+          },
+          options: [
+            { label: "全部", value: "" },
+            { label: "阿里云", value: "aliyun" },
+            { label: "腾讯云", value: "tencent" },
+          ],
+        },
+      ],
+      fixed: "left",
+    },
+    { label: "账期", prop: "name", filter: { external: true, labelWidth: "90px" } },
+    { label: "账期范围", prop: "cycle", filter: { external: true, labelWidth: "90px", type: "date-picker", props: { type: "monthrange", format: "YYYY-MM", valueFormat: "YYYY-MM" }, tableKey: ["startTime", "endTime"], value: ["2023-04", "2023-05"] } },
+    {
+      label: "类目一",
+      prop: "cateId",
+      filter: {
+        type: "select",
+        inner: true,
+        props: { filterable: true },
+        asyncOptions: async (_modelRef, _formItem, _context, config) => {
+          // console.log("调了cateId的options")
+          const config1 = config as Record<string, string>
+          return [
+            { label: "一级1", value: 1 },
+            { label: "一级2", value: 2 },
+          ].filter((a) => a.label.includes(config1?.queryString || ""))
+        },
+        eventObject: {
+          change(formModel, formItem, context) {
+            formModel.subCateId = ""
+            context.loadOptions("subCateId")
+            context.change(formModel, formItem)
+          },
+        },
+      },
+    },
+    {
+      label: "类目二",
+      prop: "subCateId",
+      filter: {
+        type: "select",
+        props: { all: true },
+        inner: true,
+        asyncOptions: async (modelRef) => {
+          return modelRef.cateId == 1
+            ? [
+                { label: "二级11", value: 11 },
+                { label: "二级12", value: 12 },
+              ]
+            : [
+                { label: "二级21", value: 21 },
+                { label: "二级22", value: 22 },
+              ]
+        },
+      },
+    },
+    {
+      label: "状态",
+      prop: "status",
+      options: [
+        { label: "唱歌", value: "1", type: "success", border: false, effect: "plain", icon: markRaw(CircleCheck) },
+        { label: "跳舞", value: "2", type: "danger" },
+      ],
+      header: { tooltip: { content: "这是状态的提示" } },
+      filter: { inner: true, type: "select" },
+    },
+    { label: "序号", prop: "index", type: "index" },
+    { label: "选项", prop: "sel", type: "selection" },
+    { label: "展开", prop: "expand", type: "expand" },
+    {
+      label: "日期",
+      prop: "date",
+      filter: { type: "time", props: { clearable: true } },
+      form: (_form, _row, query) => {
+        return { value: [query.startTime, query.endTime], type: "date-picker", props: { type: "monthrange", valueFormat: "YYYY-MM", format: "YYYY-MM" } }
+      },
+    },
+    {
+      label: "滑动条",
+      prop: "slider",
+      form: { type: "el-slider" },
+      showOverflowTooltip: true,
+      formatter: (row) => row.slider as string,
+    },
+    {
+      prop: "isPublic",
+      label: "Formatter",
+      formatter: (row) => h(PrivateTooltip, { privateReason: row.isPublic ? "" : "有提示" }),
+      // formatter: () => "1111",
+    },
+    { label: "金额", prop: "amount" },
+  ],
+  fetchData: ({ listQuery }) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const list = [
+          { name: "张三", age: 9, status: 1, listQuery, amount: "222.00", slider: "1231231233" },
+          { name: "李四", age: 3, status: 2, amount: "1,233.00" },
+        ]
+        table.value.data = list
+        resolve({
+          list,
+          total: list.length,
+        })
+      }, 500)
+    })
+  },
+  fetchCreate: async () => {},
+})
+// setTimeout(() => {
+//   table.value.option && (table.value.option.hideOperation = true)
+// }, 1000)
+</script>

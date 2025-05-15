@@ -1,12 +1,12 @@
-import {EventObject, FormSchema} from "./../../CurdForm/src/types"
-import { ParamsItem } from "../../TableFilter"
-import { FormItem as FormItemType, Fields, TooltipProps } from "../../CurdForm"
-import { OptionItem } from "../../ConstantStatus"
-import { TableProps } from "element-plus/es/components/table/src/table/defaults"
+import type { TableProps } from "element-plus/es/components/table/src/table/defaults"
+import type { OptionItem } from "../../ConstantStatus"
+import type { Fields, FormItem as FormItemType, TooltipProps } from "../../CurdForm"
+import type { ParamsItem } from "../../TableFilter"
+import type { EventObject, FormSchema } from "./../../CurdForm/src/types"
 // import { TableColumnCtx } from "element-plus"
 
 import type { VNode } from "vue"
-import { FormDialogOptions } from "../../FormDialog/src/types"
+import type { FormDialogOptions } from "../../FormDialog/src/types"
 
 export interface CurdTableProps<T = unknown> extends Partial<TableProps<T>> {
   rowKey?: string
@@ -29,12 +29,12 @@ export interface ColumnItemCtx<T> extends Partial<TableColumnCtx<T>> {
   children?: ColumnItem<T>[]
   options?: Array<OptionItem> //数据字典
   asyncOptions?: () => Promise<OptionItem[]>
-  eventObject?:EventObject
+  eventObject?: EventObject
   form?: Partial<FormItemType> | ((formItem: FormItemType, row: T, query: Fields) => Partial<FormItemType>)
   filter?: ColumnItemFilter
-  empty?: string | any
+  empty?: string | unknown
   detail?: ColumnItemDetail
-  value?: any
+  value?: unknown
   copy?: boolean // 对某一列的单元格的值进行复制
   vHtml?: boolean //当前列是否v-html渲染
   header?: string | TableColumnHeader
@@ -46,7 +46,7 @@ interface TableColumnCtx<T> {
   prop: string
   width: string | number
   minWidth: string | number
-  renderHeader: (data: any) => VNode
+  renderHeader: (data: unknown) => VNode
   sortable: boolean | string
   sortMethod: (a: T, b: T) => number
   sortBy: string | ((row: T, index: number) => string) | string[]
@@ -58,7 +58,7 @@ interface TableColumnCtx<T> {
   showTooltipWhenOverflow: boolean
   showOverflowTooltip: boolean
   fixed: boolean | string
-  formatter: (row: T, column: ColumnItemCtx<T>, cellValue: any, index: number) => VNode | string
+  formatter: (row: T, column: ColumnItemCtx<T>, cellValue: unknown, index: number) => VNode | string
   selectable: (row: T, index: number) => boolean
   reserveSelection: boolean
   filterMethod: FilterMethods<T>
@@ -68,7 +68,7 @@ interface TableColumnCtx<T> {
   filterMultiple: boolean
   index: number | ((index: number) => number)
   sortOrders: ("ascending" | "descending" | null)[]
-  renderCell: (data: any) => void
+  renderCell: (data: unknown) => void
   colSpan: number
   rowSpan: number
   // children: TableColumnCtx<T>[]
@@ -82,13 +82,13 @@ interface TableColumnCtx<T> {
   no: number
   filterOpened?: boolean
 }
-type FilterMethods<T> = (value: any, row: T, column: ColumnItemCtx<T>) => void
+type FilterMethods<T> = (value: unknown, row: T, column: ColumnItemCtx<T>) => void
 type Filters = {
   text: string
   value: string
 }[]
 
-export type ColumnItem<T = any> = ColumnItemCtx<T>
+export type ColumnItem<T = unknown> = ColumnItemCtx<T>
 
 export interface TableColumnHeader {
   title?: string
@@ -128,7 +128,7 @@ export interface ColumnItemFilter extends Partial<ParamsItem> {
 export interface ColumnItemDetail {
   label?: string
   span?: number
-  value?: any
+  value?: unknown
 }
 
 export interface TableAttr {
@@ -139,7 +139,7 @@ export interface TableListQuery {
   pageIndex: number
   pageSize: number
 
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface FeachDataParam {

@@ -16,10 +16,10 @@
         <slot name="default"></slot>
         <el-table-column v-if="$attrs.index !== undefined" type="index" />
         <el-table-column v-if="$attrs.selection !== undefined && $attrs.selection !== false" type="selection" v-bind="option.selectionProps" />
-        <template v-for="item in columns" :key="item.label">
+        <template v-for="item in tableColumns" :key="item.label">
           <el-table-column v-if="item.type == 'index'" type="index" v-bind="item" />
           <el-table-column v-else-if="item.type == 'selection'" type="selection" v-bind="item" />
-          <STableItem v-else :ref="(el) => (tableItemRefs[item.prop] = el)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
+          <STableItem v-else :ref="getTableItemRef(item.prop)" :schema="item" :is-slot="!!$slots[item.prop]" :is-slot-header="!!$slots[item.prop + 'Header']" :option="option" @search="onItemChange">
             <template #default="scope">
               <slot :name="item.prop" v-bind="scope"></slot>
             </template>
@@ -93,33 +93,33 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { computed, ref, reactive, watch, onActivated, onMounted, getCurrentInstance, provide, PropType, Ref } from "vue"
-import STableItem from "./STableItem.vue"
-import STableFilter from "./STableFilter.vue"
-import STableMenu from "./STableMenu.vue"
-import STableDetail from "./STableDetail.vue"
+import { ArrowDown, Delete, Document, Edit, Plus } from "@element-plus/icons-vue"
+import { ElLoading, ElMessage, ElMessageBox, ElTable } from "element-plus"
+import { computed, getCurrentInstance, onActivated, onMounted, type PropType, provide, reactive, ref, type Ref, watch } from "vue"
+import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
+import type { Fields, FormItem, FormSchema } from "../../CurdForm"
+import FormDialog from "../../FormDialog"
+import type { FilterItem, ListQuery } from "../../TableFilter"
 import { deepClone } from "../utils/common"
 import { exportExcel } from "../utils/tabelToExcel"
-import { Edit, Delete, Plus, ArrowDown, Document } from "@element-plus/icons-vue"
-import { ColumnItem, PropOption, TableAttr, FetchDataOpt, MenuEventKey, FormAttrs, FeachDataParam } from "./types"
-import { ListQuery } from "../../TableFilter"
-import FormDialog from "../../FormDialog"
-import { ElMessageBox, ElMessage, ElLoading, FormItemRule, ElTable } from "element-plus"
-import { FormItem, FormSchema, Fields } from "../../CurdForm"
 import { useColumnHook } from "./hooks/useColumnHook"
-import { useGlobalConfig } from "../../../utils/hooks/useGlobalConfig"
+import STableDetail from "./STableDetail.vue"
+import STableFilter from "./STableFilter.vue"
+import STableItem from "./STableItem.vue"
+import STableMenu from "./STableMenu.vue"
+import type { ColumnItem, FeachDataParam, FetchDataOpt, FormAttrs, MenuEventKey, PropOption } from "./types"
 
 const props = defineProps({
   // 表格的数据
   data: {
-    type: Array as PropType<Array<any>>,
+    type: Array as PropType<Record<string, unknown>[]>,
     default() {
       return []
     },
   },
   // 表格列模型
   columns: {
-    type: Array as PropType<Array<ColumnItem>>,
+    type: Array as PropType<Array<ColumnItem<Record<string, unknown>>>>,
     default() {
       return []
     },
@@ -135,7 +135,7 @@ const props = defineProps({
   },
   // 调用接口获取数据
   fetchData: {
-    type: Function as PropType<(opt: FeachDataParam) => Promise<{ total?: number; list?: any[] } | void>>,
+    type: Function as PropType<(opt: FeachDataParam) => Promise<{ total?: number; list?: Record<string, unknown>[] } | void>>,
     default: null,
   },
   // 自定义创建函数
@@ -145,12 +145,12 @@ const props = defineProps({
   },
   // 自定义编辑函数
   fetchEdit: {
-    type: Function as PropType<(row: any, formItem: any) => Promise<void>>,
+    type: Function as PropType<(row: unknown, formItem: unknown) => Promise<void>>,
     default: null,
   },
   // 自定义删除函数
   fetchRemove: {
-    type: Function as PropType<(row: any, index: number) => Promise<void>>,
+    type: Function as PropType<(row: unknown, index: number) => Promise<void>>,
     default: null,
   },
   // 专门配置一些公共的参数
@@ -190,7 +190,7 @@ watch(
   { deep: true },
 )
 const globalConfig = useGlobalConfig()
-const tableAttrs: Ref<TableAttr> = ref({ size: globalConfig.value.size || "default" })
+const tableAttrs = ref({ size: globalConfig.value.size || "default" })
 const listQuery = reactive({
   pageIndex: 1,
   pageSize: props.pageOptions?.pageSize || 10,
@@ -238,7 +238,7 @@ const fetchData = async (opt?: FetchDataOpt) => {
       search[i] = optQuery[i]
       // 更新tableFilter组件
       sTableFilter.value?.setItem(i)
-      tableItemRefs.value[i]?.search && tableItemRefs.value[i].search({ listQuery: search })
+      if (tableItemRefs.value[i]) tableItemRefs.value[i].search({ listQuery: search })
     }
     const params: Fields & { pageIndex: number; pageSize: number } = { ...listQuery, ...search }
     const fetchDataRes = await props.fetchData({ listQuery: params }).finally(() => {
@@ -252,7 +252,14 @@ const fetchData = async (opt?: FetchDataOpt) => {
     }
   }
 }
-const tableItemRefs: Ref<Record<string, any>> = ref({})
+const tableItemRefs: Ref<Record<string, InstanceType<typeof STableItem>>> = ref({})
+const getTableItemRef = (prop: string) => {
+  return (el: InstanceType<typeof STableItem> | null) => {
+    if (el) {
+      tableItemRefs.value[prop] = el
+    }
+  }
+}
 // 搜索
 const onSearch = (params?: ListQuery) => {
   if (params) {
@@ -263,11 +270,11 @@ const onSearch = (params?: ListQuery) => {
   listQuery.pageIndex = 1
   fetchData()
   for (let i in tableItemRefs.value) {
-    tableItemRefs.value[i]?.search && tableItemRefs.value[i].search({ listQuery: params })
+    if (tableItemRefs.value[i]) tableItemRefs.value[i].search({ listQuery: params || {} })
   }
 }
 const sTableFilter: Ref<InstanceType<typeof STableFilter> | undefined> = ref()
-const onItemChange = (prop: string, value: string, filter: any) => {
+const onItemChange = (prop: string, value: string, filter: FilterItem) => {
   sTableFilter.value?.setItem(prop, filter)
   search[prop] = value
 
@@ -286,11 +293,18 @@ onActivated(() => {
 })
 // filter内部有一些初始化的操作，比如操作value初始值，需要等子组件初始化后再执行列表数据fetch操作
 onMounted(() => {
-  option.autoload && fetchData()
+  if (option.autoload) fetchData()
   provide("tableFilter", sTableFilter.value)
 })
 // 组装columns
-const { columns, selectParams } = useColumnHook(props)
+const { tableColumns, selectParams, initColumn } = useColumnHook<Record<string, unknown>>()
+initColumn(props.columns)
+watch(
+  () => props.columns,
+  (val) => {
+    initColumn(val)
+  },
+)
 // 菜单点击事件
 const onMenuOption = (optionKey: MenuEventKey, val: string) => {
   const f = option.menuEvent && option.menuEvent[optionKey]
@@ -305,13 +319,13 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
       filterVisible.value = !filterVisible.value
       break
     case "size": {
-      if (val) {
+      if (val == "small" || val == "default" || val == "large") {
         tableAttrs.value.size = val
       }
       break
     }
     case "export": {
-      const getTableValue = (val: any, schema: ColumnItem, row: any, i: number) => {
+      const getTableValue = (val: unknown, schema: ColumnItem<Record<string, unknown>>, row: Record<string, unknown>, i: number): string | number => {
         if (schema.options) {
           const vals = String(val).split(",")
           const curs = vals.map((item) => {
@@ -331,10 +345,10 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
         if (/^[0-9\.,+-]+\.[0-9]{2}$/.test(String(val)) && String(val).split(".").length < 3) {
           val = +parseFloat(String(val).replace(/,|$|￥/g, ""))
         }
-        return val
+        return val as string
       }
-      const data = list.value.map((a) => columns.value.filter((b) => !b.hidden && !b.neverShow).map((b, i) => getTableValue(a[b.prop], b, a, i)))
-      const header = columns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label)
+      const data = list.value.map((a) => tableColumns.value.filter((b) => !b.hidden && !b.neverShow).map((b, i) => getTableValue(a[b.prop], b, a, i)))
+      const header = tableColumns.value.filter((b) => !b.hidden && !b.neverShow).map((a) => a.label)
       const tabledata = [header, ...data]
       const filename = "导出数据"
       exportExcel(tabledata, "data", (option.excelTitle || filename) + ".xls")
@@ -345,7 +359,7 @@ const onMenuOption = (optionKey: MenuEventKey, val: string) => {
 }
 
 // 添加/编辑
-const create = (row?: any) => {
+const create = (row?: Record<string, unknown>) => {
   const formAttrs: FormAttrs | undefined = option.formAttrs
   const formSchema: FormSchema = {
     formItem: [],
@@ -353,11 +367,12 @@ const create = (row?: any) => {
     labelWidth: "110px",
     ...formAttrs,
   }
-  const setItem = (a: ColumnItem) => {
+  const setItem = (a: ColumnItem<Record<string, unknown>>) => {
     if (!a.form) return
     let formValue: Partial<FormItem>
     if (a.form instanceof Function) {
-      formValue = a.form(a, row, search)
+      const row1 = row || {}
+      formValue = a.form(a, row1, search)
     } else {
       formValue = a.form
     }
@@ -372,20 +387,19 @@ const create = (row?: any) => {
     }
     formSchema.formItem.push(item)
     if (rules) {
-      let rulesItem: FormItemRule[] = []
       if (!formSchema.rules) formSchema.rules = {}
       if (typeof formSchema.rules !== "function") {
         formSchema.rules[item.prop] = rules
       }
     }
   }
-  columns.value.map((a) => {
+  tableColumns.value.map((a) => {
     if (a.children && a.children.length) {
       for (let i in a.children) {
-        a.children[i].form && setItem(a.children[i])
+        if (a.children[i].form) setItem(a.children[i])
       }
-    } else {
-      a.form && setItem(a)
+    } else if (a.form) {
+      setItem(a)
     }
   })
   formSchema.formItem.sort((a, b) => (b.sortIndex || 0) - (a.sortIndex || 0))
@@ -393,7 +407,7 @@ const create = (row?: any) => {
   FormDialog.show({
     title: row ? "编辑" : "添加",
     formSchema: formSchema,
-    fields: row,
+    fields: row as Fields,
     width: formAttrs?.width || 600,
     handleOk: async (modelRef: Fields) => {
       const fun = row ? "fetchEdit" : "fetchCreate"
@@ -403,7 +417,7 @@ const create = (row?: any) => {
   })
 }
 const instance = getCurrentInstance()
-const startremove = (scope: any) => {
+const startremove = (scope: { row: unknown; $index: number }) => {
   ElMessageBox.confirm("确认删除当前数据吗", "提示", {
     type: "warning",
     cancelButtonText: "取消",
@@ -419,23 +433,23 @@ const startremove = (scope: any) => {
 
 // 详情
 const STableDetailRef = ref()
-const detail = (row: any) => {
-  STableDetailRef.value.open({ data: row, columns: columns.value })
+const detail = (row: unknown) => {
+  STableDetailRef.value.open({ data: row, columns: tableColumns.value })
 }
 // 行点击事件
-const onRowClick = (row: any, column: any, event: Event) => {
+const onRowClick = (row: unknown, column: ColumnItem, event: Event) => {
   if (instance && typeof instance.attrs["click-row-to-view"] !== "undefined") {
     detail(row)
   }
   emits("row-click", row, column, event)
 }
 // 多选事件
-const selectionChange = (rows: any) => {
+const selectionChange = (rows: unknown[]) => {
   emits("selectionChange", rows)
 }
-const tableRef = ref<any>() // 表格的实例
+const tableRef = ref<InstanceType<typeof ElTable>>() // 表格的实例
 
-const toggleRowSelection = (row: any, isChecked?: boolean) => {
+const toggleRowSelection = (row: unknown, isChecked?: boolean) => {
   setTimeout(() => {
     tableRef.value?.toggleRowSelection(row, isChecked)
   })

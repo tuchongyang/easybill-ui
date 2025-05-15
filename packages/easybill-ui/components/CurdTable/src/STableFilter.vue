@@ -4,10 +4,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { inject, PropType, Ref, ref } from "vue"
-import { ListQuery, ParamsItem } from "../../TableFilter"
-import TableFilter from "../../TableFilter"
-import { PropOption } from "./types"
+import { inject, type PropType, type Ref, ref } from "vue"
+import TableFilter, { type FilterItem, type ListQuery, type ParamsItem } from "../../TableFilter"
+import type { PropOption } from "./types"
 
 const emits = defineEmits(["search"])
 const option = inject<PropOption>("option")
@@ -24,13 +23,13 @@ const onSearch = () => {
   emits("search", props.listQuery)
 }
 const tableFilterRef = ref()
-const setItem = (prop: string, filterItem?: any) => {
+const setItem = (prop: string, filterItem?: FilterItem) => {
   tableFilterRef.value.setItem(prop, filterItem)
 }
 const getSelectList = () => {
   return tableFilterRef.value.selectList
 }
-const loadOptions = (prop: string, config?: any) => {
+const loadOptions = (prop: string, config?: unknown) => {
   return tableFilterRef.value.loadOptions(prop, config)
 }
 const clear = (prop: string) => {

@@ -11,8 +11,9 @@
   </el-select>
 </template>
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref, watch } from "vue"
-import { ElSelect, ElOption, ElCheckbox } from "element-plus"
+import { ElCheckbox, ElOption, ElSelect } from "element-plus"
+import { computed, defineComponent, onMounted, ref, watch } from "vue"
+import type { CurdFormOptionItem } from "../types"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormSelect",
@@ -32,11 +33,12 @@ export default defineComponent({
     })
     const checked = computed({
       get() {
-        return Array.isArray(model.value) && model.value.length && props.formItem?.options?.every((item) => model.value?.includes(item.value))
+        return Array.isArray(model.value) && model.value.length && props.formItem?.options?.every((item) => Array.isArray(model.value) && model.value?.includes(item.value))
       },
       set(val) {
-        model.value = val ? props.formItem?.options?.map((a) => a.value) : []
-        props?.eventObject?.change && props?.eventObject?.change()
+        const options = props.formItem.options || []
+        model.value = val ? options.map((a) => a.value) : []
+        if (props?.eventObject?.change) props.eventObject.change()
       },
     })
     const loading = ref(false)
@@ -55,19 +57,21 @@ export default defineComponent({
     const { filterMethod, remoteMethod, ...selectProps } = props.props
     // 前端筛选
     if (filterMethod) {
-      selectProps.filterMethod = function (val) {
-        list.value = props.formItem?.options?.filter((a) => filterMethod(val, a))
+      selectProps.filterMethod = function (val: string) {
+        const remoteMehotd1 = remoteMethod as (val: string, optionItem?: CurdFormOptionItem) => Promise<CurdFormOptionItem[]>
+        list.value = props.formItem?.options?.filter((a) => remoteMehotd1(val, a))
       }
     }
     // 远程筛选
     if (selectProps.remote && remoteMethod) {
-      selectProps.remoteMethod = function (val) {
+      selectProps.remoteMethod = function (val: string) {
         loading.value = true
-        remoteMethod(val)
+        const remoteMehotd1 = remoteMethod as (val: string, optionItem?: CurdFormOptionItem) => Promise<CurdFormOptionItem[]>
+        remoteMehotd1(val)
           .then((res) => {
             list.value = res
           })
-          .finally((e) => {
+          .finally(() => {
             loading.value = false
           })
       }

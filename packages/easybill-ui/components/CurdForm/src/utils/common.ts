@@ -1,4 +1,4 @@
-export function deepClone<T extends Array<T> | any>(sourceData: T): T {
+export function deepClone<T extends Array<T> | unknown>(sourceData: T): T {
   if (Array.isArray(sourceData)) {
     return sourceData.map((item) => deepClone(item)) as T
   }

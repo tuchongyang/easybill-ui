@@ -16,13 +16,13 @@
 export default { name: "TableFilter" }
 </script>
 <script lang="ts" setup>
-import { PropType, provide, Ref, ref, reactive, onMounted, watch } from "vue"
+import { onMounted, type PropType, provide, reactive, type Ref, ref, watch } from "vue"
+import type { CurdFormOptionItem, FormContext } from "../../CurdForm"
+import { deepClone } from "../../CurdTable/utils/common"
 import * as I from "../types"
 import FilterExternal from "./FilterExternal/FilterExternal.vue"
 import FilterSearchBox from "./FilterSearchBox.vue"
 import FilterTags from "./components/FilterTags.vue"
-import { deepClone } from "../../CurdTable/utils/common"
-import { CurdFormOptionItem } from "easybill-ui/components/CurdForm"
 
 const props = defineProps({
   /**
@@ -62,7 +62,7 @@ const selectList: Ref<I.ParamsItem[]> = ref([])
 const selectParams = ref<I.ParamsItem[]>(props.schema || props.selectParams || [])
 const listQuery = reactive<I.ListQuery>(props.modelValue || props.listQuery || {})
 
-const onChange = (d: any) => {
+const onChange = (d?: I.ParamsItem) => {
   //清除一遍
   for (let i = 0; i < selectList.value.length; i++) {
     const sitem = selectList.value[i]
@@ -83,8 +83,8 @@ const onChange = (d: any) => {
       } else {
         cur.tagNames = d.tagNames
       }
-    } else {
-      typeof listQuery[d.prop] !== "undefined" && listQuery[d.prop] !== "" && selectList.value.push(d)
+    } else if (typeof listQuery[d.prop] !== "undefined" && listQuery[d.prop] !== "") {
+      selectList.value.push(d)
     }
     emit("search", listQuery, selectList.value)
     return
@@ -114,7 +114,7 @@ const getTags = () => {
         loadOptions(a.prop).then((res: CurdFormOptionItem[]) => {
           selectList.value.push({
             ...a,
-            tagNames: a.tagNames || res.find((j: any) => j.value == listQuery[a.prop])?.label || "",
+            tagNames: a.tagNames || res.find((j) => j.value == listQuery[a.prop])?.label || "",
           })
         })
       } else {
@@ -124,7 +124,7 @@ const getTags = () => {
   })
 }
 
-const setItem = (prop: string, paramsItem?: any) => {
+const setItem = (prop: string, paramsItem?: I.ParamsItem) => {
   // 加延时是因为在curdtable那边筛选后，调用setItem时，listQuery更新不及时
   setTimeout(() => {
     let item = paramsItem || selectParams.value.find((a) => a.prop == prop)
@@ -134,22 +134,22 @@ const setItem = (prop: string, paramsItem?: any) => {
       if (typeof listQuery[prop] !== "undefined" && listQuery[prop] !== "") {
         selectList.value.push({
           ...item,
-          tagNames: item.tagNames || item.options?.find((j: any) => j.value == listQuery[prop])?.label,
+          tagNames: item.tagNames || item.options?.find((j) => j.value == listQuery[prop])?.label,
         })
       }
     } else if (item.options && item.options.length) {
-      let tagNames = item.options?.find((j: any) => j.value == listQuery[prop])?.label
+      let tagNames = item.options?.find((j) => j.value == listQuery[prop])?.label
       // 处理多选value的值
       if (!item.tagNames && item.type == "checkbox") {
         let propList = prop.split(",").map((a) => {
-          return item?.options?.find((j: any) => String(j.value) == String(a))?.label
+          return item?.options?.find((j) => String(j.value) == String(a))?.label
         })
         tagNames = propList.join(" | ")
       }
       current.tagNames = tagNames
     } else if (item.asyncOptions) {
-      item.asyncOptions(listQuery, item, tableFilterContext).then((res: any) => {
-        current.tagNames = item.tagNames || res.find((j: any) => j.value == listQuery[prop])?.label
+      item.asyncOptions(listQuery, item, tableFilterContext as FormContext).then((res) => {
+        current.tagNames = item.tagNames || res.find((j) => j.value == listQuery[prop])?.label
       })
     }
     if ((current && typeof current.tagNames == "undefined") || (current && current.tagNames === "")) {
@@ -161,15 +161,15 @@ const setItem = (prop: string, paramsItem?: any) => {
   })
 }
 //主动赋值
-const setValue = (prop: string, value: any) => {
+const setValue = (prop: string, value: unknown) => {
   listQuery[prop] = value
   setItem(prop)
 }
-const state = ref({
+const state = ref<I.State>({
   isFocus: false,
 })
 const filterExternalRef = ref()
-const loadOptions = (prop: string, option?: any) => {
+const loadOptions = (prop: string, option?: unknown) => {
   const current = selectParams.value.find((a) => a.prop == prop)
   if (!current || !current.asyncOptions) return
   if (current.external) {
@@ -208,6 +208,16 @@ const tableFilterContext = reactive<I.TableFilterContext>({
     emit("search", listQuery, selectList.value)
   },
   setValue,
+  setOptions: (prop: string, options: CurdFormOptionItem[]) => {
+    const current = selectParams.value.find((a) => a.prop == prop)
+    if (!current || current.external) return
+    current.options = options
+    setItem(prop)
+  },
+  formModel: listQuery,
+  components: {},
+  change: () => {},
+  formRef: undefined,
 })
 watch(
   () => [props.schema, props.selectParams],

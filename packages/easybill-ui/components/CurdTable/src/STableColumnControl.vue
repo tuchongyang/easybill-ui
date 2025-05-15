@@ -22,9 +22,9 @@
   </el-drawer>
 </template>
 <script lang="ts" setup>
-import { shallowRef, watch, Ref, ref, computed, inject, triggerRef } from "vue"
 import { CaretLeft, CaretRight, VideoPause } from "@element-plus/icons-vue"
-import { ColumnItem } from "./types"
+import { computed, inject, type Ref, ref, shallowRef, triggerRef, watch } from "vue"
+import type { ColumnItem } from "./types"
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -59,8 +59,8 @@ const columnDatas = computed(() => {
         }
       }
       continue
-    } else {
-      !column.neverShow && result.push(column)
+    } else if (!column.neverShow) {
+      result.push(column)
     }
   }
   return result
@@ -70,7 +70,7 @@ const fixedMap = shallowRef([
   { value: "", label: "不固定", icon: VideoPause },
   { value: "right", label: "右固定", icon: CaretRight },
 ])
-const selectFixed = (row: any, val: string) => {
+const selectFixed = (row: Record<string, unknown>, val: string) => {
   if (val) {
     row.fixed = val
   } else {

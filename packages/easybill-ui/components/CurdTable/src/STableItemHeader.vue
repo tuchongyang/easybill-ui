@@ -3,12 +3,12 @@
   <STableItemHeaderTooltip :tooltip="tooltip" />
 </template>
 <script lang="ts" setup>
-import { PropType, computed } from "vue"
-import { ColumnItem } from "./types"
+import { type PropType, computed } from "vue"
 import STableItemHeaderTooltip from "./STableItemHeaderTooltip.vue"
+import type { ColumnItem } from "./types"
 const props = defineProps({
   schemaItem: {
-    type: Object as PropType<ColumnItem>,
+    type: Object as PropType<ColumnItem<Record<string, unknown>>>,
     default: () => ({}),
   },
 })
@@ -25,12 +25,9 @@ const title = computed(() => {
   if (typeof props.schemaItem.header == "string") {
     return props.schemaItem.header
   }
-  if (is(props.schemaItem.header, "Object")) {
+  if (typeof props.schemaItem.header === "object") {
     return props.schemaItem.header.title || props.schemaItem.label
   }
   return ""
 })
-const is = (val: any, type: string) => {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
-}
 </script>

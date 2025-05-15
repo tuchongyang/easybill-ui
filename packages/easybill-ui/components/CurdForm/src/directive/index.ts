@@ -18,10 +18,12 @@ const directives = {
   trim: {
     mounted(el: El) {
       const inputEle = getInput(el)
-      const handler = function (event: any) {
-        const newVal = event.target.value.trim()
-        if (event.target.value !== newVal) {
-          event.target.value = newVal
+      const handler = function (event: FocusEvent) {
+        if (!event.target) return
+        const target = event.target as HTMLInputElement
+        const newVal = target.value.trim()
+        if (target.value !== newVal) {
+          target.value = newVal
           dispatchEvent(inputEle, "input")
         }
       }
@@ -39,13 +41,13 @@ const directives = {
       el.inputEle = inputEle
       el._blurHandler = handler
       el._keyHandler = keydown
-      inputEle && inputEle.addEventListener("blur", handler)
-      inputEle && inputEle.addEventListener("keydown", keydown)
+      if (inputEle) inputEle.addEventListener("blur", handler)
+      if (inputEle) inputEle.addEventListener("keydown", keydown)
     },
     unmounted(el: El) {
       const { inputEle } = el
-      inputEle && inputEle.removeEventListener("blur", el._blurHandler)
-      inputEle && inputEle.removeEventListener("keydown", el._keyHandler)
+      if (inputEle) inputEle.removeEventListener("blur", el._blurHandler)
+      if (inputEle) inputEle.removeEventListener("keydown", el._keyHandler)
     },
   },
 }

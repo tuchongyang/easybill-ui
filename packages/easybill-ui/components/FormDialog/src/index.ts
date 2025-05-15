@@ -1,7 +1,7 @@
 // create-api.ts
-import { createVNode, render, nextTick, App, VNode } from "vue"
+import { type App, createVNode, nextTick, render, type VNode } from "vue"
 import FormModal from "./FormDialog.vue"
-import { FormDialogOptions } from "./types"
+import type { FormDialogOptions } from "./types"
 let _app: App<Element>
 
 /**
@@ -21,7 +21,9 @@ const FormDialog = {
     formModal = createVNode(FormModal, { ...options, remove })
     // 使当前模态框继承App实例上下文
     nextTick(() => {
-      _app && formModal && (formModal.appContext = _app._instance?.appContext || _app._context || null)
+      if (_app && formModal) {
+        formModal.appContext = _app._instance?.appContext || _app._context || null
+      }
       render(formModal, container)
       document.body.appendChild(container)
     })

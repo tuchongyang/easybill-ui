@@ -17,19 +17,16 @@ const props = defineProps({
   },
 })
 const getTooltipContent = () => {
-  const tooltip: any = props.tooltip
+  const tooltip = props.tooltip
   if (!tooltip) {
     return ""
   }
-  if (is(tooltip, "Object")) {
-    return tooltip.content
-  }
-  if (is(tooltip, "String")) {
+  if (typeof tooltip === "string") {
     return tooltip
   }
+  if (typeof tooltip === "object") {
+    return tooltip.content
+  }
   return ""
-}
-const is = (val: any, type: string) => {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
 }
 </script>

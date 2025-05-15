@@ -1,16 +1,15 @@
-import { Ref, ref, provide, watch, shallowRef } from "vue"
-import { ColumnItem } from "../types"
+import { provide, type Ref, ref, shallowRef } from "vue"
+import type { ParamsItem } from "../../../TableFilter"
 import { deepClone } from "../../utils/common"
-import { ParamsItem } from "../../../TableFilter"
+import type { ColumnItem } from "../types"
 
-export function useColumnHook(props: any) {
-  const columns: Ref<Array<ColumnItem>> = shallowRef([])
-  const cs = deepClone(props.columns)
-  columns.value = cs //.filter((a) => !a.hidden)
+export function useColumnHook<T>() {
+  const columns: Ref<Array<ColumnItem<T>>> = shallowRef([])
+
   provide("columns", columns)
-  const getSchema = (colss: ColumnItem[]) => {
+  const getSchema = (colss: ColumnItem<T>[]) => {
     const result: Array<ParamsItem> = []
-    const getFilter = (cols: Array<ColumnItem>) => {
+    const getFilter = (cols: Array<ColumnItem<T>>) => {
       for (const i in cols) {
         const a = deepClone(cols[i])
         if (a.children && a.children.length) {
@@ -18,7 +17,7 @@ export function useColumnHook(props: any) {
           continue
         }
         if (a.filter) {
-          result.push(getFilterFromColumn(a))
+          result.push(getFilterFromColumn<T>(a))
         }
       }
     }
@@ -28,8 +27,10 @@ export function useColumnHook(props: any) {
   const selectParams = ref<ParamsItem[]>([])
   // selectParams.value = getSchema()
   provide("selectParams", selectParams)
-  async function initColumn() {
-    const find = async (cs: ColumnItem[]) => {
+  async function initColumn(propsColumns: ColumnItem<T>[]) {
+    const cs = deepClone(propsColumns)
+    columns.value = cs //.filter((a) => !a.hidden)
+    const find = async (cs: ColumnItem<T>[]) => {
       for (let i = 0; i < cs.length; i++) {
         const item = cs[i]
         if (item.children && item.children.length) {
@@ -43,21 +44,13 @@ export function useColumnHook(props: any) {
     selectParams.value = getSchema(columns.value).sort((a, b) => (b.sortIndex || 0) - (a.sortIndex || 0))
   }
 
-  initColumn()
-  watch(
-    () => props.columns,
-    (val) => {
-      columns.value = deepClone(val)
-
-      initColumn()
-    },
-  )
   return {
-    columns,
+    tableColumns: columns,
     selectParams,
+    initColumn,
   }
 }
-export function getFilterFromColumn(a: ColumnItem) {
+export function getFilterFromColumn<T>(a: ColumnItem<T>) {
   const options = a.filter?.options || a.options
   const item: ParamsItem = deepClone(a.filter) as ParamsItem
   if (!item.prop) {

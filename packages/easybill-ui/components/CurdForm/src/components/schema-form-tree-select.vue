@@ -13,9 +13,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, toRaw } from "vue"
 import { Loading, Warning } from "@element-plus/icons-vue"
-import { ElTreeSelect, ElIcon } from "element-plus"
+import { ElIcon, ElTreeSelect } from "element-plus"
+import { computed, defineComponent, toRaw } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormTreeSelect",

@@ -4,12 +4,12 @@
   </el-drawer>
 </template>
 <script lang="ts" setup>
-import { ref, Ref } from "vue"
-import { ColumnItem } from "./types"
-import DetailInfo, { DetailDataItem } from "../../DetailInfo"
+import { ref, type Ref } from "vue"
+import DetailInfo, { type DetailDataItem } from "../../DetailInfo"
+import type { ColumnItem } from "./types"
 interface OpenOption {
   columns: Array<ColumnItem>
-  data: any
+  data: Record<string, unknown>
 }
 
 const visible = ref(false)

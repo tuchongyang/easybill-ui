@@ -2,7 +2,7 @@
   <div v-bind="props" v-html="model"></div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
+import { computed, defineComponent } from "vue"
 import { FormItemProps } from "../types"
 export default defineComponent({
   name: "SchemaFormValue",

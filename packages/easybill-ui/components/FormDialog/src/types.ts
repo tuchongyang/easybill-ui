@@ -1,6 +1,5 @@
-import { Fields, FormContext, FormSchema } from "../../CurdForm"
-import { DialogProps } from "element-plus"
-import { StepProps } from "element-plus"
+import type { DialogProps, StepProps } from "element-plus"
+import type { Fields, FormContext, FormSchema } from "../../CurdForm"
 
 export interface FormDialogOptions extends Partial<DialogProps> {
   title?: string

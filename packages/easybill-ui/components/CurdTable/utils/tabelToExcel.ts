@@ -2,7 +2,7 @@
  * 导出excel
  */
 
-export function exportExcel(data: string[][], worksheetName: string, filename?: string) {
+export function exportExcel(data: (string | number)[][], worksheetName: string, filename?: string) {
   if (!filename) {
     filename = worksheetName
   }
@@ -39,16 +39,16 @@ const tableToExcel = (function () {
       '</head><body ><table class="excelTable">{table}</table></body></html>',
     base64 = function (s: string) {
       const encoder = new TextEncoder()
-      const utf8Array = encoder.encode(s) as any
-      return btoa(String.fromCharCode.apply(null, utf8Array))
+      const utf8Array = encoder.encode(s)
+      return btoa(String.fromCharCode.apply(null, Array.from(utf8Array)))
       return window.btoa(decodeURIComponent(encodeURIComponent(s)))
     },
-    format = function (s: string, c: any) {
-      return s.replace(/{(\w+)}/g, function (m, p) {
+    format = function (s: string, c: Record<string, string>) {
+      return s.replace(/{(\w+)}/g, function (_m, p) {
         return c[p]
       })
     }
-  return function (data: string[][], worksheetName: string, filename: string) {
+  return function (data: (string | number)[][], worksheetName: string, filename: string) {
     const tableStr = data
       .map((a) => {
         const td = a.map((td) => "<td class='" + (typeof td == "number" ? "text-right" : "") + "' style='" + (typeof td != "number" ? "mso-number-format:\\@;" : "") + "'>" + (td === undefined || td === null ? "" : td) + "</td>").join("")

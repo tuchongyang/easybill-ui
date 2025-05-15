@@ -14,8 +14,8 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { computed, PropType } from "vue"
-import { OptionItem } from "./types"
+import { computed, type PropType } from "vue"
+import type { OptionItem } from "./types"
 const props = defineProps({
   value: {
     type: [String, Number, Boolean],
@@ -26,7 +26,7 @@ const props = defineProps({
     default: () => [],
   },
 })
-const current = computed(() => {
+const current = computed<OptionItem>(() => {
   const result = props.options || []
   const value = props.value
   if (typeof value == "string" && value.indexOf(",") > -1) {
@@ -36,7 +36,8 @@ const current = computed(() => {
       label: curs.map((a) => a.label).join(","),
     }
   }
-  return (result && result.find((a) => a.value == props.value)) || { label: props.value }
+  const defaultItem = { label: props.value } as OptionItem
+  return (result && result.find((a) => a.value == props.value)) || defaultItem
 })
 const currentProps = computed(() => {
   const defaults = { type: "", label: "", value: "", style: {} } as OptionItem

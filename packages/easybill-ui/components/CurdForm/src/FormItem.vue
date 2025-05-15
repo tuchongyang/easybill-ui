@@ -12,11 +12,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed, Ref, PropType } from "vue"
-import { FormItem, Fields } from "./types"
+import { computed, type PropType, ref, type Ref } from "vue"
 import { getComponent } from "./components"
 import FormTooltip from "./FormTooltip.vue"
 import { useForm } from "./hooks"
+import type { Fields, FormItem } from "./types"
 const props = defineProps({
   // 动态验证表单
   formItem: {
@@ -45,7 +45,7 @@ const formItemProps = computed(() => {
 // 重新组装eventObject
 const eventObject = ref(
   (() => {
-    const result: any = { ...props.formItem.eventObject }
+    const result = { ...props.formItem.eventObject }
     // 如果没有传eventObject，就初始一个change事件
     if (!props.formItem.eventObject || Object.keys(props.formItem.eventObject).length <= 0) {
       return {
@@ -55,7 +55,7 @@ const eventObject = ref(
       }
     }
     const changeFun = props.formItem.eventObject.change
-    result.change = (...args: any) => {
+    result.change = (...args: unknown[]) => {
       if (changeFun) {
         const flag = changeFun && changeFun.apply(null, [props.formModel, props.formItem, formContext, ...args])
         if (flag) {
@@ -68,15 +68,15 @@ const eventObject = ref(
     for (let i in result) {
       if (i !== "change") {
         const fun = result[i]
-        result[i] = (...args: any) => {
-          fun(props.formModel, props.formItem, formContext, ...args)
+        result[i] = (...args: unknown[]) => {
+          if (fun) fun(props.formModel, props.formItem, formContext, ...args)
         }
       }
     }
     return result
   })(),
 )
-const isString = (val: any) => {
+const isString = (val: unknown) => {
   return typeof val === "string"
 }
 const prefixList = computed(() => {

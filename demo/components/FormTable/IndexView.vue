@@ -16,8 +16,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { FormItemProps } from "easybill-ui/index"
 import { Delete } from "@element-plus/icons-vue"
+import { FormItemProps } from "easybill-ui/index"
 import { ref } from "vue"
 const props = defineProps({
   ...FormItemProps,
@@ -32,7 +32,7 @@ const add = () => {
   model.value.push({})
   emit("update:modelValue", model.value)
 }
-const remove = (i) => {
+const remove = (i: number) => {
   model.value.splice(i, 1)
 }
 </script>
